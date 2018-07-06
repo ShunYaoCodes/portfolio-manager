@@ -5,7 +5,7 @@ import { Grid, Image, Divider } from 'semantic-ui-react'
 const Stats = props => {
   return (
     <React.Fragment>
-      <h1>hi im Asset Stats</h1>
+      <h2>hi im Asset Stats</h2>
       <br />
       <br />
       <br />

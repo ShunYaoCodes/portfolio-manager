@@ -16,6 +16,9 @@ class App extends Component {
     indexes: [],
     quote: null,
     searchHistory: [],
+    portfolio: [],
+    watchlist: [],
+    watchlistNews: [],
   }
 
   componentDidMount() {
@@ -39,10 +42,17 @@ class App extends Component {
 
     fetch('http://localhost:3001/api/v1/search_histories/1')
     .then(r => r.json()).then(searchHistory => {
-      console.log(searchHistory);
-      this.setState({
-        searchHistory
-      })
+      this.setState({ searchHistory })
+    })
+
+    fetch('http://localhost:3001/api/v1/watchlists/1')
+    .then(r => r.json()).then(watchlist => {
+      this.setState({ watchlist })
+    })
+
+    fetch('http://localhost:3001/api/v1/portfolio_assets/1')
+    .then(r => r.json()).then(portfolio => {
+      this.setState({ portfolio })
     })
   }
 
@@ -65,32 +75,23 @@ class App extends Component {
   		headers: {
   			"Content-Type": "application/json"
   		},
-  		body: JSON.stringify({
-  			keyword
-  		})
+  		body: JSON.stringify({ keyword })
   	})
 
     fetch('http://localhost:3001/api/v1/search_histories/1')
     .then(r => r.json()).then(searchHistory => {
-      this.setState({
-        searchHistory
-      })
+      this.setState({ searchHistory })
     })
   }
 
   handleClick = (name, checked, symbol) => {
-    console.log(name);
-    console.log(checked);
-    console.log(symbol);
     if (checked) {
       fetch(`http://localhost:3001/api/v1/${name}s`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json"
         },
-        body: JSON.stringify({
-          symbol
-        })
+        body: JSON.stringify({ symbol })
       })
     } else {
       fetch(`http://localhost:3001/api/v1/${name}s/1`, {
@@ -98,9 +99,7 @@ class App extends Component {
         headers: {
           "Content-Type": "application/json"
         },
-        body: JSON.stringify({
-          symbol
-        })
+        body: JSON.stringify({ symbol })
       })
     }
   }
@@ -124,8 +123,8 @@ class App extends Component {
             </Grid.Column>
 
             <Route exact path='/' render={() => <Market indexes={this.state.indexes} news={this.state.news} searchHistory={this.state.searchHistory}/>} />
-            <Route exact path='/portfolio' render={() => <Portfolio indexes={this.state.indexes} news={this.state.news} />} />
-            <Route exact path='/watchlist' render={() => <Watchlist indexes={this.state.indexes} news={this.state.news} />} />
+            <Route exact path='/portfolio' render={() => <Portfolio indexes={this.state.indexes} news={this.state.news} portfolio={this.state.portfolio}/>} />
+            <Route exact path='/watchlist' render={() => <Watchlist indexes={this.state.indexes} news={this.state.news} watchlist={this.state.watchlist}/>} />
             <Route exact path='/quote' render={() => <Quote quote={this.state.quote} news={this.state.news} click={this.handleClick}/>} />
           </Grid>
         </div>

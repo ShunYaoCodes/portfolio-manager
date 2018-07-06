@@ -7,16 +7,22 @@ import { Grid } from 'semantic-ui-react'
 
 class Portfolio extends React.Component {
   render() {
-    // console.log(this.state.news);
-    // console.log(this.state.indexes)
+    // later use <Positions />
+    const portfolio = this.props.portfolio.map(port => <li>{port}</li>)
     return (
       <React.Fragment>
         <Grid.Row>
-          <Positions />
+          <Grid.Column width={12}>
+            <ul><h2>Your Portfolio:</h2>
+              {portfolio}
+            </ul>
+          </Grid.Column>
         </Grid.Row>
 
         <Grid.Row>
-          <Stats />
+          <Grid.Column width={12}>
+            <Stats />
+          </Grid.Column>
         </Grid.Row>
       </React.Fragment>
     )
