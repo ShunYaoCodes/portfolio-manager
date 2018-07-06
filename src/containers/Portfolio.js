@@ -7,6 +7,7 @@ import { Grid } from 'semantic-ui-react'
 
 class Portfolio extends React.Component {
   render() {
+    console.log(this.props.portfolio);
     // later use <Positions />
     const portfolio = this.props.portfolio.map(port => <li>{port}</li>)
     return (

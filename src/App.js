@@ -38,6 +38,21 @@ class App extends Component {
         //console.log(indexArr);
         this.setState({ indexes: indexArr })
       })
+
+      fetch(`https://api.iextrading.com/1.0/stock/market/batch?symbols=${this.state.searchHistory}&types=quote`)
+      .then(r => r.json()).then(searchHistoryQuotes => {
+        this.setState({ searchHistoryQuotes })
+      })
+
+      fetch(`https://api.iextrading.com/1.0/stock/market/batch?symbols=${this.state.watchlist}&types=quote`)
+      .then(r => r.json()).then(watchlistQuotes => {
+        this.setState({ watchlistQuotes })
+      })
+
+      fetch(`https://api.iextrading.com/1.0/stock/market/batch?symbols=${this.state.portfolio}&types=quote`)
+      .then(r => r.json()).then(portfolioQuotes => {
+        this.setState({ portfolioQuotes })
+      })
     }.bind(this),3000);
 
     fetch('https://api.iextrading.com/1.0/stock/market/news/10')
@@ -47,32 +62,17 @@ class App extends Component {
 
     fetch('http://localhost:3001/api/v1/search_histories/1')
     .then(r => r.json()).then(searchHistory => {
-      this.setState({ searchHistory: searchHistory.join(',') })
+      this.setState({ searchHistory: searchHistory.join(',') });
     })
 
     fetch('http://localhost:3001/api/v1/watchlists/1')
     .then(r => r.json()).then(watchlist => {
-      this.setState({ watchlist: watchlist.join(',') })
+      this.setState({ watchlist: watchlist.join(',') });
     })
 
     fetch('http://localhost:3001/api/v1/portfolio_assets/1')
     .then(r => r.json()).then(portfolio => {
-      this.setState({ portfolio: portfolio.join(',') })
-    })
-
-    fetch(`https://api.iextrading.com/1.0/stock/market/batch?symbols=${this.state.searchHistory}&types=quote`)
-    .then(r => r.json()).then(searchHistoryQuotes => {
-      this.setState({ searchHistoryQuotes })
-    })
-
-    fetch(`https://api.iextrading.com/1.0/stock/market/batch?symbols=${this.state.watchlist}&types=quote`)
-    .then(r => r.json()).then(watchlistQuotes => {
-      this.setState({ watchlistQuotes })
-    })
-
-    fetch(`https://api.iextrading.com/1.0/stock/market/batch?symbols=${this.state.portfolio}&types=quote`)
-    .then(r => r.json()).then(portfolioQuotes => {
-      this.setState({ portfolioQuotes })
+      this.setState({ portfolio: portfolio.join(',') });
     })
   }
 
@@ -137,6 +137,7 @@ class App extends Component {
   }
 
   render() {
+    //console.log(this.state.searchHistoryQuotes);
     return (
       <Router>
         <div>

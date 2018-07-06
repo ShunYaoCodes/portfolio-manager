@@ -6,6 +6,7 @@ import { Grid } from 'semantic-ui-react'
 
 class Watchlist extends React.Component {
   render() {
+    console.log(this.props.watchlist);
     // later use <Watchlists />
     const watchlist = this.props.watchlist.map(watch => <li>{watch}</li>)
     return (

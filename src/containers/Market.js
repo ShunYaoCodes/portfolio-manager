@@ -6,10 +6,10 @@ import { Grid } from 'semantic-ui-react'
 
 class Market extends React.Component {
   render() {
-    // console.log(this.state.news);
+    //console.log(this.props.searchHistory);
     // console.log(this.state.indexes)
     return (
-      
+
       <React.Fragment>
         <Grid.Row>
           <IndexList indexes={this.props.indexes}/>
