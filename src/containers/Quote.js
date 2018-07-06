@@ -11,20 +11,28 @@ class Quote extends React.Component {
   }
 
   render() {
-    //console.log(this.props.news);
+    //console.log(this.props.inWatchlist);
     //console.log(this.props.quote.symbol);
     return (
       <React.Fragment>
         <Grid.Row>
           <Grid.Column width={6}>
-            <Checkbox toggle onClick={this.handleClick} name="watchlist"/> Add to your watchlist
+            {this.props.inWatchlist ?
+              <div><Checkbox toggle checked onClick={this.handleClick} name="watchlist"/>Remove from your watchlist</div>
+              :
+              <div><Checkbox toggle onClick={this.handleClick} name="watchlist"/> Add to your watchlist</div>
+            }
           </Grid.Column>
 
           <Grid.Column width={6}>
-            <Checkbox toggle onClick={this.handleClick} name="portfolio_asset"/> Add to your portfolio
+            {this.props.inPortfolio ?
+              <div><Checkbox toggle checked onClick={this.handleClick} name="portfolio_asset"/> Remove from your portfolio</div>
+              :
+              <div><Checkbox toggle onClick={this.handleClick} name="portfolio_asset"/> Add to your portfolio</div>
+            }
           </Grid.Column>
         </Grid.Row>
-
+        <h2>{this.props.quote.symbol}</h2>
         <Asset />
 
         <Grid.Row>

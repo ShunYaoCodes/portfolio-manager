@@ -4,9 +4,11 @@ import { Grid, Image, Divider } from 'semantic-ui-react'
 
 const SearchedItem = props => {
   return (
-    <div>
-      <li>{props.asset}</li>
-    </div>
+    <Table.Row>
+      <Table.Cell>Cell</Table.Cell>
+      <Table.Cell>Cell</Table.Cell>
+      <Table.Cell>Cell</Table.Cell>
+    </Table.Row>
   )
 }
 

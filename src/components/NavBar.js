@@ -22,12 +22,12 @@ class NavBar extends Component {
           <Menu.Item as={NavLink} to='/portfolio'
             name='Portfolio'
             active={activeItem === 'Portfolio'}
-            onClick={this.handleItemClick}
+            onClick={() => window.location.reload()}
           />
         <Menu.Item as={NavLink} to='/watchlist'
             name='Watchlist'
             active={activeItem === 'Watchlist'}
-            onClick={this.handleItemClick}
+            onClick={() => window.location.reload()}
           />
         </Menu>
       </Segment>

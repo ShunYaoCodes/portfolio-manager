@@ -19,6 +19,11 @@ class App extends Component {
     portfolio: [],
     watchlist: [],
     watchlistNews: [],
+    inPortfolio: false,
+    inWatchlist: false,
+    searchHistoryQuotes: [],
+    portfolioQuotes: [],
+    watchlistQuotes: [],
   }
 
   componentDidMount() {
@@ -42,17 +47,32 @@ class App extends Component {
 
     fetch('http://localhost:3001/api/v1/search_histories/1')
     .then(r => r.json()).then(searchHistory => {
-      this.setState({ searchHistory })
+      this.setState({ searchHistory: searchHistory.join(',') })
     })
 
     fetch('http://localhost:3001/api/v1/watchlists/1')
     .then(r => r.json()).then(watchlist => {
-      this.setState({ watchlist })
+      this.setState({ watchlist: watchlist.join(',') })
     })
 
     fetch('http://localhost:3001/api/v1/portfolio_assets/1')
     .then(r => r.json()).then(portfolio => {
-      this.setState({ portfolio })
+      this.setState({ portfolio: portfolio.join(',') })
+    })
+
+    fetch(`https://api.iextrading.com/1.0/stock/market/batch?symbols=${this.state.searchHistory}&types=quote`)
+    .then(r => r.json()).then(searchHistoryQuotes => {
+      this.setState({ searchHistoryQuotes })
+    })
+
+    fetch(`https://api.iextrading.com/1.0/stock/market/batch?symbols=${this.state.watchlist}&types=quote`)
+    .then(r => r.json()).then(watchlistQuotes => {
+      this.setState({ watchlistQuotes })
+    })
+
+    fetch(`https://api.iextrading.com/1.0/stock/market/batch?symbols=${this.state.portfolio}&types=quote`)
+    .then(r => r.json()).then(portfolioQuotes => {
+      this.setState({ portfolioQuotes })
     })
   }
 
@@ -69,6 +89,18 @@ class App extends Component {
         news: item.news,
       })
     })
+
+    if (this.state.portfolio.includes(keyword.toUpperCase())) {
+      this.setState({ inPortfolio: true })
+    } else {
+      this.setState({ inPortfolio: false })
+    }
+
+    if (this.state.watchlist.includes(keyword.toUpperCase())) {
+      this.setState({ inWatchlist: true })
+    } else {
+      this.setState({ inWatchlist: false })
+    }
 
     fetch('http://localhost:3001/api/v1/search_histories', {
   		method: "POST",
@@ -122,10 +154,10 @@ class App extends Component {
               <NavBar />
             </Grid.Column>
 
-            <Route exact path='/' render={() => <Market indexes={this.state.indexes} news={this.state.news} searchHistory={this.state.searchHistory}/>} />
-            <Route exact path='/portfolio' render={() => <Portfolio indexes={this.state.indexes} news={this.state.news} portfolio={this.state.portfolio}/>} />
-            <Route exact path='/watchlist' render={() => <Watchlist indexes={this.state.indexes} news={this.state.news} watchlist={this.state.watchlist}/>} />
-            <Route exact path='/quote' render={() => <Quote quote={this.state.quote} news={this.state.news} click={this.handleClick}/>} />
+            <Route exact path='/' render={() => <Market indexes={this.state.indexes} news={this.state.news} searchHistory={this.state.searchHistoryQuotes}/>} />
+            <Route exact path='/portfolio' render={() => <Portfolio indexes={this.state.indexes} news={this.state.news} portfolio={this.state.portfolioQuotes}/>} />
+            <Route exact path='/watchlist' render={() => <Watchlist indexes={this.state.indexes} news={this.state.news} watchlist={this.state.watchlistQuotes}/>} />
+            <Route exact path='/quote' render={() => <Quote quote={this.state.quote} news={this.state.news} click={this.handleClick} inPortfolio={this.state.inPortfolio} inWatchlist={this.state.inWatchlist}/>} />
           </Grid>
         </div>
       </Router>
