@@ -44,9 +44,27 @@ class App extends Component {
         this.setState({ searchHistoryQuotes })
       })
 
-      fetch(`https://api.iextrading.com/1.0/stock/market/batch?symbols=${this.state.watchlist}&types=quote`)
-      .then(r => r.json()).then(watchlistQuotes => {
-        this.setState({ watchlistQuotes })
+      fetch(`https://api.iextrading.com/1.0/stock/market/batch?symbols=${this.state.watchlist}&types=quote,news`)
+      .then(r => r.json()).then(watchlistQuotesNews => {
+        //console.log(watchlistQuotesNews);
+        const quotes = [];
+        let news = [];
+
+        for(const each in watchlistQuotesNews) {
+          quotes.push(watchlistQuotesNews[each].quote);
+          news.push(watchlistQuotesNews[each].news);
+        }
+
+        if (news.length > 0) {
+          news = news.reduce(
+            (accumulator, currentValue) => accumulator.concat(currentValue),[]
+          );
+        }
+
+        this.setState({
+          watchlistQuotes: quotes,
+          watchlistNews: news,
+        })
       })
 
       fetch(`https://api.iextrading.com/1.0/stock/market/batch?symbols=${this.state.portfolio}&types=quote`)
@@ -137,7 +155,8 @@ class App extends Component {
   }
 
   render() {
-    //console.log(this.state.searchHistoryQuotes);
+    console.log(this.state.news);
+    console.log(this.state.watchlistNews);
     return (
       <Router>
         <div>
@@ -156,8 +175,8 @@ class App extends Component {
             </Grid.Column>
 
             <Route exact path='/' render={() => <Market indexes={this.state.indexes} news={this.state.news} searchHistory={this.state.searchHistoryQuotes}/>} />
-            <Route exact path='/portfolio' render={() => <Portfolio indexes={this.state.indexes} news={this.state.news} portfolio={this.state.portfolioQuotes}/>} />
-            <Route exact path='/watchlist' render={() => <Watchlist indexes={this.state.indexes} news={this.state.news} watchlist={this.state.watchlistQuotes}/>} />
+            <Route exact path='/portfolio' render={() => <Portfolio indexes={this.state.indexes} portfolio={this.state.portfolioQuotes}/>} />
+            <Route exact path='/watchlist' render={() => <Watchlist indexes={this.state.indexes} news={this.state.watchlistNews} watchlist={this.state.watchlistQuotes}/>} />
             <Route exact path='/quote' render={() => <Quote quote={this.state.quote} news={this.state.news} click={this.handleClick} inPortfolio={this.state.inPortfolio} inWatchlist={this.state.inWatchlist}/>} />
           </Grid>
         </div>

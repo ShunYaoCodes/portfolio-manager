@@ -32,7 +32,7 @@ class Quote extends React.Component {
             }
           </Grid.Column>
         </Grid.Row>
-        <h2>{this.props.quote.symbol}</h2>
+        <h2>{this.props.quote ? this.props.quote.symbol : null}</h2>
         <Asset />
 
         <Grid.Row>
