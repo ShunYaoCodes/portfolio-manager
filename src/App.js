@@ -78,26 +78,30 @@ class App extends Component {
     })
   }
 
-  handleClick = (checked, symbol) => {
+  handleClick = (name, checked, symbol) => {
+    console.log(name);
+    console.log(checked);
+    console.log(symbol);
     if (checked) {
-      // fetch('http://localhost:3001/api/v1/search_histories', {
-      //   method: "POST",
-      //   headers: {
-      //     "Content-Type": "application/json"
-      //   },
-      //   body: JSON.stringify({
-      //     keyword
-      //   })
-      } else {
-      // fetch('http://localhost:3001/api/v1/search_histories', {
-      //   method: "DELETE",
-      //   headers: {
-      //     "Content-Type": "application/json"
-      //   },
-      //   body: JSON.stringify({
-      //     keyword
-      //   })
-      // })
+      fetch(`http://localhost:3001/api/v1/${name}s`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          symbol
+        })
+      })
+    } else {
+      fetch(`http://localhost:3001/api/v1/${name}s/1`, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          symbol
+        })
+      })
     }
   }
 

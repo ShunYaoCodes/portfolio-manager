@@ -7,7 +7,7 @@ import { Checkbox } from 'semantic-ui-react'
 
 class Quote extends React.Component {
   handleClick = (event, data) => {
-    this.props.click(data.checked, this.props.quote.symbol)
+    this.props.click(data.name, data.checked, this.props.quote.symbol)
   }
 
   render() {
@@ -17,11 +17,11 @@ class Quote extends React.Component {
       <React.Fragment>
         <Grid.Row>
           <Grid.Column width={6}>
-            <Checkbox toggle onClick={this.handleClick}/> Add to your watchlist
+            <Checkbox toggle onClick={this.handleClick} name="watchlist"/> Add to your watchlist
           </Grid.Column>
 
           <Grid.Column width={6}>
-            <Checkbox toggle /> Add to your portfolio
+            <Checkbox toggle onClick={this.handleClick} name="portfolio_asset"/> Add to your portfolio
           </Grid.Column>
         </Grid.Row>
 
