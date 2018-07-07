@@ -14,7 +14,8 @@ const Asset = props => {
       </Grid.Row>
       <Grid.Row>
         <Grid.Column width={12}>
-          <Stats />
+          <h2>{props.symbol ? props.symbol : null} Summary:</h2>
+          <Stats {...props}/>
         </Grid.Column>
       </Grid.Row>
     </React.Fragment>

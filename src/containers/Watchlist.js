@@ -2,12 +2,13 @@ import React from 'react';
 import IndexList from '../components/IndexList';
 import NewsList from '../components/NewsList';
 import Watchlists from '../components/Watchlist/Watchlists';
+import UUID from 'uuid';
 import { Grid, Table } from 'semantic-ui-react'
 
 class Watchlist extends React.Component {
   render() {
     //console.log(this.props.watchlist);
-    const list = this.props.watchlist.map(each => <Watchlists {...each} />)
+    const list = this.props.watchlist.map(each => <Watchlists key={UUID()} {...each} />)
 
     return (
       <React.Fragment>

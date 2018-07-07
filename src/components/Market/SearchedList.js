@@ -7,9 +7,9 @@ const SearchedList = props => {
   //console.log(props.searchHistory);
   let list = [];
 
-  if (Object.keys(props.searchHistory) !== []) {
+  if (Object.keys(props.searchHistory).length > 0) {
     for(const quote in props.searchHistory) {
-      list.push(<SearchedItem quote={props.searchHistory[quote].quote} />)
+      list.push(<SearchedItem key={UUID()} quote={props.searchHistory[quote].quote} />)
     }
   }
 

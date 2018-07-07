@@ -12,7 +12,7 @@ class Quote extends React.Component {
 
   render() {
     //console.log(this.props.inWatchlist);
-    //console.log(this.props.quote.symbol);
+    //console.log(this.props.quote);
     return (
       <React.Fragment>
         <Grid.Row>
@@ -33,10 +33,12 @@ class Quote extends React.Component {
           </Grid.Column>
         </Grid.Row>
         <h2>{this.props.quote ? this.props.quote.symbol : null}</h2>
-        <Asset />
+
+        <Asset {...this.props.quote}/>
 
         <Grid.Row>
           <Grid.Column width={12}>
+            <h2>{this.props.quote ? this.props.quote.symbol : null} News:</h2>
             <NewsList news={this.props.news}/>
           </Grid.Column>
         </Grid.Row>

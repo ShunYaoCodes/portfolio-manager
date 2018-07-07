@@ -143,6 +143,7 @@ class App extends Component {
         },
         body: JSON.stringify({ symbol })
       })
+      console.log(this.state.inWatchlist);
     } else {
       fetch(`http://localhost:3001/api/v1/${name}s/1`, {
         method: "DELETE",
@@ -151,12 +152,13 @@ class App extends Component {
         },
         body: JSON.stringify({ symbol })
       })
+      console.log(this.state.inWatchlist);
     }
   }
 
   render() {
-    console.log(this.state.news);
-    console.log(this.state.watchlistNews);
+    // console.log(this.state.news);
+    // console.log(this.state.watchlistNews);
     return (
       <Router>
         <div>
