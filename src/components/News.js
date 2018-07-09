@@ -3,15 +3,14 @@ import { Item } from 'semantic-ui-react';
 //import { BrowserRouter, Route, Link } from 'react-router-dom'
 
 const News = props => {
-  //onClick={()=> window.open(props.url, "_blank")
+  //console.log(props);
+  const heading = props.heading.replace(/amp;/g, ``).replace(/&apos;/g, `'`);
+  //<Item.Image size='tiny' src={props.thumbnail} bordered/>
   return (
-
     <Item>
-      <Item.Image size='tiny' src={props.thumbnail} bordered/>
-
       <Item.Content>
         <Item.Header>
-            {props.heading}
+          {heading}
         </Item.Header>
 
         <Item.Meta>
@@ -25,9 +24,7 @@ const News = props => {
           </a>
         </Item.Description>
       </Item.Content>
-
     </Item>
-
   )
 }
 

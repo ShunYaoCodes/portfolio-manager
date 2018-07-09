@@ -1,5 +1,4 @@
 import React from 'react';
-import { BrowserRouter as Router, Route, NavLink } from 'react-router-dom';
 import { Table } from 'semantic-ui-react'
 
 const SearchedItem = props => {

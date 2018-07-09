@@ -22,7 +22,7 @@ class Portfolio extends React.Component {
         <Grid.Row>
           <Grid.Column width={12}>
             <h3>Your Portfolio:</h3>
-            <Table>
+            <Table color='blue'>
               <Table.Header>
                 <Table.Row>
                   <Table.HeaderCell>Symbol</Table.HeaderCell>

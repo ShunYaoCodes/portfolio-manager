@@ -4,7 +4,7 @@ import UUID from 'uuid';
 import { Grid } from 'semantic-ui-react'
 
 const IndexList = props => {
-  const indexList = props.indexes.map(index => <Index key={UUID()} symbol={index.symbol} price={index.latestPrice} />)
+  const indexList = props.indexes.map(index => <Index key={UUID()} {...index} />)
   return (
     <React.Fragment>
       {indexList}

@@ -1,17 +1,43 @@
 import React from 'react';
 
-import { Grid, Image, Divider } from 'semantic-ui-react'
+import { Grid, Icon, Divider } from 'semantic-ui-react'
 
 const Index = props => {
-  //console.log(props)
+  let symbol;
+  switch(props.symbol) {
+    case 'SPY':
+      symbol = 'S&P 500';
+      break;
+    case 'DIA':
+      symbol = 'DOW 30';
+      break;
+    case 'QQQ':
+      symbol = 'NASDAQ';
+      break;
+    case 'IWM':
+      symbol = 'RUSSELL 2K';
+      break;
+    case 'VXX':
+      symbol = 'VIX';
+      break;
+  }
+  
   return (
     <React.Fragment>
-      <Grid.Column width={2}>
-       <img src='/images/wireframe/media-paragraph.png' />
-      </Grid.Column>
-      <Grid.Column width={2}>
-        <p>{props.symbol}</p>
-        <p>{props.price}</p>
+      {props.change >= 0 ?
+          <Grid.Column textAlign='right' color='green' width={1}>
+            <p>{symbol}</p>
+            <p>{props.latestPrice}&nbsp;&nbsp;+{props.change}</p>
+            <p><Icon name='triangle up' />&nbsp;(+{(props.changePercent*100).toFixed(2)}%)</p>
+          </Grid.Column>
+        :
+          <Grid.Column textAlign='right' color='red' width={1}>
+            <p>{symbol}</p>
+            <p>{props.latestPrice}&nbsp;&nbsp;{props.change}</p>
+            <p><Icon name='triangle down' />&nbsp;({(props.changePercent*100).toFixed(2)}%)</p>
+          </Grid.Column>
+      }
+      <Grid.Column width={1}>
       </Grid.Column>
     </React.Fragment>
   )

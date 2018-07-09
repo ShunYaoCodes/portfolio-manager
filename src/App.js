@@ -5,16 +5,21 @@ import SearchBar from './components/SearchBar';
 import NavBar from './components/NavBar';
 import Portfolio from './containers/Portfolio'
 import Watchlist from './containers/Watchlist'
-import Quote from './containers/Quote'
+import Quote from './containers/Quote';
+import { timeParse } from "d3-time-format";
 import { BrowserRouter as Router, Route, NavLink } from 'react-router-dom';
 
 //import { BrowserRouter, Route, Link } from 'react-router-dom'
+const parseDate = timeParse("%Y-%m-%d");
 
 class App extends Component {
   state = {
     news: [],
     indexes: [],
+    symbol: '',
     quote: null,
+    quoteNews: [],
+    quoteChart: [],
     searchHistory: [],
     portfolio: [],
     watchlist: [],
@@ -24,11 +29,14 @@ class App extends Component {
     searchHistoryQuotes: [],
     portfolioQuotes: [],
     watchlistQuotes: [],
+    mostActive: [],
+    gainers: [],
+    losers: [],
   }
 
   componentDidMount() {
     this.intervalID = setInterval(function(){
-      fetch('https://api.iextrading.com/1.0/stock/market/batch?symbols=spy,dia,qqq&types=quote')
+      fetch('https://api.iextrading.com/1.0/stock/market/batch?symbols=spy,dia,qqq,iwm,vxx&types=quote')
       .then(r => r.json()).then(indexes => {
         const indexArr = [];
 
@@ -42,6 +50,21 @@ class App extends Component {
       fetch(`https://api.iextrading.com/1.0/stock/market/batch?symbols=${this.state.searchHistory}&types=quote`)
       .then(r => r.json()).then(searchHistoryQuotes => {
         this.setState({ searchHistoryQuotes })
+      })
+
+      fetch(`https://api.iextrading.com/1.0/stock/market/list/mostactive`)
+      .then(r => r.json()).then(mostActive => {
+        this.setState({ mostActive })
+      })
+
+      fetch(`https://api.iextrading.com/1.0/stock/market/list/gainers`)
+      .then(r => r.json()).then(gainers => {
+        this.setState({ gainers })
+      })
+
+      fetch(`https://api.iextrading.com/1.0/stock/market/list/losers`)
+      .then(r => r.json()).then(losers => {
+        this.setState({ losers })
       })
 
       fetch(`https://api.iextrading.com/1.0/stock/market/batch?symbols=${this.state.watchlist}&types=quote,news`)
@@ -73,7 +96,7 @@ class App extends Component {
       })
     }.bind(this),3000);
 
-    fetch('https://api.iextrading.com/1.0/stock/market/news/10')
+    fetch('https://api.iextrading.com/1.0/stock/market/news/last/20')
     .then(r => r.json()).then(news => {
       this.setState({ news })
     })
@@ -99,12 +122,25 @@ class App extends Component {
   }
 
   handleSearch = keyword => {
-    fetch(`https://api.iextrading.com/1.0/stock/${keyword}/batch?types=quote,news`)
+    fetch(`https://api.iextrading.com/1.0/stock/${keyword}/batch?types=quote,news,chart&range=ytd`)
     .then(r => r.json()).then(item => {
-      //console.log(item);
+      let data = item.chart.map(d => {
+        return {
+          date: parseDate(d.date),
+          open: d.open,
+          high: d.high,
+          low: d.low,
+          close: d.close,
+          volume: d.volume,
+        }
+      })
+      data.columns = ['date', 'open', 'high', 'low', 'close', 'volume']
+
       this.setState({
+        symbol: keyword,
         quote: item.quote,
-        news: item.news,
+        quoteNews: item.news,
+        quoteChart: data,
       })
     })
 
@@ -143,7 +179,6 @@ class App extends Component {
         },
         body: JSON.stringify({ symbol })
       })
-      console.log(this.state.inWatchlist);
     } else {
       fetch(`http://localhost:3001/api/v1/${name}s/1`, {
         method: "DELETE",
@@ -152,12 +187,18 @@ class App extends Component {
         },
         body: JSON.stringify({ symbol })
       })
-      console.log(this.state.inWatchlist);
     }
+
+    const stateName = name.split('_')[0];
+    const inStateName = 'in'+ stateName.slice(0,1).toUpperCase() + stateName.slice(1);
+
+    this.setState({
+      [inStateName]: !this.state[inStateName]
+      //[stateName]:
+    })
   }
 
   render() {
-    // console.log(this.state.news);
     // console.log(this.state.watchlistNews);
     return (
       <Router>
@@ -176,10 +217,10 @@ class App extends Component {
               <NavBar />
             </Grid.Column>
 
-            <Route exact path='/' render={() => <Market indexes={this.state.indexes} news={this.state.news} searchHistory={this.state.searchHistoryQuotes}/>} />
+            <Route exact path='/' render={() => <Market indexes={this.state.indexes} news={this.state.news} searchHistory={this.state.searchHistoryQuotes} mostActive={this.state.mostActive} gainers={this.state.gainers} losers={this.state.losers}/>} />
             <Route exact path='/portfolio' render={() => <Portfolio indexes={this.state.indexes} portfolio={this.state.portfolioQuotes}/>} />
             <Route exact path='/watchlist' render={() => <Watchlist indexes={this.state.indexes} news={this.state.watchlistNews} watchlist={this.state.watchlistQuotes}/>} />
-            <Route exact path='/quote' render={() => <Quote quote={this.state.quote} news={this.state.news} click={this.handleClick} inPortfolio={this.state.inPortfolio} inWatchlist={this.state.inWatchlist}/>} />
+            <Route path='/quote' render={() => <Quote quote={this.state.quote} news={this.state.quoteNews} chart={this.state.quoteChart} click={this.handleClick} inPortfolio={this.state.inPortfolio} inWatchlist={this.state.inWatchlist}/>} />
           </Grid>
         </div>
       </Router>

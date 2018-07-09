@@ -19,7 +19,7 @@ class Watchlist extends React.Component {
         <Grid.Row>
           <Grid.Column width={12}>
             <h3>Your Watchlist:</h3>
-            <Table>
+            <Table color='blue'>
               <Table.Header>
                 <Table.Row>
                   <Table.HeaderCell>Symbol</Table.HeaderCell>

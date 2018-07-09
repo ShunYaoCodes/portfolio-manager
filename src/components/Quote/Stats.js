@@ -3,6 +3,7 @@ import React from 'react';
 import { Table } from 'semantic-ui-react'
 
 const Stats = props => {
+  //console.log(props);
   return (
     <React.Fragment>
       {Object.keys(props).length > 0 ?

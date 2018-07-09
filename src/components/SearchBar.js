@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter as Router, Route, NavLink, withRouter } from 'react-router-dom';
+import { withRouter } from 'react-router-dom';
 
 class SearchBar extends React.Component {
   state ={
@@ -14,8 +14,8 @@ class SearchBar extends React.Component {
 
   handleSubmit = event => {
     event.preventDefault();
+    this.props.history.push(`/quote?symbol=${this.state.value}`);
     this.props.search(this.state.value);
-    this.props.history.push('/quote');
     this.setState({ value: '' });
   }
 

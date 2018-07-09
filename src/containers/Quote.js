@@ -11,10 +11,15 @@ class Quote extends React.Component {
   }
 
   render() {
-    //console.log(this.props.inWatchlist);
     //console.log(this.props.quote);
     return (
       <React.Fragment>
+        <Grid.Row>
+          <Grid.Column width={12}>
+            <h2>{this.props.quote ? `${this.props.quote.companyName} (${this.props.quote.symbol})` : null}</h2>
+          </Grid.Column>
+        </Grid.Row>
+
         <Grid.Row>
           <Grid.Column width={6}>
             {this.props.inWatchlist ?
@@ -32,9 +37,8 @@ class Quote extends React.Component {
             }
           </Grid.Column>
         </Grid.Row>
-        <h2>{this.props.quote ? this.props.quote.symbol : null}</h2>
 
-        <Asset {...this.props.quote}/>
+        <Asset {...this.props}/>
 
         <Grid.Row>
           <Grid.Column width={12}>
