@@ -144,13 +144,13 @@ class App extends Component {
       })
     })
 
-    if (this.state.portfolio.includes(keyword.toUpperCase())) {
+    if (this.state.portfolio.includes(keyword)) {
       this.setState({ inPortfolio: true })
     } else {
       this.setState({ inPortfolio: false })
     }
 
-    if (this.state.watchlist.includes(keyword.toUpperCase())) {
+    if (this.state.watchlist.includes(keyword)) {
       this.setState({ inWatchlist: true })
     } else {
       this.setState({ inWatchlist: false })
@@ -164,9 +164,17 @@ class App extends Component {
   		body: JSON.stringify({ keyword })
   	})
 
-    fetch('http://localhost:3001/api/v1/search_histories/1')
-    .then(r => r.json()).then(searchHistory => {
-      this.setState({ searchHistory })
+    const historyArr = this.state.searchHistory.split(',');
+    const newHistoryArr = historyArr.filter(history => history !== keyword);
+    newHistoryArr.unshift(keyword);
+    const newHistory = newHistoryArr.join(',');
+
+    fetch(`https://api.iextrading.com/1.0/stock/market/batch?symbols=${newHistory}&types=quote`)
+    .then(r => r.json()).then(searchHistoryQuotes => {
+      this.setState({
+        searchHistory: newHistory,
+        searchHistoryQuotes,
+      })
     })
   }
 
@@ -214,7 +222,7 @@ class App extends Component {
           <Grid centered>
             <Grid.Row>
               <Grid.Column width={6}>
-                <NavLink to='/' exact onClick={() => window.location.reload()}><h1>Portfolio Manager and Hedger</h1></NavLink>
+                <NavLink to='/' exact><h1>Portfolio Manager and Hedger</h1></NavLink>
               </Grid.Column>
               <Grid.Column width={6}>
                 <SearchBar search={this.handleSearch}/>
