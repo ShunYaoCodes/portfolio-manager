@@ -171,6 +171,10 @@ class App extends Component {
   }
 
   handleClick = (name, checked, symbol) => {
+    const stateName = name.split('_')[0];
+    const inStateName = 'in'+ stateName.slice(0,1).toUpperCase() + stateName.slice(1);
+    let newState;
+
     if (checked) {
       fetch(`http://localhost:3001/api/v1/${name}s`, {
         method: "POST",
@@ -179,6 +183,8 @@ class App extends Component {
         },
         body: JSON.stringify({ symbol })
       })
+
+      newState = this.state[stateName] + ',' + symbol;
     } else {
       fetch(`http://localhost:3001/api/v1/${name}s/1`, {
         method: "DELETE",
@@ -187,14 +193,16 @@ class App extends Component {
         },
         body: JSON.stringify({ symbol })
       })
+
+      const stateArr = this.state[stateName].split(',');
+      const index = stateArr.indexOf(symbol);
+      const newStateArr = [...stateArr.slice(0, index), ...stateArr.slice(index+1)];
+      newState = newStateArr.join(',');
     }
 
-    const stateName = name.split('_')[0];
-    const inStateName = 'in'+ stateName.slice(0,1).toUpperCase() + stateName.slice(1);
-
     this.setState({
-      [inStateName]: !this.state[inStateName]
-      //[stateName]:
+      [inStateName]: !this.state[inStateName],
+      [stateName]: newState,
     })
   }
 
