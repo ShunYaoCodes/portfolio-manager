@@ -21,7 +21,7 @@ class SearchBar extends React.Component {
   }
 
   handleSubmit = event => {
-    //event.preventDefault();
+    event.preventDefault();
     const symbol = this.state.value.toUpperCase();
     this.props.history.push(`/quote?symbol=${symbol}`);
     this.props.search(symbol);
@@ -31,8 +31,10 @@ class SearchBar extends React.Component {
   render() {
     return (
       <React.Fragment>
-        <input style={inputStyle} type="text" value={this.state.value} onChange={this.handleChange} />
-        <Icon color='blue' size='masive' name='search' circular onClick={this.handleSubmit}/>
+        <form onSubmit={this.handleSubmit}>
+          <input style={inputStyle} type="text" value={this.state.value} onChange={this.handleChange} />
+          <Icon color='blue' size='masive' name='search' circular onClick={this.handleSubmit}/>
+        </form>
       </React.Fragment>
     )
   }
