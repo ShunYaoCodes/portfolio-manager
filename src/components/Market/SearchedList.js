@@ -11,7 +11,7 @@ const SearchedList = props => {
     let count = 0;
     for(const quote in props.searchHistory) {
       if (count > 9) break;
-      list.push(<SearchedItem key={UUID()} quote={props.searchHistory[quote].quote} />);
+      list.push(<SearchedItem key={UUID()} quote={props.searchHistory[quote].quote} search={props.search}/>);
       count++;
     }
   }

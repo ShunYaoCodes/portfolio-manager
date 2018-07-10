@@ -1,5 +1,13 @@
 import React from 'react';
 import { withRouter } from 'react-router-dom';
+import { Icon } from 'semantic-ui-react';
+
+const inputStyle = {
+  width: '80%',
+  padding: '5px 20px',
+  borderRadius: '6px',
+  marginTop: '10px',
+};
 
 class SearchBar extends React.Component {
   state ={
@@ -13,7 +21,7 @@ class SearchBar extends React.Component {
   }
 
   handleSubmit = event => {
-    event.preventDefault();
+    //event.preventDefault();
     const symbol = this.state.value.toUpperCase();
     this.props.history.push(`/quote?symbol=${symbol}`);
     this.props.search(symbol);
@@ -22,10 +30,10 @@ class SearchBar extends React.Component {
 
   render() {
     return (
-      <form onSubmit={this.handleSubmit}>
-        <input type="text" value={this.state.value} onChange={this.handleChange} />
-        <input type="submit" value="Search" />
-      </form>
+      <React.Fragment>
+        <input style={inputStyle} type="text" value={this.state.value} onChange={this.handleChange} />
+        <Icon color='blue' size='masive' name='search' circular onClick={this.handleSubmit}/>
+      </React.Fragment>
     )
   }
 }

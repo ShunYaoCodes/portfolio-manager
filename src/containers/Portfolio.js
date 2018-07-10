@@ -13,7 +13,7 @@ class Portfolio extends React.Component {
 
     if (Object.keys(this.props.portfolio) !== []) {
       for(const quote in this.props.portfolio) {
-        list.push(<Positions quote={this.props.portfolio[quote].quote} />)
+        list.push(<Positions quote={this.props.portfolio[quote].quote} search={this.props.search}/>)
       }
     }
 

@@ -221,10 +221,10 @@ class App extends Component {
         <div>
           <Grid centered>
             <Grid.Row>
-              <Grid.Column width={6}>
-                <NavLink to='/' exact><h1>Portfolio Manager and Hedger</h1></NavLink>
+              <Grid.Column width={4}>
+                <NavLink to='/' exact><h1 style={{marginTop: '5px'}}>Portfolio Manager and Hedger</h1></NavLink>
               </Grid.Column>
-              <Grid.Column width={6}>
+              <Grid.Column width={8}>
                 <SearchBar search={this.handleSearch}/>
               </Grid.Column>
             </Grid.Row>
@@ -233,9 +233,9 @@ class App extends Component {
               <NavBar />
             </Grid.Column>
 
-            <Route exact path='/' render={() => <Market indexes={this.state.indexes} news={this.state.news} searchHistory={this.state.searchHistoryQuotes} mostActive={this.state.mostActive} gainers={this.state.gainers} losers={this.state.losers}/>} />
-            <Route exact path='/portfolio' render={() => <Portfolio indexes={this.state.indexes} portfolio={this.state.portfolioQuotes}/>} />
-            <Route exact path='/watchlist' render={() => <Watchlist indexes={this.state.indexes} news={this.state.watchlistNews} watchlist={this.state.watchlistQuotes}/>} />
+            <Route exact path='/' render={() => <Market indexes={this.state.indexes} news={this.state.news} searchHistory={this.state.searchHistoryQuotes} mostActive={this.state.mostActive} gainers={this.state.gainers} losers={this.state.losers} search={this.handleSearch}/>} />
+            <Route exact path='/portfolio' render={() => <Portfolio indexes={this.state.indexes} portfolio={this.state.portfolioQuotes} search={this.handleSearch}/>} />
+            <Route exact path='/watchlist' render={() => <Watchlist indexes={this.state.indexes} news={this.state.watchlistNews} watchlist={this.state.watchlistQuotes} search={this.handleSearch}/>} />
             <Route path='/quote' render={() => <Quote quote={this.state.quote} news={this.state.quoteNews} chart={this.state.quoteChart} click={this.handleClick} inPortfolio={this.state.inPortfolio} inWatchlist={this.state.inWatchlist}/>} />
           </Grid>
         </div>

@@ -4,7 +4,7 @@ import UUID from 'uuid';
 import { Table } from 'semantic-ui-react';
 
 const MostActiveList = props => {
-  const list = props.mostActive.map(quote => <MostActive key={UUID()} {...quote} />)
+  const list = props.mostActive.map(quote => <MostActive key={UUID()} {...quote} search={props.search}/>)
 
   return (
     <div>

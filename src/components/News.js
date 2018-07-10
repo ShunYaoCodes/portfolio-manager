@@ -4,10 +4,10 @@ import { Item } from 'semantic-ui-react';
 
 const News = props => {
   //console.log(props);
-  const heading = props.heading.replace(/amp;/g, ``).replace(/&apos;/g, `'`);
+  const heading = props.heading.replace(/amp;/g, ``).replace(/&apos;/g, `'`).replace(/&#xAE;/g,`®`).replace(/&quot;/g, `'`);
   //<Item.Image size='tiny' src={props.thumbnail} bordered/>
   return (
-    <Item>
+    <Item style={itemStyle}>
       <Item.Content>
         <Item.Header>
           {heading}
@@ -26,6 +26,12 @@ const News = props => {
       </Item.Content>
     </Item>
   )
+}
+
+const itemStyle = {
+  padding: `10px 10px`,
+  border: `1px dotted #ccc`,
+  borderRadius: `4px`
 }
 
 export default News;

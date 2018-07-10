@@ -4,7 +4,7 @@ import UUID from 'uuid';
 import { Table } from 'semantic-ui-react';
 
 const GainersList = props => {
-  const list = props.gainers.map(quote => <Gainer key={UUID()} {...quote} />)
+  const list = props.gainers.map(quote => <Gainer key={UUID()} {...quote} search={props.search}/>)
 
   return (
     <div>

@@ -20,13 +20,14 @@ class Market extends React.Component {
 
         <Grid.Row>
           <Grid.Column width={9}>
+            <h2>Market News:</h2>
             <NewsList news={this.props.news}/>
           </Grid.Column>
           <Grid.Column width={3}>
-            <SearchedList searchHistory={this.props.searchHistory}/>
-            <MostActiveList mostActive={this.props.mostActive}/>
-            <GainersList gainers={this.props.gainers}/>
-            <LosersList losers={this.props.mostActive}/>
+            <SearchedList searchHistory={this.props.searchHistory} search={this.props.search}/>
+            <MostActiveList mostActive={this.props.mostActive} search={this.props.search}/>
+            <GainersList gainers={this.props.gainers} search={this.props.search}/>
+            <LosersList losers={this.props.mostActive} search={this.props.search}/>
           </Grid.Column>
         </Grid.Row>
       </React.Fragment>

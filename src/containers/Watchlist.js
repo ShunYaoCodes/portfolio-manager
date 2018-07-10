@@ -8,7 +8,7 @@ import { Grid, Table } from 'semantic-ui-react'
 class Watchlist extends React.Component {
   render() {
     //console.log(this.props.watchlist);
-    const list = this.props.watchlist.map(each => <Watchlists key={UUID()} {...each} />)
+    const list = this.props.watchlist.map(each => <Watchlists key={UUID()} {...each} search={this.props.search}/>)
 
     return (
       <React.Fragment>
