@@ -10,11 +10,7 @@ import { timeParse } from "d3-time-format";
 const parseDate = timeParse("%Y-%m-%d");
 
 const Asset = (props) => {
-  //console.log(props);
-  if (!(props.quote && props.chart.length > 0)) {
-  	return <div>Loading...</div>
-  }
-
+  //console.log('in asset', props);
   return (
     <React.Fragment>
       <Grid.Row>

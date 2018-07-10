@@ -123,7 +123,14 @@ class App extends Component {
 
   handleSearch = keyword => {
     fetch(`https://api.iextrading.com/1.0/stock/${keyword}/batch?types=quote,news,chart&range=ytd`)
-    .then(r => r.json()).then(item => {
+    .then(function(response) {
+      if (response.ok) {
+        return response;
+      }
+      throw new Error(keyword);
+    })
+    .then(res => res.json())
+    .then(item => {
       let data = item.chart.map(d => {
         return {
           date: parseDate(d.date),
@@ -142,7 +149,9 @@ class App extends Component {
         quoteNews: item.news,
         quoteChart: data,
       })
-    })
+    }).catch(function(error) {
+      this.setState({ quote: `No results for ${error.message}` })
+    }.bind(this));
 
     if (this.state.portfolio.includes(keyword)) {
       this.setState({ inPortfolio: true })

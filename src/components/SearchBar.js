@@ -6,7 +6,7 @@ const inputStyle = {
   width: '80%',
   padding: '5px 20px',
   borderRadius: '6px',
-  marginTop: '10px',
+  marginTop: '14px',
 };
 
 class SearchBar extends React.Component {
@@ -33,7 +33,7 @@ class SearchBar extends React.Component {
       <React.Fragment>
         <form onSubmit={this.handleSubmit}>
           <input style={inputStyle} type="text" value={this.state.value} onChange={this.handleChange} />
-          <Icon color='blue' size='masive' name='search' circular onClick={this.handleSubmit}/>
+          <Icon color='blue' size='large' name='search' circular onClick={this.handleSubmit}/>
         </form>
       </React.Fragment>
     )

@@ -12,42 +12,50 @@ class Quote extends React.Component {
 
   render() {
     //console.log(this.props.quote);
-    return (
-      <React.Fragment>
+    if (this.props.quote && typeof(this.props.quote) !== 'string') {
+      return (
+        <React.Fragment>
+          <Grid.Row>
+            <Grid.Column width={12}>
+              <h2>{this.props.quote.companyName} ({this.props.quote.symbol})</h2>
+            </Grid.Column>
+          </Grid.Row>
+
+          <Grid.Row>
+            <Grid.Column width={6}>
+              {this.props.inWatchlist ?
+                <div><Checkbox toggle checked onClick={this.handleClick} name="watchlist"/>Remove from your watchlist</div>
+                :
+                <div><Checkbox toggle onClick={this.handleClick} name="watchlist"/> Add to your watchlist</div>
+              }
+            </Grid.Column>
+
+            <Grid.Column width={6}>
+              {this.props.inPortfolio ?
+                <div><Checkbox toggle checked onClick={this.handleClick} name="portfolio_asset"/> Remove from your portfolio</div>
+                :
+                <div><Checkbox toggle onClick={this.handleClick} name="portfolio_asset"/> Add to your portfolio</div>
+              }
+            </Grid.Column>
+          </Grid.Row>
+
+          <Asset {...this.props}/>
+
+          <Grid.Row>
+            <Grid.Column width={12}>
+              <h2>{this.props.quote.symbol} News:</h2>
+              <NewsList news={this.props.news}/>
+            </Grid.Column>
+          </Grid.Row>
+        </React.Fragment>
+      )
+    } else {
+      return (
         <Grid.Row>
-          <Grid.Column width={12}>
-            <h2>{this.props.quote ? `${this.props.quote.companyName} (${this.props.quote.symbol})` : null}</h2>
-          </Grid.Column>
+          <h3>{this.props.quote}</h3>
         </Grid.Row>
-
-        <Grid.Row>
-          <Grid.Column width={6}>
-            {this.props.inWatchlist ?
-              <div><Checkbox toggle checked onClick={this.handleClick} name="watchlist"/>Remove from your watchlist</div>
-              :
-              <div><Checkbox toggle onClick={this.handleClick} name="watchlist"/> Add to your watchlist</div>
-            }
-          </Grid.Column>
-
-          <Grid.Column width={6}>
-            {this.props.inPortfolio ?
-              <div><Checkbox toggle checked onClick={this.handleClick} name="portfolio_asset"/> Remove from your portfolio</div>
-              :
-              <div><Checkbox toggle onClick={this.handleClick} name="portfolio_asset"/> Add to your portfolio</div>
-            }
-          </Grid.Column>
-        </Grid.Row>
-
-        <Asset {...this.props}/>
-
-        <Grid.Row>
-          <Grid.Column width={12}>
-            <h2>{this.props.quote ? this.props.quote.symbol : null} News:</h2>
-            <NewsList news={this.props.news}/>
-          </Grid.Column>
-        </Grid.Row>
-      </React.Fragment>
-    )
+      )
+    }
   }
 }
 
