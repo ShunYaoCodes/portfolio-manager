@@ -114,7 +114,7 @@ class App extends Component {
 
     fetch('http://localhost:3001/api/v1/portfolio_assets/1')
     .then(r => r.json()).then(portfolio => {
-      this.setState({ portfolio: portfolio.join(',') });
+      this.setState({ portfolio: portfolio.map(each => each.symbol).join(',') });
     })
   }
 
@@ -244,7 +244,7 @@ class App extends Component {
             </Grid.Column>
 
             <Route exact path='/' render={() => <Market indexes={this.state.indexes} news={this.state.news} searchHistory={this.state.searchHistoryQuotes} mostActive={this.state.mostActive} gainers={this.state.gainers} losers={this.state.losers} search={this.handleSearch}/>} />
-            <Route exact path='/portfolio' render={() => <Portfolio indexes={this.state.indexes} portfolio={this.state.portfolioQuotes} search={this.handleSearch}/>} />
+            <Route exact path='/portfolio' render={() => <Portfolio indexes={this.state.indexes} portfolio={this.state.portfolioQuotes} search={this.handleSearch} type={this.handleType}/>} />
             <Route exact path='/watchlist' render={() => <Watchlist indexes={this.state.indexes} news={this.state.watchlistNews} watchlist={this.state.watchlistQuotes} search={this.handleSearch}/>} />
             <Route path='/quote' render={() => <Quote quote={this.state.quote} news={this.state.quoteNews} chart={this.state.quoteChart} click={this.handleClick} inPortfolio={this.state.inPortfolio} inWatchlist={this.state.inWatchlist}/>} />
           </Grid>
