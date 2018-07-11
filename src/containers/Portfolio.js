@@ -29,6 +29,7 @@ class Portfolio extends React.Component {
             <Table color='blue'>
               <Table.Header>
                 <Table.Row>
+                  <Table.HeaderCell>Long or Short?</Table.HeaderCell>
                   <Table.HeaderCell>Symbol</Table.HeaderCell>
                   <Table.HeaderCell>Beta</Table.HeaderCell>
                   <Table.HeaderCell>Short Interest</Table.HeaderCell>

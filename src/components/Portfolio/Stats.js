@@ -1,7 +1,7 @@
 import React from 'react';
 
 const Stats = props => {
-  console.log(props);
+  //console.log(props);
   return (
     <React.Fragment>
       <h3>Your Portfolio Status:</h3>
