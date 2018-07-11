@@ -1,7 +1,5 @@
 import React from 'react';
 
-import { Grid, Image, Divider } from 'semantic-ui-react'
-
 const Stats = props => {
   return (
     <React.Fragment>

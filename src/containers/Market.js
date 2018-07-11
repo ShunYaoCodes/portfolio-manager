@@ -5,7 +5,7 @@ import SearchedList from '../components/Market/SearchedList';
 import MostActiveList from '../components/Market/MostActiveList';
 import GainersList from '../components/Market/GainersList';
 import LosersList from '../components/Market/LosersList';
-import { Grid } from 'semantic-ui-react'
+import { Grid, Icon } from 'semantic-ui-react'
 
 class Market extends React.Component {
   render() {
@@ -15,12 +15,12 @@ class Market extends React.Component {
 
       <React.Fragment>
         <Grid.Row>
-          <IndexList indexes={this.props.indexes}/>
+          <IndexList indexes={this.props.indexes} search={this.props.search}/>
         </Grid.Row>
 
         <Grid.Row>
           <Grid.Column width={9}>
-            <h2>Market News:</h2>
+            <h2><Icon name='newspaper outline'/> Market News:</h2>
             <NewsList news={this.props.news}/>
           </Grid.Column>
           <Grid.Column width={3}>

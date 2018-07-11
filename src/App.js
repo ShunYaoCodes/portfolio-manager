@@ -8,6 +8,7 @@ import Watchlist from './containers/Watchlist'
 import Quote from './containers/Quote';
 import { timeParse } from "d3-time-format";
 import { BrowserRouter as Router, Route, NavLink } from 'react-router-dom';
+import './App.css'
 
 //import { BrowserRouter, Route, Link } from 'react-router-dom'
 const parseDate = timeParse("%Y-%m-%d");

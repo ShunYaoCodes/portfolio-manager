@@ -1,6 +1,5 @@
 import React from 'react';
 import { Item } from 'semantic-ui-react';
-//import { BrowserRouter, Route, Link } from 'react-router-dom'
 
 const News = props => {
   //console.log(props);

@@ -1,6 +1,4 @@
 import React from 'react';
-import IndexList from '../components/IndexList';
-import NewsList from '../components/NewsList';
 import Positions from '../components/Portfolio/Positions';
 import Stats from '../components/Portfolio/Stats';
 import { Grid, Table } from 'semantic-ui-react'

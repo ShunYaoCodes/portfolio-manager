@@ -1,10 +1,9 @@
 import React from 'react';
 import Index from './Index';
 import UUID from 'uuid';
-import { Grid } from 'semantic-ui-react'
 
 const IndexList = props => {
-  const indexList = props.indexes.map(index => <Index key={UUID()} {...index} />)
+  const indexList = props.indexes.map(index => <Index key={UUID()} {...index} search={props.search}/>)
   return (
     <React.Fragment>
       {indexList}

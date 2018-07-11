@@ -1,8 +1,10 @@
 import React from 'react';
-
-import { Grid, Icon, Divider } from 'semantic-ui-react'
+import { NavLink } from 'react-router-dom'
+import { Grid, Icon } from 'semantic-ui-react'
 
 const Index = props => {
+  const link = `/quote?symbol=${props.symbol}`;
+
   let symbol;
   switch(props.symbol) {
     case 'SPY':
@@ -20,21 +22,27 @@ const Index = props => {
     case 'VXX':
       symbol = 'VIX';
       break;
+    default:
+      return symbol;
   }
-  
+
   return (
     <React.Fragment>
       {props.change >= 0 ?
           <Grid.Column textAlign='right' color='green' width={1}>
-            <p>{symbol}</p>
-            <p>{props.latestPrice}&nbsp;&nbsp;+{props.change}</p>
-            <p><Icon name='triangle up' />&nbsp;(+{(props.changePercent*100).toFixed(2)}%)</p>
+            <NavLink style={{color: 'white'}} to={link} onClick={() => props.search(props.symbol)}>
+              <p>{symbol}</p>
+              <p>{props.latestPrice}&nbsp;&nbsp;+{props.change}</p>
+              <p><Icon name='triangle up' />&nbsp;(+{(props.changePercent*100).toFixed(2)}%)</p>
+            </NavLink>
           </Grid.Column>
         :
           <Grid.Column textAlign='right' color='red' width={1}>
-            <p>{symbol}</p>
-            <p>{props.latestPrice}&nbsp;&nbsp;{props.change}</p>
-            <p><Icon name='triangle down' />&nbsp;({(props.changePercent*100).toFixed(2)}%)</p>
+            <NavLink style={{color: 'white'}} to={link} onClick={() => props.search(props.symbol)}>
+              <p>{symbol}</p>
+              <p>{props.latestPrice}&nbsp;&nbsp;{props.change}</p>
+              <p><Icon name='triangle down' />&nbsp;({(props.changePercent*100).toFixed(2)}%)</p>
+            </NavLink>
           </Grid.Column>
       }
       <Grid.Column width={1}>

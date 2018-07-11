@@ -13,7 +13,7 @@ class Watchlist extends React.Component {
     return (
       <React.Fragment>
         <Grid.Row>
-          <IndexList indexes={this.props.indexes}/>
+          <IndexList indexes={this.props.indexes} search={this.props.search}/>
         </Grid.Row>
 
         <Grid.Row>

@@ -1,13 +1,8 @@
 import React from 'react';
 import Stats from './Stats.js';
 import StockChart from './Chart.js';
-
-import { Grid, Image, Divider } from 'semantic-ui-react'
-
+import { Grid } from 'semantic-ui-react'
 import { TypeChooser } from "react-stockcharts/lib/helper";
-
-import { timeParse } from "d3-time-format";
-const parseDate = timeParse("%Y-%m-%d");
 
 const Asset = (props) => {
   //console.log('in asset', props);
