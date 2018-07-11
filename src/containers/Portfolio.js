@@ -1,6 +1,7 @@
 import React from 'react';
 import Positions from '../components/Portfolio/Positions';
 import Stats from '../components/Portfolio/Stats';
+import UUID from 'uuid';
 import { Grid, Table } from 'semantic-ui-react'
 
 class Portfolio extends React.Component {
@@ -8,11 +9,16 @@ class Portfolio extends React.Component {
     //console.log(this.props.portfolio);
 
     let list = [];
+    let betaList = [];
 
-    if (Object.keys(this.props.portfolio) !== []) {
+    //if (Object.keys(this.props.portfolio) !== []) {
       for(const quote in this.props.portfolio) {
-        list.push(<Positions quote={this.props.portfolio[quote].quote} search={this.props.search}/>)
+        list.push(<Positions key={UUID()} {...this.props.portfolio[quote].stats} search={this.props.search}/>)
       }
+    //}
+
+    for(const quote in this.props.portfolio) {
+      betaList.push({symbol: quote, beta: this.props.portfolio[quote].stats.beta})
     }
 
     return (
@@ -24,19 +30,21 @@ class Portfolio extends React.Component {
               <Table.Header>
                 <Table.Row>
                   <Table.HeaderCell>Symbol</Table.HeaderCell>
-                  <Table.HeaderCell>Last Price</Table.HeaderCell>
-                  <Table.HeaderCell>Change</Table.HeaderCell>
-                  <Table.HeaderCell>% Change</Table.HeaderCell>
-                  <Table.HeaderCell>Daily High</Table.HeaderCell>
-                  <Table.HeaderCell>Daily Low</Table.HeaderCell>
-                  <Table.HeaderCell>Daily Volume</Table.HeaderCell>
-                  <Table.HeaderCell>Average Volume</Table.HeaderCell>
-                  <Table.HeaderCell>Sector</Table.HeaderCell>
-                  <Table.HeaderCell>Market Cap</Table.HeaderCell>
-                  <Table.HeaderCell>P/E Ratio</Table.HeaderCell>
-                  <Table.HeaderCell>52 Week High</Table.HeaderCell>
-                  <Table.HeaderCell>52 Week Low</Table.HeaderCell>
-                  <Table.HeaderCell>YTD Change</Table.HeaderCell>
+                  <Table.HeaderCell>Beta</Table.HeaderCell>
+                  <Table.HeaderCell>Short Interest</Table.HeaderCell>
+                  <Table.HeaderCell>Short Date</Table.HeaderCell>
+                  <Table.HeaderCell>Forward Dividend & Yield</Table.HeaderCell>
+                  <Table.HeaderCell>Ex-Dividend Date</Table.HeaderCell>
+                  <Table.HeaderCell>EPS (TTM)</Table.HeaderCell>
+                  <Table.HeaderCell>5 Day % Change</Table.HeaderCell>
+                  <Table.HeaderCell>30 Day % Change</Table.HeaderCell>
+                  <Table.HeaderCell>1 Month % Change</Table.HeaderCell>
+                  <Table.HeaderCell>3 Month % Change</Table.HeaderCell>
+                  <Table.HeaderCell>6 Month % Change</Table.HeaderCell>
+                  <Table.HeaderCell>YTD % Change</Table.HeaderCell>
+                  <Table.HeaderCell>1 Year % Change</Table.HeaderCell>
+                  <Table.HeaderCell>2 Year % Change</Table.HeaderCell>
+                  <Table.HeaderCell>5 Year % Change</Table.HeaderCell>
                 </Table.Row>
               </Table.Header>
 
@@ -49,7 +57,7 @@ class Portfolio extends React.Component {
 
         <Grid.Row>
           <Grid.Column width={12}>
-            <Stats />
+            <Stats {...betaList}/>
           </Grid.Column>
         </Grid.Row>
       </React.Fragment>

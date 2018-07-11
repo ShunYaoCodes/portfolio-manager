@@ -91,7 +91,7 @@ class App extends Component {
         })
       })
 
-      fetch(`https://api.iextrading.com/1.0/stock/market/batch?symbols=${this.state.portfolio}&types=quote`)
+      fetch(`https://api.iextrading.com/1.0/stock/market/batch?symbols=${this.state.portfolio}&types=stats`)
       .then(r => r.json()).then(portfolioQuotes => {
         this.setState({ portfolioQuotes })
       })
