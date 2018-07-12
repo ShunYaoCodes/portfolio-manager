@@ -23,6 +23,7 @@ class App extends Component {
     quoteChart: [],
     searchHistory: [],
     portfolio: [],
+    portfolioNames: [],
     watchlist: [],
     watchlistNews: [],
     inPortfolio: false,
@@ -91,9 +92,23 @@ class App extends Component {
         })
       })
 
-      fetch(`https://api.iextrading.com/1.0/stock/market/batch?symbols=${this.state.portfolio}&types=stats`)
-      .then(r => r.json()).then(portfolioQuotes => {
-        this.setState({ portfolioQuotes })
+      fetch('http://localhost:3001/api/v1/portfolio_assets/1')
+      .then(r => r.json())
+      .then(portfolio => {
+        this.setState({
+          portfolioNames: portfolio.map(each => each.symbol).join(','),
+          portfolio: portfolio,
+        });
+      })
+      .then(() => {
+        fetch(`https://api.iextrading.com/1.0/stock/market/batch?symbols=${this.state.portfolioNames}&types=stats`)
+        .then(r => r.json()).then(quotes => {
+          for(const symbol in quotes) {
+            const quote = this.state.portfolio.find(each => each.symbol === symbol);
+            quotes[symbol].position_type = quote.position_type;
+          }
+          this.setState({ portfolioQuotes: quotes })
+        })
       })
     }.bind(this),3000);
 
@@ -110,11 +125,6 @@ class App extends Component {
     fetch('http://localhost:3001/api/v1/watchlists/1')
     .then(r => r.json()).then(watchlist => {
       this.setState({ watchlist: watchlist.join(',') });
-    })
-
-    fetch('http://localhost:3001/api/v1/portfolio_assets/1')
-    .then(r => r.json()).then(portfolio => {
-      this.setState({ portfolio: portfolio.map(each => each.symbol).join(',') });
     })
   }
 
@@ -222,6 +232,28 @@ class App extends Component {
       [inStateName]: !this.state[inStateName],
       [stateName]: newState,
     })
+  }
+
+  handleType = (symbol, position_type) => {
+    const newPortfolioQuotes = {...this.state.portfolioQuotes};
+
+    for(const quote in newPortfolioQuotes) {
+      if (quote === symbol) {
+        newPortfolioQuotes[quote].position_type = position_type;
+      }
+    }
+
+    fetch(`http://localhost:3001/api/v1/portfolio_assets/1`, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({ symbol, position_type })
+    })
+
+    this.setState({
+      portfolioQuotes: newPortfolioQuotes,
+    });
   }
 
   render() {
