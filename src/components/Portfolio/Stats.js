@@ -7,7 +7,8 @@ const Stats = props => {
   //console.log(props);
   //if (props.betas.length >0 ){
   //Total Amount
-  const total = 20000;
+  const total = props.amount || 25000;
+  //console.log(total);
   const longEachSymbol = props.betas.filter(quote => quote.position_type === 'Long')
                                   .map(quote => quote.symbol)
   const shortEachSymbol = props.betas.filter(quote => quote.position_type === 'Short')
@@ -145,8 +146,6 @@ const Stats = props => {
   }
   return (
     <React.Fragment>
-      <h3>Your Beta Hedge Status:</h3>
-      <h3>Amount: 20000</h3>
       <Table color='black'>
         <Table.Header>
           <Table.Row>

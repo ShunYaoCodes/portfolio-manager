@@ -5,7 +5,7 @@ const EachStats = props => {
   //console.log(props.shares);
   return (
     <Table.Row>
-      <Table.Cell>{props.type}</Table.Cell>
+      <Table.Cell className='head'>{props.type}</Table.Cell>
       <Table.Cell>{props.symbol}</Table.Cell>
       <Table.Cell>{props.beta.toFixed(2)}</Table.Cell>
       <Table.Cell>{(props.weight*100).toFixed(2)}%</Table.Cell>

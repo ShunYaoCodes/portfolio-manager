@@ -2,9 +2,24 @@ import React from 'react';
 import Positions from '../components/Portfolio/Positions';
 import Stats from '../components/Portfolio/Stats';
 import UUID from 'uuid';
-import { Grid, Table } from 'semantic-ui-react'
+import { Grid, Table, Form, Input, Button, Message } from 'semantic-ui-react'
 
 class Portfolio extends React.Component {
+  state = {
+    value: null,
+    amount: 25000,
+  }
+
+  handleChange = (e, { value }) => {
+    this.setState({ value })
+  }
+
+  handleSubmit = (e, { error }) => {
+    if (!error) {
+      this.setState({ amount: this.state.value })
+    }
+  }
+
   render() {
     //console.log(this.props.portfolio);
 
@@ -58,7 +73,13 @@ class Portfolio extends React.Component {
 
         <Grid.Row>
           <Grid.Column width={12}>
-            <Stats betas={betaList}/>
+            <h3>Your Beta Hedge Recommendation:</h3>
+            <Form onSubmit={this.handleSubmit} error={!(Number(this.state.value, 10) >= 0)}>
+              <Input placeholder='Enter your amount' onChange={this.handleChange}/>
+              <Button>Submit</Button>
+              <Message error content='Please enter only a positive number'/>
+            </Form>
+            <Stats betas={betaList} amount={this.state.amount}/>
           </Grid.Column>
         </Grid.Row>
       </React.Fragment>
