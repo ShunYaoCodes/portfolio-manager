@@ -16,7 +16,7 @@ const Positions = props => {
         <Radio label='Long' value='Long' defaultChecked={props.position_type === 'Long'} onChange={handleChange}/>
         <Radio label='Short' value='Short' defaultChecked={props.position_type === 'Short'} onChange={handleChange}/>
       </Table.Cell>
-      <Table.Cell><NavLink to={link} onClick={() => props.stats.search(props.stats.symbol)}>{props.stats.symbol}</NavLink></Table.Cell>
+      <Table.Cell><NavLink to={link} onClick={() => props.search(props.stats.symbol)}>{props.stats.symbol}</NavLink></Table.Cell>
       <Table.Cell>{props.stats.beta}</Table.Cell>
       <Table.Cell>{props.stats.shortInterest}</Table.Cell>
       <Table.Cell>{props.stats.shortDate}</Table.Cell>

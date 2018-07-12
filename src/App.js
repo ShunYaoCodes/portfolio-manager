@@ -101,12 +101,13 @@ class App extends Component {
         });
       })
       .then(() => {
-        fetch(`https://api.iextrading.com/1.0/stock/market/batch?symbols=${this.state.portfolioNames}&types=stats`)
+        fetch(`https://api.iextrading.com/1.0/stock/market/batch?symbols=${this.state.portfolioNames}&types=stats,price`)
         .then(r => r.json()).then(quotes => {
           for(const symbol in quotes) {
             const quote = this.state.portfolio.find(each => each.symbol === symbol);
             quotes[symbol].position_type = quote.position_type;
           }
+          //console.log(quotes);
           this.setState({ portfolioQuotes: quotes })
         })
       })

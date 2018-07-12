@@ -18,14 +18,14 @@ class Portfolio extends React.Component {
     //}
 
     for(const quote in this.props.portfolio) {
-      betaList.push({symbol: quote, beta: this.props.portfolio[quote].stats.beta})
+      betaList.push({symbol: quote, price: this.props.portfolio[quote].price, beta: this.props.portfolio[quote].stats.beta, position_type: this.props.portfolio[quote].position_type})
     }
 
     return (
       <React.Fragment>
         <Grid.Row>
           <Grid.Column width={12}>
-            <h3>Your Portfolio:</h3>
+            <h3>Adjust Your Long / Short Positions:</h3>
             <Table color='blue'>
               <Table.Header>
                 <Table.Row>
@@ -58,7 +58,7 @@ class Portfolio extends React.Component {
 
         <Grid.Row>
           <Grid.Column width={12}>
-            <Stats {...betaList}/>
+            <Stats betas={betaList}/>
           </Grid.Column>
         </Grid.Row>
       </React.Fragment>
