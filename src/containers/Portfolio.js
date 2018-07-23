@@ -79,6 +79,7 @@ class Portfolio extends React.Component {
               <Button>Submit</Button>
               <Message error content='Please enter only a positive number'/>
             </Form>
+            <h5 className='inline'>Total Amount Invested: ${this.state.amount}</h5> (Default: $25000)
             <Stats betas={betaList} amount={this.state.amount}/>
           </Grid.Column>
         </Grid.Row>

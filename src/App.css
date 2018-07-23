@@ -24,3 +24,7 @@
 ::-ms-input-placeholder { /* Microsoft Edge */
     color: #A9A9A9;
 }
+
+.inline {
+  display: inline;
+}

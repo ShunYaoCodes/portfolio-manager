@@ -24,7 +24,7 @@ class App extends Component {
     searchHistory: [],
     portfolio: [],
     portfolioNames: [],
-    watchlist: [],
+    watchlistNames: [],
     watchlistNews: [],
     inPortfolio: false,
     inWatchlist: false,
@@ -69,7 +69,7 @@ class App extends Component {
         this.setState({ losers })
       })
 
-      fetch(`https://api.iextrading.com/1.0/stock/market/batch?symbols=${this.state.watchlist}&types=quote,news`)
+      fetch(`https://api.iextrading.com/1.0/stock/market/batch?symbols=${this.state.watchlistNames}&types=quote,news`)
       .then(r => r.json()).then(watchlistQuotesNews => {
         //console.log(watchlistQuotesNews);
         const quotes = [];
@@ -125,7 +125,7 @@ class App extends Component {
 
     fetch('http://localhost:3001/api/v1/watchlists/1')
     .then(r => r.json()).then(watchlist => {
-      this.setState({ watchlist: watchlist.join(',') });
+      this.setState({ watchlistNames: watchlist.join(',') });
     })
   }
 
@@ -165,13 +165,13 @@ class App extends Component {
       this.setState({ quote: `No results for ${error.message}` })
     }.bind(this));
 
-    if (this.state.portfolio.includes(keyword)) {
+    if (this.state.portfolioNames.includes(keyword)) {
       this.setState({ inPortfolio: true })
     } else {
       this.setState({ inPortfolio: false })
     }
 
-    if (this.state.watchlist.includes(keyword)) {
+    if (this.state.watchlistNames.includes(keyword)) {
       this.setState({ inWatchlist: true })
     } else {
       this.setState({ inWatchlist: false })
@@ -201,6 +201,8 @@ class App extends Component {
 
   handleClick = (name, checked, symbol) => {
     const stateName = name.split('_')[0];
+    const fullStateName = stateName + 'Names';
+    //console.log(`${stateName}:`, this.state[stateName]);
     const inStateName = 'in'+ stateName.slice(0,1).toUpperCase() + stateName.slice(1);
     let newState;
 
@@ -213,7 +215,7 @@ class App extends Component {
         body: JSON.stringify({ symbol })
       })
 
-      newState = this.state[stateName] + ',' + symbol;
+      newState = this.state[fullStateName] + ',' + symbol;
     } else {
       fetch(`http://localhost:3001/api/v1/${name}s/1`, {
         method: "DELETE",
@@ -223,15 +225,17 @@ class App extends Component {
         body: JSON.stringify({ symbol })
       })
 
-      const stateArr = this.state[stateName].split(',');
+      const stateArr = this.state[fullStateName].split(',');
       const index = stateArr.indexOf(symbol);
       const newStateArr = [...stateArr.slice(0, index), ...stateArr.slice(index+1)];
       newState = newStateArr.join(',');
     }
 
+    //console.log(stateName);
+    //console.log(inStateName);
     this.setState({
       [inStateName]: !this.state[inStateName],
-      [stateName]: newState,
+      [fullStateName]: newState,
     })
   }
 
