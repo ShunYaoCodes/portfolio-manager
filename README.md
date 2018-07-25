@@ -19,12 +19,15 @@ Master
 ## Credits
 Solo full-stack project built by [Shun Yao](https://github.com/rainANDshine)
 
+## Youtube Video Demo
+https://www.youtube.com/watch?v=4jI4vCN9ws0&t=7s
+
 ## Screenshots
 <img src="1.png" alt="1">
 <img src="2.png" alt="2">
 <img src="3.png" alt="3">
 <img src="4.png" alt="4">
-<img src="5.png" alt="4">
+<img src="5.png" alt="5">
 
 ## License
 MIT ©
