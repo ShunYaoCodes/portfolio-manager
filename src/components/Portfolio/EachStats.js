@@ -15,7 +15,7 @@ const EachStats = props => {
       <Table.Cell>{(props.position*100).toFixed(2)}%</Table.Cell>
       <Table.Cell>${props.amount.toFixed(2)}</Table.Cell>
       <Table.Cell>${props.price}</Table.Cell>
-      <Table.Cell>{Math.ceil(props.shares)}</Table.Cell>
+      <Table.Cell active>{Math.ceil(props.shares)}</Table.Cell>
       <Table.Cell>{(props.percent*100).toFixed(2)}%</Table.Cell>
     </Table.Row>
   )

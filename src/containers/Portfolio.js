@@ -76,7 +76,7 @@ class Portfolio extends React.Component {
             <h3>Your Beta Hedge Recommendation:</h3>
             <Form onSubmit={this.handleSubmit} error={!(Number(this.state.value, 10) >= 0)}>
               <Input placeholder='Enter your amount' onChange={this.handleChange}/>
-              <Button>Submit</Button>
+              <Button disabled={!(Number(this.state.value, 10) >= 0)}>Submit</Button>
               <Message error content='Please enter only a positive number'/>
             </Form>
             <h5 className='inline'>Total Amount Invested: ${this.state.amount}</h5> (Default: $25000)
