@@ -18,7 +18,7 @@ const SearchedList = props => {
 
   return (
     <div>
-      <h3>Your Recent Search:</h3>
+      <h3>Your Recent Viewed:</h3>
       <Table color='blue' columns={4}>
         <Table.Header>
           <Table.Row>

@@ -118,6 +118,13 @@ class App extends Component {
       this.setState({ news })
     })
 
+    this.intervalID1 = setInterval(function(){
+      fetch('https://api.iextrading.com/1.0/stock/market/news/last/20')
+      .then(r => r.json()).then(news => {
+        this.setState({ news })
+      })
+    }.bind(this),20000);
+
     fetch('http://localhost:3001/api/v1/search_histories/1')
     .then(r => r.json()).then(searchHistory => {
       this.setState({ searchHistory: searchHistory.join(',') });
@@ -131,6 +138,7 @@ class App extends Component {
 
   componentWillUnmount() {
     clearInterval(this.intervalID);
+    clearInterval(this.intervalID1);
   }
 
   handleSearch = keyword => {
