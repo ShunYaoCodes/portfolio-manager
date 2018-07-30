@@ -1,5 +1,5 @@
 ## Portfolio Manager and Hedger (front-end)
-Portfolio Manager and Hedger is a financial web app that provides investment advice based on dynamic hedging algorithm, as well as real-time stock news, quotes, charts and watchlist monitoring including recent viewed, most active, gainers and losers. This is the front-end, it requires [Portfolio Database](https://github.com/rainANDshine/portfolio-database) to run.
+Portfolio Manager and Hedger is a financial web app that provides investment advice based on dynamic hedging algorithm, as well as real-time stock news, quotes, charts, recent viewed, most active, gainers, losers and watchlist and portfolio monitoring. This is the front-end, it requires [Portfolio Database](https://github.com/rainANDshine/portfolio-database) to run.
 
 ## Technical Aspects
 + Implemented hedging algorithm to provide investment guidance dynamically based on addition / deletion and long / short of positions
