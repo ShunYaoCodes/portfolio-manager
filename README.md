@@ -16,6 +16,9 @@ Master
 
 2. npm install && npm start
 
+## Live App
+https://portfolio-manager-1.herokuapp.com/
+
 ## Youtube Video Demo
 https://www.youtube.com/watch?v=4jI4vCN9ws0&t=7s
 
