@@ -17,7 +17,7 @@ class Watchlist extends React.Component {
         </Grid.Row>
 
         <Grid.Row>
-          <Grid.Column width={12}>
+          <Grid.Column width={14}>
             <h3>Your Watchlist:</h3>
             <Table color='blue'>
               <Table.Header>
@@ -47,7 +47,7 @@ class Watchlist extends React.Component {
         </Grid.Row>
 
         <Grid.Row>
-          <Grid.Column width={12}>
+          <Grid.Column width={14}>
             <h3>Your Watchlist News:</h3>
             <NewsList news={this.props.news}/>
           </Grid.Column>

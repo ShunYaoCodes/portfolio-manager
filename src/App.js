@@ -276,7 +276,7 @@ class App extends Component {
         <div>
           <Grid centered>
             <Grid.Row>
-              <Grid.Column width={4}>
+              <Grid.Column width={6}>
                 <NavLink to='/' exact><h1 style={{marginTop: '5px'}}>Portfolio Manager and Hedger</h1></NavLink>
               </Grid.Column>
               <Grid.Column width={8}>
@@ -284,7 +284,7 @@ class App extends Component {
               </Grid.Column>
             </Grid.Row>
 
-            <Grid.Column width={12}>
+            <Grid.Column width={14}>
               <NavBar />
             </Grid.Column>
 

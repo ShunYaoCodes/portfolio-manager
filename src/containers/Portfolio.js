@@ -39,7 +39,7 @@ class Portfolio extends React.Component {
     return (
       <React.Fragment>
         <Grid.Row>
-          <Grid.Column width={12}>
+          <Grid.Column width={14}>
             <h3>Adjust Your Long / Short Positions:</h3>
             <Table color='blue'>
               <Table.Header>
@@ -54,10 +54,8 @@ class Portfolio extends React.Component {
                   <Table.HeaderCell>EPS (TTM)</Table.HeaderCell>
                   <Table.HeaderCell>5 Day % Change</Table.HeaderCell>
                   <Table.HeaderCell>30 Day % Change</Table.HeaderCell>
-                  <Table.HeaderCell>1 Month % Change</Table.HeaderCell>
                   <Table.HeaderCell>3 Month % Change</Table.HeaderCell>
                   <Table.HeaderCell>6 Month % Change</Table.HeaderCell>
-                  <Table.HeaderCell>YTD % Change</Table.HeaderCell>
                   <Table.HeaderCell>1 Year % Change</Table.HeaderCell>
                   <Table.HeaderCell>2 Year % Change</Table.HeaderCell>
                   <Table.HeaderCell>5 Year % Change</Table.HeaderCell>
@@ -72,7 +70,7 @@ class Portfolio extends React.Component {
         </Grid.Row>
 
         <Grid.Row>
-          <Grid.Column width={12}>
+          <Grid.Column width={14}>
             <h3>Your Beta Hedge Recommendation:</h3>
             <Form onSubmit={this.handleSubmit} error={!(Number(this.state.value, 10) >= 0)}>
               <Input placeholder='Enter your amount' onChange={this.handleChange}/>

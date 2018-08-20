@@ -16,13 +16,13 @@ class Quote extends React.Component {
       return (
         <React.Fragment>
           <Grid.Row>
-            <Grid.Column width={12}>
+            <Grid.Column width={14}>
               <h2>{this.props.quote.companyName} ({this.props.quote.symbol})</h2>
             </Grid.Column>
           </Grid.Row>
 
           <Grid.Row>
-            <Grid.Column width={6}>
+            <Grid.Column width={7}>
               {this.props.inWatchlist ?
                 <div><Checkbox toggle checked onClick={this.handleClick} name="watchlist"/>Remove from your watchlist</div>
                 :
@@ -30,7 +30,7 @@ class Quote extends React.Component {
               }
             </Grid.Column>
 
-            <Grid.Column width={6}>
+            <Grid.Column width={7}>
               {this.props.inPortfolio ?
                 <div><Checkbox toggle checked onClick={this.handleClick} name="portfolio_asset"/> Remove from your portfolio</div>
                 :
@@ -42,7 +42,7 @@ class Quote extends React.Component {
           <Asset {...this.props}/>
 
           <Grid.Row>
-            <Grid.Column width={12}>
+            <Grid.Column width={14}>
               <h2>{this.props.quote.symbol} News:</h2>
               <NewsList news={this.props.news}/>
             </Grid.Column>

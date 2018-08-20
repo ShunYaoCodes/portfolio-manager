@@ -17,7 +17,7 @@ const Positions = props => {
         <Radio label='Short' value='Short' defaultChecked={props.position_type === 'Short'} onChange={handleChange}/>
       </Table.Cell>
       <Table.Cell><NavLink to={link} onClick={() => props.search(props.stats.symbol)}>{props.stats.symbol}</NavLink></Table.Cell>
-      <Table.Cell>{props.stats.beta}</Table.Cell>
+      <Table.Cell>{props.stats.beta.toFixed(2)}</Table.Cell>
       <Table.Cell>{props.stats.shortInterest}</Table.Cell>
       <Table.Cell>{props.stats.shortDate}</Table.Cell>
       <Table.Cell>{props.stats.dividendRate}({props.stats.dividendYield.toFixed(2)}%)</Table.Cell>
@@ -25,10 +25,8 @@ const Positions = props => {
       <Table.Cell>{props.stats.ttmEPS.toFixed(2)}</Table.Cell>
       <Table.Cell>{(props.stats.day5ChangePercent*100).toFixed(2)}%</Table.Cell>
       <Table.Cell>{(props.stats.day30ChangePercent*100).toFixed(2)}%</Table.Cell>
-      <Table.Cell>{(props.stats.month1ChangePercent*100).toFixed(2)}%</Table.Cell>
       <Table.Cell>{(props.stats.month3ChangePercent*100).toFixed(2)}%</Table.Cell>
       <Table.Cell>{(props.stats.month6ChangePercent*100).toFixed(2)}%</Table.Cell>
-      <Table.Cell>{(props.stats.ytdChangePercent*100).toFixed(2)}%</Table.Cell>
       <Table.Cell>{(props.stats.year1ChangePercent*100).toFixed(2)}%</Table.Cell>
       <Table.Cell>{(props.stats.year2ChangePercent*100).toFixed(2)}%</Table.Cell>
       <Table.Cell>{(props.stats.year5ChangePercent*100).toFixed(2)}%</Table.Cell>
