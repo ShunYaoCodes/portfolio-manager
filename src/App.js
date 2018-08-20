@@ -92,7 +92,7 @@ class App extends Component {
         })
       })
 
-      fetch('http://localhost:3001/api/v1/portfolio_assets/1')
+      fetch('https://portfolio-database.herokuapp.com/api/v1/portfolio_assets/1')
       .then(r => r.json())
       .then(portfolio => {
         this.setState({
@@ -125,12 +125,12 @@ class App extends Component {
       })
     }.bind(this),20000);
 
-    fetch('http://localhost:3001/api/v1/search_histories/1')
+    fetch('https://portfolio-database.herokuapp.com/api/v1/search_histories/1')
     .then(r => r.json()).then(searchHistory => {
       this.setState({ searchHistory: searchHistory.join(',') });
     })
 
-    fetch('http://localhost:3001/api/v1/watchlists/1')
+    fetch('https://portfolio-database.herokuapp.com/api/v1/watchlists/1')
     .then(r => r.json()).then(watchlist => {
       this.setState({ watchlistNames: watchlist.join(',') });
     })
@@ -185,7 +185,7 @@ class App extends Component {
       this.setState({ inWatchlist: false })
     }
 
-    fetch('http://localhost:3001/api/v1/search_histories', {
+    fetch('https://portfolio-database.herokuapp.com/api/v1/search_histories', {
   		method: "POST",
   		headers: {
   			"Content-Type": "application/json"
@@ -215,7 +215,7 @@ class App extends Component {
     let newState;
 
     if (checked) {
-      fetch(`http://localhost:3001/api/v1/${name}s`, {
+      fetch(`https://portfolio-database.herokuapp.com/api/v1/${name}s`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json"
@@ -225,7 +225,7 @@ class App extends Component {
 
       newState = this.state[fullStateName] + ',' + symbol;
     } else {
-      fetch(`http://localhost:3001/api/v1/${name}s/1`, {
+      fetch(`https://portfolio-database.herokuapp.com/api/v1/${name}s/1`, {
         method: "DELETE",
         headers: {
           "Content-Type": "application/json"
@@ -256,7 +256,7 @@ class App extends Component {
       }
     }
 
-    fetch(`http://localhost:3001/api/v1/portfolio_assets/1`, {
+    fetch(`https://portfolio-database.herokuapp.com/api/v1/portfolio_assets/1`, {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json"
