@@ -13,7 +13,8 @@
     "react-stockcharts": "^0.7.7",
     "redux": "^4.0.0",
     "semantic-ui-css": "^2.3.2",
-    "semantic-ui-react": "^0.81.3"
+    "semantic-ui-react": "^0.81.3",
+    "url-parse": ">=1.4.3"
   },
   "scripts": {
     "start": "react-scripts start",
