@@ -9,6 +9,7 @@ import Quote from './containers/Quote';
 import { timeParse } from "d3-time-format";
 import { BrowserRouter as Router, Route, NavLink } from 'react-router-dom';
 import './App.css'
+import EndPoints from './EndPoints';
 
 //import { BrowserRouter, Route, Link } from 'react-router-dom'
 const parseDate = timeParse("%Y-%m-%d");
@@ -38,7 +39,7 @@ class App extends Component {
 
   componentDidMount() {
     this.intervalID = setInterval(function(){
-      fetch('https://api.iextrading.com/1.0/stock/market/batch?symbols=spy,dia,qqq,iwm,vxx&types=quote')
+      fetch(EndPoints.index)
       .then(r => r.json()).then(indexes => {
         const indexArr = [];
 
@@ -54,17 +55,17 @@ class App extends Component {
         this.setState({ searchHistoryQuotes })
       })
 
-      fetch(`https://api.iextrading.com/1.0/stock/market/list/mostactive`)
+      fetch(EndPoints.mostActive)
       .then(r => r.json()).then(mostActive => {
         this.setState({ mostActive })
       })
 
-      fetch(`https://api.iextrading.com/1.0/stock/market/list/gainers`)
+      fetch(EndPoints.gainers)
       .then(r => r.json()).then(gainers => {
         this.setState({ gainers })
       })
 
-      fetch(`https://api.iextrading.com/1.0/stock/market/list/losers`)
+      fetch(EndPoints.losers)
       .then(r => r.json()).then(losers => {
         this.setState({ losers })
       })
