@@ -39,62 +39,87 @@ class App extends Component {
 
   componentDidMount() {
     this.intervalID = setInterval(function(){
-      fetch(EndPoints.index)
-      .then(r => r.json()).then(indexes => {
-        const indexArr = [];
+      this.getIndexes();
+      this.getMostActive();
+      this.getGainers();
+      this.getLosers();
+      this.getSearchHistoryQuote();
+      this.getWatchlistQuotes();
+      this.getPortfolio();
+    }.bind(this),3000);
 
-        for(const index in indexes) {
-          indexArr.push(indexes[index].quote)
-        }
-        //console.log(indexArr);
-        this.setState({ indexes: indexArr })
+    this.getNews();
+    this.getSearchHistories();
+    this.getWatchlists();
+  }
+
+  componentWillUnmount() {
+    clearInterval(this.intervalID);
+    clearInterval(this.intervalID1);
+  }
+
+  getIndexes = () => {
+    fetch(EndPoints.index).then(r => r.json()).then(indexes => {
+      const indexArr = [];
+
+      for(const index in indexes) {
+        indexArr.push(indexes[index].quote)
+      }
+      //console.log(indexArr);
+      this.setState({ indexes: indexArr })
+    })
+  }
+
+  getMostActive = () => {
+    fetch(EndPoints.mostActive).then(r => r.json()).then(mostActive => {
+      this.setState({ mostActive })
+    })
+  }
+
+  getGainers = () => {
+    fetch(EndPoints.gainers).then(r => r.json()).then(gainers => {
+      this.setState({ gainers })
+    })
+  }
+
+  getLosers = () => {
+    fetch(EndPoints.losers).then(r => r.json()).then(losers => {
+      this.setState({ losers })
+    })
+  }
+
+  getSearchHistoryQuotes = () => {
+    fetch(`${EndPoints.host}/batch?symbols=${this.state.searchHistory}&types=quote`).then(r => r.json()).then(searchHistoryQuotes => {
+      this.setState({ searchHistoryQuotes })
+    })
+  }
+
+  getWatchlistQuotes = () => {
+    fetch(`${EndPoints.host}/batch?symbols=${this.state.watchlistNames}&types=quote,news`).then(r => r.json()).then(watchlistQuotesNews => {
+      //console.log(watchlistQuotesNews);
+      const quotes = [];
+      let news = [];
+
+      for(const each in watchlistQuotesNews) {
+        quotes.push(watchlistQuotesNews[each].quote);
+        news.push(watchlistQuotesNews[each].news);
+      }
+
+      if (news.length > 0) {
+        news = news.reduce(
+          (accumulator, currentValue) => accumulator.concat(currentValue),[]
+        );
+      }
+
+      this.setState({
+        watchlistQuotes: quotes,
+        watchlistNews: news,
       })
+    })
+  }
 
-      fetch(`${EndPoints.host}/batch?symbols=${this.state.searchHistory}&types=quote`)
-      .then(r => r.json()).then(searchHistoryQuotes => {
-        this.setState({ searchHistoryQuotes })
-      })
-
-      fetch(EndPoints.mostActive)
-      .then(r => r.json()).then(mostActive => {
-        this.setState({ mostActive })
-      })
-
-      fetch(EndPoints.gainers)
-      .then(r => r.json()).then(gainers => {
-        this.setState({ gainers })
-      })
-
-      fetch(EndPoints.losers)
-      .then(r => r.json()).then(losers => {
-        this.setState({ losers })
-      })
-
-      fetch(`${EndPoints.host}/batch?symbols=${this.state.watchlistNames}&types=quote,news`)
-      .then(r => r.json()).then(watchlistQuotesNews => {
-        //console.log(watchlistQuotesNews);
-        const quotes = [];
-        let news = [];
-
-        for(const each in watchlistQuotesNews) {
-          quotes.push(watchlistQuotesNews[each].quote);
-          news.push(watchlistQuotesNews[each].news);
-        }
-
-        if (news.length > 0) {
-          news = news.reduce(
-            (accumulator, currentValue) => accumulator.concat(currentValue),[]
-          );
-        }
-
-        this.setState({
-          watchlistQuotes: quotes,
-          watchlistNews: news,
-        })
-      })
-
-      fetch(`${EndPoints.backendHost}/portfolio_assets/1`)
-      .then(r => r.json())
+  getPortfolio = () => {
+    fetch(`${EndPoints.backendHost}/portfolio_assets/1`).then(r => r.json())
       .then(portfolio => {
         this.setState({
           portfolioNames: portfolio.map(each => each.symbol).join(','),
@@ -112,34 +137,32 @@ class App extends Component {
           this.setState({ portfolioQuotes: quotes })
         })
       })
-    }.bind(this),3000);
+  }
 
-    fetch('${EndPoints.host}/news/last/20')
-    .then(r => r.json()).then(news => {
+  getNews = () => {
+    fetch(`${EndPoints.host}/news/last/20`).then(r => r.json()).then(news => {
       this.setState({ news })
     })
 
     this.intervalID1 = setInterval(function(){
-      fetch('${EndPoints.host}/news/last/20')
-      .then(r => r.json()).then(news => {
+      fetch(`${EndPoints.host}/news/last/20`).then(r => r.json()).then(news => {
         this.setState({ news })
       })
     }.bind(this),20000);
+  }
 
+  getSearchHistories = () => {
     fetch(`${EndPoints.backendHost}/search_histories/1`)
     .then(r => r.json()).then(searchHistory => {
       this.setState({ searchHistory: searchHistory.join(',') });
     })
+  }
 
+  getWatchlists = () => {
     fetch(`${EndPoints.backendHost}/watchlists/1`)
     .then(r => r.json()).then(watchlist => {
       this.setState({ watchlistNames: watchlist.join(',') });
     })
-  }
-
-  componentWillUnmount() {
-    clearInterval(this.intervalID);
-    clearInterval(this.intervalID1);
   }
 
   handleSearch = keyword => {
