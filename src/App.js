@@ -50,7 +50,7 @@ class App extends Component {
         this.setState({ indexes: indexArr })
       })
 
-      fetch(`https://api.iextrading.com/1.0/stock/market/batch?symbols=${this.state.searchHistory}&types=quote`)
+      fetch(`${EndPoints.host}/batch?symbols=${this.state.searchHistory}&types=quote`)
       .then(r => r.json()).then(searchHistoryQuotes => {
         this.setState({ searchHistoryQuotes })
       })
@@ -70,7 +70,7 @@ class App extends Component {
         this.setState({ losers })
       })
 
-      fetch(`https://api.iextrading.com/1.0/stock/market/batch?symbols=${this.state.watchlistNames}&types=quote,news`)
+      fetch(`${EndPoints.host}/batch?symbols=${this.state.watchlistNames}&types=quote,news`)
       .then(r => r.json()).then(watchlistQuotesNews => {
         //console.log(watchlistQuotesNews);
         const quotes = [];
@@ -93,7 +93,7 @@ class App extends Component {
         })
       })
 
-      fetch('https://portfolio-database.herokuapp.com/api/v1/portfolio_assets/1')
+      fetch(`${EndPoints.backendHost}/portfolio_assets/1`)
       .then(r => r.json())
       .then(portfolio => {
         this.setState({
@@ -102,7 +102,7 @@ class App extends Component {
         });
       })
       .then(() => {
-        fetch(`https://api.iextrading.com/1.0/stock/market/batch?symbols=${this.state.portfolioNames}&types=stats,price`)
+        fetch(`${EndPoints.host}/batch?symbols=${this.state.portfolioNames}&types=stats,price`)
         .then(r => r.json()).then(quotes => {
           for(const symbol in quotes) {
             const quote = this.state.portfolio.find(each => each.symbol === symbol);
@@ -114,24 +114,24 @@ class App extends Component {
       })
     }.bind(this),3000);
 
-    fetch('https://api.iextrading.com/1.0/stock/market/news/last/20')
+    fetch('${EndPoints.host}/news/last/20')
     .then(r => r.json()).then(news => {
       this.setState({ news })
     })
 
     this.intervalID1 = setInterval(function(){
-      fetch('https://api.iextrading.com/1.0/stock/market/news/last/20')
+      fetch('${EndPoints.host}/news/last/20')
       .then(r => r.json()).then(news => {
         this.setState({ news })
       })
     }.bind(this),20000);
 
-    fetch('https://portfolio-database.herokuapp.com/api/v1/search_histories/1')
+    fetch(`${EndPoints.backendHost}/search_histories/1`)
     .then(r => r.json()).then(searchHistory => {
       this.setState({ searchHistory: searchHistory.join(',') });
     })
 
-    fetch('https://portfolio-database.herokuapp.com/api/v1/watchlists/1')
+    fetch(`${EndPoints.backendHost}/watchlists/1`)
     .then(r => r.json()).then(watchlist => {
       this.setState({ watchlistNames: watchlist.join(',') });
     })
@@ -143,7 +143,7 @@ class App extends Component {
   }
 
   handleSearch = keyword => {
-    fetch(`https://api.iextrading.com/1.0/stock/${keyword}/batch?types=quote,news,chart&range=ytd`)
+    fetch(`${EndPoints.host}/stock/${keyword}/batch?types=quote,news,chart&range=ytd`)
     .then(function(response) {
       if (response.ok) {
         return response;
@@ -186,7 +186,7 @@ class App extends Component {
       this.setState({ inWatchlist: false })
     }
 
-    fetch('https://portfolio-database.herokuapp.com/api/v1/search_histories', {
+    fetch(`${EndPoints.backendHost}/search_histories`, {
   		method: "POST",
   		headers: {
   			"Content-Type": "application/json"
@@ -199,7 +199,7 @@ class App extends Component {
     newHistoryArr.unshift(keyword);
     const newHistory = newHistoryArr.join(',');
 
-    fetch(`https://api.iextrading.com/1.0/stock/market/batch?symbols=${newHistory}&types=quote`)
+    fetch(`${EndPoints.host}/batch?symbols=${newHistory}&types=quote`)
     .then(r => r.json()).then(searchHistoryQuotes => {
       this.setState({
         searchHistory: newHistory,
@@ -216,7 +216,7 @@ class App extends Component {
     let newState;
 
     if (checked) {
-      fetch(`https://portfolio-database.herokuapp.com/api/v1/${name}s`, {
+      fetch(`${EndPoints.backendHost}/${name}s`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json"
@@ -226,7 +226,7 @@ class App extends Component {
 
       newState = this.state[fullStateName] + ',' + symbol;
     } else {
-      fetch(`https://portfolio-database.herokuapp.com/api/v1/${name}s/1`, {
+      fetch(`${EndPoints.backendHost}/${name}s/1`, {
         method: "DELETE",
         headers: {
           "Content-Type": "application/json"
@@ -257,7 +257,7 @@ class App extends Component {
       }
     }
 
-    fetch(`https://portfolio-database.herokuapp.com/api/v1/portfolio_assets/1`, {
+    fetch(`${EndPoints.backendHost}/portfolio_assets/1`, {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json"
