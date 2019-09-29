@@ -43,7 +43,7 @@ class App extends Component {
       this.getMostActive();
       this.getGainers();
       this.getLosers();
-      this.getSearchHistoryQuote();
+      this.getSearchHistoryQuotes();
       this.getWatchlistQuotes();
       this.getPortfolio();
     }.bind(this),3000);
@@ -300,10 +300,10 @@ class App extends Component {
         <div>
           <Grid centered>
             <Grid.Row>
-              <Grid.Column width={6}>
+              <Grid.Column computer={6} mobile={14}>
                 <NavLink to='/' exact><h1 style={{marginTop: '5px'}}>Portfolio Manager and Hedger</h1></NavLink>
               </Grid.Column>
-              <Grid.Column width={8}>
+              <Grid.Column computer={8} mobile={14}>
                 <SearchBar search={this.handleSearch}/>
               </Grid.Column>
             </Grid.Row>

@@ -19,11 +19,11 @@ class Market extends React.Component {
         </Grid.Row>
 
         <Grid.Row>
-          <Grid.Column width={10}>
+          <Grid.Column computer={10} mobile={8}>
             <h2><Icon name='newspaper outline'/> Market News:</h2>
             <NewsList news={this.props.news}/>
           </Grid.Column>
-          <Grid.Column width={4}>
+          <Grid.Column computer={4} mobile={8}>
             <SearchedList searchHistory={this.props.searchHistory} search={this.props.search}/>
             <MostActiveList mostActive={this.props.mostActive} search={this.props.search}/>
             <GainersList gainers={this.props.gainers} search={this.props.search}/>
