@@ -209,10 +209,10 @@ class App extends Component {
       this.setState({ inWatchlist: false })
     }
     
-    this.updateSearchHistory();
+    this.updateSearchHistory(keyword);
   }
   
-  updateSearchHistory = () => {
+  updateSearchHistory = (keyword) => {
     fetch(`${EndPoints.backendHost}/search_histories`, {
   		method: "POST",
   		headers: {

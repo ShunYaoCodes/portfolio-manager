@@ -18,7 +18,7 @@ const News = props => {
         </Item.Meta>
 
         <Item.Description>
-          <a href={props.url} target="_blank">
+          <a href={props.url} target="_blank" rel="noopener noreferrer">
             {props.body}
           </a>
         </Item.Description>
