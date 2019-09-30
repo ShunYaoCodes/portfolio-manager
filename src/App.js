@@ -194,7 +194,7 @@ class App extends Component {
         quoteChart: data,
       })
     }).catch(function(error) {
-      this.setState({ quote: `No results for ${error.message}` })
+      this.setState({ quote: `No results for ${error.message}. Please enter a valid stock symbol.` })
     }.bind(this));
 
     if (this.state.portfolioNames.includes(keyword)) {
@@ -208,7 +208,11 @@ class App extends Component {
     } else {
       this.setState({ inWatchlist: false })
     }
-
+    
+    this.updateSearchHistory();
+  }
+  
+  updateSearchHistory = () => {
     fetch(`${EndPoints.backendHost}/search_histories`, {
   		method: "POST",
   		headers: {
