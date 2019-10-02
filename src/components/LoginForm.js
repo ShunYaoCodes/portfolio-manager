@@ -4,8 +4,9 @@ import { Button, Form, Grid, Header, Image, Message, Segment } from 'semantic-ui
 const LoginForm = () => (
   <Grid textAlign='center' style={{ height: '80vh' }} verticalAlign='middle'>
     <Grid.Column style={{ maxWidth: 450 }}>
-      <Header as='h2' color='teal' textAlign='center'>
-        <Image src='/logo.png' /> Log-in to your account
+      <Header as='h2' color='violet' textAlign='center'>
+        {/* <Image src='/logo.png' /> */}
+        Sign in to your account
       </Header>
       <Form size='large'>
         <Segment stacked>
@@ -18,7 +19,7 @@ const LoginForm = () => (
             type='password'
           />
 
-          <Button color='teal' fluid size='large'>
+          <Button color='violet' fluid size='large'>
             Login
           </Button>
         </Segment>
