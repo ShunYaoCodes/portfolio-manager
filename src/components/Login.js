@@ -5,13 +5,13 @@ const Login = props => {
     const {signIn} = props;
 
     const handleClick = event => {
-        signIn('sign in');
+        signIn(event.target.name);
     }
 
     return (
         <div style={{marginTop: '10px'}}>
-            <Button primary onClick={handleClick}>Sign In</Button>
-            <Button secondary>Sign Up</Button>
+            <Button primary name='sign_in' onClick={handleClick}>Sign In</Button>
+            <Button secondary name='sign_up' onClick={handleClick}>Sign Up</Button>
         </div>
     )
 }
