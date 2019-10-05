@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Grid } from 'semantic-ui-react'
+import { Grid, Button } from 'semantic-ui-react'
 import Market from './containers/Market'
 import SearchBar from './components/SearchBar';
 import NavBar from './components/NavBar';
@@ -7,12 +7,13 @@ import Portfolio from './containers/Portfolio'
 import Watchlist from './containers/Watchlist'
 import Quote from './containers/Quote';
 import { timeParse } from "d3-time-format";
-import { BrowserRouter as Router, Route, NavLink } from 'react-router-dom';
+import { BrowserRouter as Router, Route, NavLink, Redirect } from 'react-router-dom';
 import './App.css'
 import EndPoints from './EndPoints';
 import Login from './components/Login';
 import LoginForm from './components/LoginForm';
-import RegistrationForm from '/components/RegistrationForm';
+import RegistrationForm from './components/RegistrationForm';
+import Adapter from './Adapter';
 
 //import { BrowserRouter, Route, Link } from 'react-router-dom'
 const parseDate = timeParse("%Y-%m-%d");
@@ -308,6 +309,12 @@ class App extends Component {
     });
   }
 
+  handleSignOut = () => {
+    localStorage.removeItem('token');
+    localStorage.removeItem('id');
+    window.location.reload();
+  }
+
   render() {
     // console.log(this.state.watchlistNews);
     
@@ -323,33 +330,33 @@ class App extends Component {
                   <SearchBar search={this.handleSearch}/>
                 </Grid.Column>
                 <Grid.Column computer={2} mobile={2}>
-                  <Login signIn={this.handleSignIn}/>
+                  {
+                    Adapter.notLoggedIn() ?
+                      <Login signIn={this.handleSignIn}/>
+                    :
+                      <Button primary name='sign_out' onClick={this.handleSignOut} style={{marginTop: '10px'}}>Sign Out</Button>
+                  }
+                </Grid.Column>
+                <Grid.Column width={14}>
+                  <NavBar {...this.states}/>
                 </Grid.Column>
               </Grid.Row>
 
               {
-                this.state.pageStatus === 'sign in' ? 
-                  <Grid.Column width={14}>
-                    <LoginForm />
-                  </Grid.Column>
+                Adapter.notLoggedIn() ?
+                  <React.Fragment>
+                    <Route exact path="/login" render={(props) => <LoginForm {...props} /> } />
+                    <Route exact path="/register" render={(props) => <RegistrationForm {...props} /> } />
+                  </React.Fragment>
                 :
-                  this.state.pageStatus === 'sign up' ? 
-                    <Grid.Column width={14}>
-                      <RegistrationForm />
-                    </Grid.Column>
-                  :
-                    <React.Fragment>
-                      <Grid.Column width={14}>
-                        <NavBar {...props}/>
-                      </Grid.Column>
-          
-                      <Route exact path='/' render={() => <Market indexes={this.state.indexes} news={this.state.news} searchHistory={this.state.searchHistoryQuotes} mostActive={this.state.mostActive} gainers={this.state.gainers} losers={this.state.losers} search={this.handleSearch}/>} />
-                      <Route exact path='/portfolio' render={() => <Portfolio indexes={this.state.indexes} portfolio={this.state.portfolioQuotes} search={this.handleSearch} type={this.handleType}/>} />
-                      <Route exact path='/watchlist' render={() => <Watchlist indexes={this.state.indexes} news={this.state.watchlistNews} watchlist={this.state.watchlistQuotes} search={this.handleSearch}/>} />
-                      <Route path='/quote' render={() => <Quote quote={this.state.quote} news={this.state.quoteNews} chart={this.state.quoteChart} click={this.handleClick} inPortfolio={this.state.inPortfolio} inWatchlist={this.state.inWatchlist}/>} />
-                    </React.Fragment>
-              } 
-              </Grid>
+                  <Redirect to="/"/>
+              }
+
+              <Route exact path='/' render={() => <Market indexes={this.state.indexes} news={this.state.news} searchHistory={this.state.searchHistoryQuotes} mostActive={this.state.mostActive} gainers={this.state.gainers} losers={this.state.losers} search={this.handleSearch}/>} />
+              <Route exact path='/portfolio' render={() => <Portfolio indexes={this.state.indexes} portfolio={this.state.portfolioQuotes} search={this.handleSearch} type={this.handleType}/>} />
+              <Route exact path='/watchlist' render={() => <Watchlist indexes={this.state.indexes} news={this.state.watchlistNews} watchlist={this.state.watchlistQuotes} search={this.handleSearch}/>} />
+              <Route path='/quote' render={() => <Quote quote={this.state.quote} news={this.state.quoteNews} chart={this.state.quoteChart} click={this.handleClick} inPortfolio={this.state.inPortfolio} inWatchlist={this.state.inWatchlist}/>} />
+            </Grid>
           </div>
         </Router>
       );

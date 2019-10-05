@@ -1,4 +1,5 @@
 import React from 'react'
+import { NavLink } from 'react-router-dom';
 import { Button } from 'semantic-ui-react'
 
 const Login = props => {
@@ -10,8 +11,12 @@ const Login = props => {
 
     return (
         <div style={{marginTop: '10px'}}>
-            <Button primary name='sign_in' onClick={handleClick}>Sign In</Button>
-            <Button secondary name='sign_up' onClick={handleClick}>Sign Up</Button>
+            <NavLink exact to="/login">
+                <Button primary name='sign_in' onClick={handleClick}>Sign In</Button>
+            </NavLink>
+            <NavLink exact to="/register">
+                <Button secondary name='sign_up' onClick={handleClick}>Sign Up</Button>
+            </NavLink>
         </div>
     )
 }

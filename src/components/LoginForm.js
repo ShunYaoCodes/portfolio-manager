@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { Component } from 'react';
 import { Button, Form, Grid, Header, Image, Message, Segment } from 'semantic-ui-react'
 
 class LoginForm extends Component {
@@ -15,7 +15,7 @@ class LoginForm extends Component {
 
   handleSubmit = (event) => {
     event.preventDefault();
-    fetch("http://localhost:3000/sessions/",
+    fetch("http://localhost:3000/api/v1/sessions/",
       {
         method: "POST",
         headers: {
@@ -29,7 +29,9 @@ class LoginForm extends Component {
       console.log("json", json)
       localStorage.setItem('token', json.token);
       localStorage.setItem('id', json.id);
-      this.props.history.push("/");
+      console.log(this.props);
+      this.props.history.push('/');
+      window.location.reload();
     })
   }
 
