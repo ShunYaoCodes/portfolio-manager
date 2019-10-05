@@ -7,6 +7,7 @@ class RegistrationForm extends Component {
   state = {
     username: "",
     password: "",
+    password_confirmation: "",
     // token: "" // This will disappear on page refresh!!
   }
 
@@ -18,27 +19,29 @@ class RegistrationForm extends Component {
 
   handleSubmit = (event) => {
     event.preventDefault();
-    fetch("http://localhost:3000/users/",
+    fetch("http://localhost:3000/api/v1/users/",
       {
         method: "POST",
         headers: {
           "Content-Type": "application/json"
         },
-        body: JSON.stringify({ username: this.state.username, password: this.state.password })
+        body: JSON.stringify({ 
+          username: this.state.username, 
+          password: this.state.password,
+          password_confirmation: this.state.password_confirmation,
+        })
       }
     )
     .then(res => res.json())
     .then(json => {
-      console.log("json", json)
-      localStorage.setItem('token', json.token);
-      localStorage.setItem('id', json.id);
-      this.props.history.push("/my-snacks")
-
-      // this.setState({
-      //   token: json.token
-      // }, () => {
-      //   console.log("state", this.state)
-      // })
+      if (json.errors) {
+        console.log(json.errors);
+      } else {
+        localStorage.setItem('token', json.token);
+        localStorage.setItem('id', json.id);
+        this.props.history.push('/');
+        window.location.reload();
+      }
     })
   }
 
@@ -46,7 +49,7 @@ class RegistrationForm extends Component {
     console.log('render', this.state)
     return (
         <Grid textAlign='center' style={{ height: '80vh' }} verticalAlign='middle'>
-        <Grid.Column style={{ maxWidth: 450 }}>
+        <Grid.Column style={{ maxWidth: 800 }}>
           <Header as='h2' color='violet' textAlign='center'>
             {/* <Image src='/logo.png' /> */}
             Create an account
@@ -70,6 +73,16 @@ class RegistrationForm extends Component {
                 name="password"
                 onChange={this.handleChange}
                 value={this.state.password}
+              />
+              <Form.Input
+                fluid
+                icon='lock'
+                iconPosition='left'
+                placeholder='Confirm Password'
+                type='password'
+                name="password_confirmation"
+                onChange={this.handleChange}
+                value={this.state.password_confirmation}
               />
     
               <Button color='violet' fluid size='large' type="submit">
