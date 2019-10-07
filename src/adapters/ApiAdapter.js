@@ -1,6 +1,6 @@
 // const host = 'https://sandbox.iexapis.com/stable/stock';
 const index = 'batch?symbols=spy,qqq,dia,iwm&types=quote';
-const news = 'batch?symbols=spy,qqq,dia,iwm&types=news';
+const news = 'batch?symbols=spy,qqq,dia,iwm&types=news&last=5';
 const publishableKey = 'Tpk_180ac35b572948beb91966b3def6fafb';
 const mostActive = 'list/mostactive';
 const gainers = 'list/gainers';

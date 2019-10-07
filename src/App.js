@@ -50,7 +50,7 @@ class App extends Component {
       this.getGainers();
       this.getLosers();
       // this.getSearchHistoryQuotes();
-      this.getWatchlistQuotes();
+      // this.getWatchlistQuotes();
       this.getPortfolio();
     }.bind(this),3000);
 
@@ -147,11 +147,13 @@ class App extends Component {
 
   getNews = () => {
     fetch(ApiAdapter.news()).then(r => r.json()).then(news => {
+      console.log(news);
       this.setState({ news })
     })
 
     this.intervalID1 = setInterval(function(){
-      fetch(`${ApiAdapter.host()}/news/last/20`).then(r => r.json()).then(news => {
+      fetch(ApiAdapter.news()).then(r => r.json()).then(news => {
+        console.log(news);
         this.setState({ news })
       })
     }.bind(this),20000);
