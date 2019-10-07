@@ -1,4 +1,4 @@
-class Adapter {
+class AuthAdapter {
     static loggedIn() {
         return !!localStorage.getItem("token")
     }
@@ -8,4 +8,4 @@ class Adapter {
     }
 }
 
-export default Adapter
+export default AuthAdapter

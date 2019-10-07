@@ -9,11 +9,11 @@ import Quote from './containers/Quote';
 import { timeParse } from "d3-time-format";
 import { BrowserRouter as Router, Route, NavLink, Redirect } from 'react-router-dom';
 import './App.css'
-import EndPoints from './EndPoints';
+import ApiAdapter from './adapters/ApiAdapter';
 import Login from './components/Login';
 import LoginForm from './components/LoginForm';
 import RegistrationForm from './components/RegistrationForm';
-import Adapter from './Adapter';
+import AuthAdapter from './adapters/AuthAdapter';
 
 //import { BrowserRouter, Route, Link } from 'react-router-dom'
 const parseDate = timeParse("%Y-%m-%d");
@@ -49,7 +49,7 @@ class App extends Component {
       this.getMostActive();
       this.getGainers();
       this.getLosers();
-      this.getSearchHistoryQuotes();
+      // this.getSearchHistoryQuotes();
       this.getWatchlistQuotes();
       this.getPortfolio();
     }.bind(this),3000);
@@ -65,7 +65,7 @@ class App extends Component {
   }
 
   getIndexes = () => {
-    fetch(EndPoints.index).then(r => r.json()).then(indexes => {
+    fetch(ApiAdapter.index()).then(r => r.json()).then(indexes => {
       const indexArr = [];
 
       for(const index in indexes) {
@@ -77,31 +77,31 @@ class App extends Component {
   }
 
   getMostActive = () => {
-    fetch(EndPoints.mostActive).then(r => r.json()).then(mostActive => {
+    fetch(ApiAdapter.mostActive()).then(r => r.json()).then(mostActive => {
       this.setState({ mostActive })
     })
   }
 
   getGainers = () => {
-    fetch(EndPoints.gainers).then(r => r.json()).then(gainers => {
+    fetch(ApiAdapter.gainers()).then(r => r.json()).then(gainers => {
       this.setState({ gainers })
     })
   }
 
   getLosers = () => {
-    fetch(EndPoints.losers).then(r => r.json()).then(losers => {
+    fetch(ApiAdapter.losers()).then(r => r.json()).then(losers => {
       this.setState({ losers })
     })
   }
 
   getSearchHistoryQuotes = () => {
-    fetch(`${EndPoints.host}/batch?symbols=${this.state.searchHistory}&types=quote`).then(r => r.json()).then(searchHistoryQuotes => {
+    fetch(`${ApiAdapter.host()}/batch?symbols=${this.state.searchHistory}&types=quote`).then(r => r.json()).then(searchHistoryQuotes => {
       this.setState({ searchHistoryQuotes })
     })
   }
 
   getWatchlistQuotes = () => {
-    fetch(`${EndPoints.host}/batch?symbols=${this.state.watchlistNames}&types=quote,news`).then(r => r.json()).then(watchlistQuotesNews => {
+    fetch(`${ApiAdapter.host()}/batch?symbols=${this.state.watchlistNames}&types=quote,news`).then(r => r.json()).then(watchlistQuotesNews => {
       //console.log(watchlistQuotesNews);
       const quotes = [];
       let news = [];
@@ -125,7 +125,7 @@ class App extends Component {
   }
 
   getPortfolio = () => {
-    fetch(`${EndPoints.backendHost}/portfolio_assets/1`).then(r => r.json())
+    fetch(`${ApiAdapter.backendHost()}/portfolio_assets/1`).then(r => r.json())
       .then(portfolio => {
         this.setState({
           portfolioNames: portfolio.map(each => each.symbol).join(','),
@@ -133,7 +133,7 @@ class App extends Component {
         });
       })
       .then(() => {
-        fetch(`${EndPoints.host}/batch?symbols=${this.state.portfolioNames}&types=stats,price`)
+        fetch(`${ApiAdapter.host()}/batch?symbols=${this.state.portfolioNames}&types=stats,price`)
         .then(r => r.json()).then(quotes => {
           for(const symbol in quotes) {
             const quote = this.state.portfolio.find(each => each.symbol === symbol);
@@ -146,33 +146,33 @@ class App extends Component {
   }
 
   getNews = () => {
-    fetch(`${EndPoints.host}/news/last/20`).then(r => r.json()).then(news => {
+    fetch(ApiAdapter.news()).then(r => r.json()).then(news => {
       this.setState({ news })
     })
 
     this.intervalID1 = setInterval(function(){
-      fetch(`${EndPoints.host}/news/last/20`).then(r => r.json()).then(news => {
+      fetch(`${ApiAdapter.host()}/news/last/20`).then(r => r.json()).then(news => {
         this.setState({ news })
       })
     }.bind(this),20000);
   }
 
   getSearchHistories = () => {
-    fetch(`${EndPoints.backendHost}/search_histories/1`)
+    fetch(`${ApiAdapter.backendHost()}/search_histories/1`)
     .then(r => r.json()).then(searchHistory => {
       this.setState({ searchHistory: searchHistory.join(',') });
     })
   }
 
   getWatchlists = () => {
-    fetch(`${EndPoints.backendHost}/watchlists/1`)
+    fetch(`${ApiAdapter.backendHost()}/watchlists/1`)
     .then(r => r.json()).then(watchlist => {
       this.setState({ watchlistNames: watchlist.join(',') });
     })
   }
 
   handleSearch = keyword => {
-    fetch(`${EndPoints.host}/stock/${keyword}/batch?types=quote,news,chart&range=ytd`)
+    fetch(`${ApiAdapter.host()}/stock/${keyword}/batch?types=quote,news,chart&range=ytd`)
     .then(function(response) {
       if (response.ok) {
         return response;
@@ -219,7 +219,7 @@ class App extends Component {
   }
   
   updateSearchHistory = (keyword) => {
-    fetch(`${EndPoints.backendHost}/search_histories`, {
+    fetch(`${ApiAdapter.backendHost()}/search_histories`, {
   		method: "POST",
   		headers: {
   			"Content-Type": "application/json"
@@ -232,7 +232,7 @@ class App extends Component {
     newHistoryArr.unshift(keyword);
     const newHistory = newHistoryArr.join(',');
 
-    fetch(`${EndPoints.host}/batch?symbols=${newHistory}&types=quote`)
+    fetch(`${ApiAdapter.host()}/batch?symbols=${newHistory}&types=quote`)
     .then(r => r.json()).then(searchHistoryQuotes => {
       this.setState({
         searchHistory: newHistory,
@@ -249,7 +249,7 @@ class App extends Component {
     let newState;
 
     if (checked) {
-      fetch(`${EndPoints.backendHost}/${name}s`, {
+      fetch(`${ApiAdapter.backendHost()}/${name}s`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json"
@@ -259,7 +259,7 @@ class App extends Component {
 
       newState = this.state[fullStateName] + ',' + symbol;
     } else {
-      fetch(`${EndPoints.backendHost}/${name}s/1`, {
+      fetch(`${ApiAdapter.backendHost()}/${name}s/1`, {
         method: "DELETE",
         headers: {
           "Content-Type": "application/json"
@@ -290,7 +290,7 @@ class App extends Component {
       }
     }
 
-    fetch(`${EndPoints.backendHost}/portfolio_assets/1`, {
+    fetch(`${ApiAdapter.backendHost()}/portfolio_assets/1`, {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json"
@@ -331,7 +331,7 @@ class App extends Component {
                 </Grid.Column>
                 <Grid.Column computer={2} mobile={2}>
                   {
-                    Adapter.notLoggedIn() ?
+                    AuthAdapter.notLoggedIn() ?
                       <Login signIn={this.handleSignIn}/>
                     :
                       <Button primary name='sign_out' onClick={this.handleSignOut} style={{marginTop: '10px'}}>Sign Out</Button>
@@ -343,7 +343,7 @@ class App extends Component {
               </Grid.Row>
 
               {
-                Adapter.notLoggedIn() ?
+                AuthAdapter.notLoggedIn() ?
                   <React.Fragment>
                     <Route exact path="/login" render={(props) => <LoginForm {...props} /> } />
                     <Route exact path="/register" render={(props) => <RegistrationForm {...props} /> } />
