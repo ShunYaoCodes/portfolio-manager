@@ -3,7 +3,11 @@ const publishableKey = 'Tpk_180ac35b572948beb91966b3def6fafb';
 
 class ApiAdapter {
     static host() {
-        return 'https://sandbox.iexapis.com/stable/stock/market';;
+        return 'https://sandbox.iexapis.com/stable/stock';
+    }
+
+    static getStockInfo(symbol = '') {
+        return `${this.host()}/${symbol}/batch?types=quote,news,chart&range=ytd&token=${publishableKey}`;
     }
 
     static getIndexQuotes() {
@@ -19,27 +23,27 @@ class ApiAdapter {
     }
 
     static getBatchQuotes(symbols = []) {
-        return `${this.host()}/batch?symbols=${symbols.join(',')}&types=quote&token=${publishableKey}`;
+        return `${this.host()}/market/batch?symbols=${symbols.join(',')}&types=quote&token=${publishableKey}`;
     }
 
     static getBatchNews(symbols = [], newCount = 5) {
-        return `${this.host()}/batch?symbols=${symbols.join(',')}&types=news&last=${newCount}&token=${publishableKey}`;
+        return `${this.host()}/market/batch?symbols=${symbols.join(',')}&types=news&last=${newCount}&token=${publishableKey}`;
     }
 
     static getBatchQuotesNews(symbols = [], newCount = 5) {
-        return `${this.host()}/batch?symbols=${symbols.join(',')}&types=quote,news&last=${newCount}&token=${publishableKey}`;
+        return `${this.host()}/market/batch?symbols=${symbols.join(',')}&types=quote,news&last=${newCount}&token=${publishableKey}`;
     }
 
     static mostActive() {
-        return `${this.host()}/list/mostactive?token=${publishableKey}`;
+        return `${this.host()}/market/list/mostactive?token=${publishableKey}`;
     }
 
     static gainers() {
-        return `${this.host()}/list/gainers?token=${publishableKey}`;
+        return `${this.host()}/market/list/gainers?token=${publishableKey}`;
     }
 
     static losers() {
-        return `${this.host()}/list/losers?token=${publishableKey}`;
+        return `${this.host()}/market/list/losers?token=${publishableKey}`;
     }
 
     static backendHost() {

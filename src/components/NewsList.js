@@ -3,14 +3,32 @@ import News from './News'
 import UUID from 'uuid';
 import { Item } from 'semantic-ui-react';
 
-const NewsList = props => {
-  const {news} = props;
-  const newslist = [];
-  
-  for (let symbol in news) {
-    const all_symbol_news = news[symbol].news;
-    all_symbol_news.forEach(symbol_news => {
-      newslist.push(
+class NewsList extends React.Component {
+  get base() {
+    return this.props.base;
+  }
+
+  get news() {
+    return this.props.news;
+  }
+
+  handle_data = () => {
+    switch(this.base) {
+      case 'market':
+        for (let symbol in this.news) {
+          const all_symbol_news = this.news[symbol].news;
+          this.handle_news(all_symbol_news);
+        }
+        break;
+      case 'quote':
+          this.handle_news(this.news);
+        break;
+    }
+  }
+
+  handle_news = (news) => {
+    news.forEach(symbol_news => {
+      this.newslist.push(
         <News 
           key={UUID()} 
           url={symbol_news.url} 
@@ -23,12 +41,17 @@ const NewsList = props => {
       );
     })
   }
-  
-  return (
-    <Item.Group>
-      {newslist}
-    </Item.Group>
-  )
+
+  render() {
+    this.newslist = [];
+    this.handle_data();
+
+    return (
+      <Item.Group>
+        {this.newslist}
+      </Item.Group>
+    )
+  }
 }
 
 export default NewsList;

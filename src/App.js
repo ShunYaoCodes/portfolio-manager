@@ -178,7 +178,7 @@ class App extends Component {
   }
 
   handleSearch = keyword => {
-    fetch(`${ApiAdapter.host()}/stock/${keyword}/batch?types=quote,news,chart&range=ytd`)
+    fetch(ApiAdapter.getStockInfo(keyword))
     .then(function(response) {
       if (response.ok) {
         return response;
@@ -221,7 +221,7 @@ class App extends Component {
       this.setState({ inWatchlist: false })
     }
     
-    this.updateSearchHistory(keyword);
+    // this.updateSearchHistory(keyword);
   }
   
   updateSearchHistory = (keyword) => {

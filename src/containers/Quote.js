@@ -44,7 +44,7 @@ class Quote extends React.Component {
           <Grid.Row>
             <Grid.Column width={14}>
               <h2>{this.props.quote.symbol} News:</h2>
-              <NewsList news={this.props.news}/>
+              <NewsList news={this.props.news}  base='quote'/>
             </Grid.Column>
           </Grid.Row>
         </React.Fragment>
