@@ -9,32 +9,44 @@ const SearchedList = props => {
 
   if (Object.keys(props.searchHistory).length > 0) {
     let count = 0;
+    
     for(const quote in props.searchHistory) {
       if (count > 9) break;
       list.push(<SearchedItem key={UUID()} quote={props.searchHistory[quote].quote} search={props.search}/>);
       count++;
     }
+
+    return (
+      <div>
+        <h3>Your Recently Viewed:</h3>
+        <Table color='blue' columns={4}>
+          <Table.Header>
+            <Table.Row>
+              <Table.HeaderCell>Symbol</Table.HeaderCell>
+              <Table.HeaderCell>Last Price</Table.HeaderCell>
+              <Table.HeaderCell>Change</Table.HeaderCell>
+              <Table.HeaderCell>% Change</Table.HeaderCell>
+            </Table.Row>
+          </Table.Header>
+  
+          <Table.Body>
+            {list}
+          </Table.Body>
+        </Table>
+      </div>
+    )
+  } else {
+    return (
+      <div>
+        <h3>Your Recently Viewed:</h3>
+        <Table color='blue' columns={4}>
+          <Table.Header>
+            <h4>Your list is empty</h4>
+          </Table.Header>
+        </Table>
+      </div>
+    )
   }
-
-  return (
-    <div>
-      <h3>Your Recent Viewed:</h3>
-      <Table color='blue' columns={4}>
-        <Table.Header>
-          <Table.Row>
-            <Table.HeaderCell>Symbol</Table.HeaderCell>
-            <Table.HeaderCell>Last Price</Table.HeaderCell>
-            <Table.HeaderCell>Change</Table.HeaderCell>
-            <Table.HeaderCell>% Change</Table.HeaderCell>
-          </Table.Row>
-        </Table.Header>
-
-        <Table.Body>
-          {list}
-        </Table.Body>
-      </Table>
-    </div>
-  )
 }
 
 export default SearchedList;
