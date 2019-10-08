@@ -49,8 +49,8 @@ class App extends Component {
       this.getMostActive();
       this.getGainers();
       this.getLosers();
-      // this.getSearchHistoryQuotes();
-      // this.getWatchlistQuotes();
+      this.getSearchHistoryQuotes();
+      this.getWatchlistQuotes();
       this.getPortfolio();
     }.bind(this),3000);
 
@@ -65,7 +65,7 @@ class App extends Component {
   }
 
   getIndexes = () => {
-    fetch(ApiAdapter.index()).then(r => r.json()).then(indexes => {
+    fetch(ApiAdapter.getIndexQuotes()).then(r => r.json()).then(indexes => {
       const indexArr = [];
 
       for(const index in indexes) {
@@ -95,14 +95,18 @@ class App extends Component {
   }
 
   getSearchHistoryQuotes = () => {
-    fetch(`${ApiAdapter.host()}/batch?symbols=${this.state.searchHistory}&types=quote`).then(r => r.json()).then(searchHistoryQuotes => {
-      this.setState({ searchHistoryQuotes })
-    })
+    if (this.state.searchHistory.length > 0) {
+      fetch(ApiAdapter.getBatchQuotes(this.state.searchHistory)).then(r => r.json()).then(searchHistoryQuotes => {
+        this.setState({ searchHistoryQuotes })
+      })
+    }
   }
 
   getWatchlistQuotes = () => {
-    fetch(`${ApiAdapter.host()}/batch?symbols=${this.state.watchlistNames}&types=quote,news`).then(r => r.json()).then(watchlistQuotesNews => {
-      //console.log(watchlistQuotesNews);
+    const adapter = this.state.watchlistNames.length > 0 ? ApiAdapter.getBatchQuotesNews(this.state.watchlistNames) : ApiAdapter.getBatchQuotesNews();
+
+    fetch(adapter).then(r => r.json()).then(watchlistQuotesNews => {
+      // console.log(watchlistQuotesNews);
       const quotes = [];
       let news = [];
 
@@ -146,14 +150,14 @@ class App extends Component {
   }
 
   getNews = () => {
-    fetch(ApiAdapter.news()).then(r => r.json()).then(news => {
-      console.log(news);
+    const adapter = this.state.searchHistory.length > 0 ? ApiAdapter.getBatchNews(this.state.searchHistory) : ApiAdapter.getIndexNews();
+
+    fetch(adapter).then(r => r.json()).then(news => {
       this.setState({ news })
     })
 
     this.intervalID1 = setInterval(function(){
-      fetch(ApiAdapter.news()).then(r => r.json()).then(news => {
-        console.log(news);
+      fetch(adapter).then(r => r.json()).then(news => {
         this.setState({ news })
       })
     }.bind(this),20000);

@@ -1,34 +1,45 @@
-// const host = 'https://sandbox.iexapis.com/stable/stock';
-const index = 'batch?symbols=spy,qqq,dia,iwm&types=quote';
-const news = 'batch?symbols=spy,qqq,dia,iwm&types=news&last=5';
+const indexes = ['spy', 'qqq', 'dia', 'iwm'];
 const publishableKey = 'Tpk_180ac35b572948beb91966b3def6fafb';
-const mostActive = 'list/mostactive';
-const gainers = 'list/gainers';
-const losers = 'list/losers';
 
 class ApiAdapter {
     static host() {
         return 'https://sandbox.iexapis.com/stable/stock/market';;
     }
 
-    static index() {
-        return `${this.host()}/${index}&token=${publishableKey}`;
+    static getIndexQuotes() {
+        return this.getBatchQuotes(indexes);
     }
 
-    static news() {
-        return `${this.host()}/${news}&token=${publishableKey}`;
+    static getIndexNews() {
+        return this.getBatchNews(indexes);
+    }
+
+    static getIndexQuotesNews() {
+        return this.getBatchQuotesNews(indexes);
+    }
+
+    static getBatchQuotes(symbols = []) {
+        return `${this.host()}/batch?symbols=${symbols.join(',')}&types=quote&token=${publishableKey}`;
+    }
+
+    static getBatchNews(symbols = [], newCount = 5) {
+        return `${this.host()}/batch?symbols=${symbols.join(',')}&types=news&last=${newCount}&token=${publishableKey}`;
+    }
+
+    static getBatchQuotesNews(symbols = [], newCount = 5) {
+        return `${this.host()}/batch?symbols=${symbols.join(',')}&types=quote,news&last=${newCount}&token=${publishableKey}`;
     }
 
     static mostActive() {
-        return `${this.host()}/${mostActive}?token=${publishableKey}`;
+        return `${this.host()}/list/mostactive?token=${publishableKey}`;
     }
 
     static gainers() {
-        return `${this.host()}/${gainers}?token=${publishableKey}`;
+        return `${this.host()}/list/gainers?token=${publishableKey}`;
     }
 
     static losers() {
-        return `${this.host()}/${losers}?token=${publishableKey}`;
+        return `${this.host()}/list/losers?token=${publishableKey}`;
     }
 
     static backendHost() {
