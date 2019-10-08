@@ -50,7 +50,7 @@ class App extends Component {
       this.getGainers();
       this.getLosers();
       this.getSearchHistoryQuotes();
-      this.getWatchlistQuotes();
+      // this.getWatchlistQuotes();
       // this.getPortfolio();
     }.bind(this),3000);
 
@@ -232,7 +232,7 @@ class App extends Component {
         "Authorization": localStorage.getItem("token")
   		},
   		body: JSON.stringify({
-        userId: 1,
+        userId: localStorage.getItem("id"),
         keyword 
       })
   	})
