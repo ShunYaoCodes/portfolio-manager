@@ -51,12 +51,12 @@ class App extends Component {
       this.getLosers();
       this.getSearchHistoryQuotes();
       this.getWatchlistQuotes();
-      this.getPortfolio();
+      // this.getPortfolio();
     }.bind(this),3000);
 
     this.getNews();
-    this.getSearchHistories();
-    this.getWatchlists();
+    // this.getSearchHistories();
+    // this.getWatchlists();
   }
 
   componentWillUnmount() {
@@ -221,27 +221,29 @@ class App extends Component {
       this.setState({ inWatchlist: false })
     }
     
-    // this.updateSearchHistory(keyword);
+    this.updateSearchHistory(keyword);
   }
   
   updateSearchHistory = (keyword) => {
-    fetch(`${ApiAdapter.backendHost()}/search_histories`, {
+    fetch(ApiAdapter.postSearchHistory(), {
   		method: "POST",
   		headers: {
-  			"Content-Type": "application/json"
+        "Content-Type": "application/json",
+        "Authorization": localStorage.getItem("token")
   		},
-  		body: JSON.stringify({ keyword })
+  		body: JSON.stringify({
+        userId: 1,
+        keyword 
+      })
   	})
 
-    const historyArr = this.state.searchHistory.split(',');
-    const newHistoryArr = historyArr.filter(history => history !== keyword);
-    newHistoryArr.unshift(keyword);
-    const newHistory = newHistoryArr.join(',');
+    const newSearchHistory = this.state.searchHistory.filter(history => history !== keyword);
+    newSearchHistory.unshift(keyword); // add to the beginning of array
 
-    fetch(`${ApiAdapter.host()}/batch?symbols=${newHistory}&types=quote`)
+    fetch(ApiAdapter.getBatchQuotes(newSearchHistory))
     .then(r => r.json()).then(searchHistoryQuotes => {
       this.setState({
-        searchHistory: newHistory,
+        searchHistory: newSearchHistory,
         searchHistoryQuotes,
       })
     })

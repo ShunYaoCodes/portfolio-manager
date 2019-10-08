@@ -47,7 +47,11 @@ class ApiAdapter {
     }
 
     static backendHost() {
-        return 'https://portfolio-database.herokuapp.com/api/v1';
+        return 'http://localhost:3000/api/v1';
+    }
+
+    static postSearchHistory() {
+        return `${this.backendHost()}/search_histories`;
     }
 }
 
