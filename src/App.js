@@ -56,7 +56,7 @@ class App extends Component {
 
     this.getNews();
     // this.getSearchHistories();
-    // this.getWatchlists();
+    this.getWatchlists();
   }
 
   componentWillUnmount() {
@@ -103,7 +103,8 @@ class App extends Component {
   }
 
   getWatchlistQuotes = () => {
-    const adapter = this.state.watchlistNames.length > 0 ? ApiAdapter.getBatchQuotesNews(this.state.watchlistNames) : ApiAdapter.getBatchQuotesNews();
+    const symbols = this.state.watchlistNames.map(watchlistName => watchlistName.symbol);
+    const adapter = this.state.watchlistNames.length > 0 ? ApiAdapter.getBatchQuotesNews(symbols) : ApiAdapter.getBatchQuotesNews();
 
     fetch(adapter).then(r => r.json()).then(watchlistQuotesNews => {
       // console.log(watchlistQuotesNews);
@@ -171,9 +172,13 @@ class App extends Component {
   }
 
   getWatchlists = () => {
-    fetch(`${ApiAdapter.backendHost()}/watchlists/1`)
-    .then(r => r.json()).then(watchlist => {
-      this.setState({ watchlistNames: watchlist.join(',') });
+    fetch(`${ApiAdapter.backendHost()}/users/${localStorage.getItem("id")}/watchlists`, {
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": localStorage.getItem("token")
+  		},
+    }).then(r => r.json()).then(watchlistNames => {
+      this.setState({ watchlistNames });
     })
   }
 
@@ -209,13 +214,13 @@ class App extends Component {
       this.setState({ quote: `No results for ${error.message}. Please enter a valid stock symbol.` })
     }.bind(this));
 
-    if (this.state.portfolioNames.includes(keyword)) {
+    if (!!this.state.portfolioNames.find(portfolioName => portfolioName.symbol.toLowerCase() === keyword.toLowerCase())) {
       this.setState({ inPortfolio: true })
     } else {
       this.setState({ inPortfolio: false })
     }
 
-    if (this.state.watchlistNames.includes(keyword)) {
+    if (!!this.state.watchlistNames.find(watchlistName => watchlistName.symbol.toLowerCase() === keyword.toLowerCase())) {
       this.setState({ inWatchlist: true })
     } else {
       this.setState({ inWatchlist: false })
@@ -257,36 +262,40 @@ class App extends Component {
     let newState;
 
     if (checked) {
-      fetch(`${ApiAdapter.backendHost()}/${name}s`, {
+      fetch(`${ApiAdapter.backendHost()}/users/${localStorage.getItem("id")}/${name}s`, {
         method: "POST",
         headers: {
-          "Content-Type": "application/json"
+          "Content-Type": "application/json",
+          "Authorization": localStorage.getItem("token")
         },
         body: JSON.stringify({ symbol })
+      }).then(r => r.json()).then(stock => {
+        newState = [...this.state[fullStateName], stock];
+        console.log(this.state)
+        this.setState({
+          [inStateName]: !this.state[inStateName],
+          [fullStateName]: newState,
+        }, () => console.log(this.state));
       })
-
-      newState = this.state[fullStateName] + ',' + symbol;
     } else {
-      fetch(`${ApiAdapter.backendHost()}/${name}s/1`, {
+      const watchlistId = this.state[fullStateName].find(name => name.symbol.toLowerCase() === symbol.toLowerCase()).id;
+      fetch(`${ApiAdapter.backendHost()}/${name}s/${watchlistId}`, {
         method: "DELETE",
         headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({ symbol })
+          "Content-Type": "application/json",
+          "Authorization": localStorage.getItem("token")
+        }
+      }).then(r => r.json()).then(() => {
+        const entry = this.state[fullStateName].find(name => name.symbol.toLowerCase() === symbol.toLowerCase());
+        const index = this.state[fullStateName].indexOf(entry);
+        newState = [...this.state[fullStateName].slice(0, index), ...this.state[fullStateName].slice(index+1)];
+    
+        this.setState({
+          [inStateName]: !this.state[inStateName],
+          [fullStateName]: newState,
+        }, () => console.log(this.state));
       })
-
-      const stateArr = this.state[fullStateName].split(',');
-      const index = stateArr.indexOf(symbol);
-      const newStateArr = [...stateArr.slice(0, index), ...stateArr.slice(index+1)];
-      newState = newStateArr.join(',');
     }
-
-    //console.log(stateName);
-    //console.log(inStateName);
-    this.setState({
-      [inStateName]: !this.state[inStateName],
-      [fullStateName]: newState,
-    })
   }
 
   handleType = (symbol, position_type) => {
