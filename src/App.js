@@ -27,7 +27,6 @@ class App extends Component {
     quoteNews: [],
     quoteChart: [],
     searchHistory: [],
-    portfolio: [],
     portfolioNames: [],
     watchlistNames: [],
     watchlistNews: [],
@@ -51,7 +50,7 @@ class App extends Component {
       this.getLosers();
       this.getSearchHistoryQuotes();
       this.getWatchlistQuotes();
-      // this.getPortfolio();
+      this.getPortfolio();
     }.bind(this),3000);
 
     this.getNews();
@@ -130,18 +129,20 @@ class App extends Component {
   }
 
   getPortfolio = () => {
-    fetch(`${ApiAdapter.backendHost()}/portfolio_assets/1`).then(r => r.json())
-      .then(portfolio => {
-        this.setState({
-          portfolioNames: portfolio.map(each => each.symbol).join(','),
-          portfolio: portfolio,
-        });
+    fetch(`${ApiAdapter.backendHost()}/users/${localStorage.getItem("id")}/portfolio_assets`, {
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": localStorage.getItem("token")
+  		},
+    }).then(r => r.json()).then(portfolioNames => {
+        this.setState({ portfolioNames });
       })
       .then(() => {
-        fetch(`${ApiAdapter.host()}/batch?symbols=${this.state.portfolioNames}&types=stats,price`)
+        const portfolioStocks = this.state.portfolioNames.map(each => each.symbol);
+        fetch(ApiAdapter.getBatchStatsPrice(portfolioStocks))
         .then(r => r.json()).then(quotes => {
           for(const symbol in quotes) {
-            const quote = this.state.portfolio.find(each => each.symbol === symbol);
+            const quote = this.state.portfolioNames.find(each => each.symbol === symbol);
             quotes[symbol].position_type = quote.position_type;
           }
           //console.log(quotes);
@@ -214,13 +215,13 @@ class App extends Component {
       this.setState({ quote: `No results for ${error.message}. Please enter a valid stock symbol.` })
     }.bind(this));
 
-    if (!!this.state.portfolioNames.find(portfolioName => portfolioName.symbol.toLowerCase() === keyword.toLowerCase())) {
+    if (this.state.portfolioNames && !!this.state.portfolioNames.find(portfolioName => portfolioName.symbol.toLowerCase() === keyword.toLowerCase())) {
       this.setState({ inPortfolio: true })
     } else {
       this.setState({ inPortfolio: false })
     }
 
-    if (!!this.state.watchlistNames.find(watchlistName => watchlistName.symbol.toLowerCase() === keyword.toLowerCase())) {
+    if (this.state.watchlistNames && !!this.state.watchlistNames.find(watchlistName => watchlistName.symbol.toLowerCase() === keyword.toLowerCase())) {
       this.setState({ inWatchlist: true })
     } else {
       this.setState({ inWatchlist: false })

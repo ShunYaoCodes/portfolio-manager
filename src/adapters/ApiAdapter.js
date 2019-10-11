@@ -34,6 +34,10 @@ class ApiAdapter {
         return `${this.host()}/market/batch?symbols=${symbols.join(',')}&types=quote,news&last=${newCount}&token=${publishableKey}`;
     }
 
+    static getBatchStatsPrice(symbols = [], newCount = 5) {
+        return `${this.host()}/market/batch?symbols=${symbols.join(',')}&types=stats,price&last=${newCount}&token=${publishableKey}`;
+    }
+
     static mostActive() {
         return `${this.host()}/market/list/mostactive?token=${publishableKey}`;
     }
