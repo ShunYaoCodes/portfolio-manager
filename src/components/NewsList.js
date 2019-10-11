@@ -4,8 +4,8 @@ import UUID from 'uuid';
 import { Item } from 'semantic-ui-react';
 
 class NewsList extends React.Component {
-  get base() {
-    return this.props.base;
+  get type() {
+    return this.props.type;
   }
 
   get news() {
@@ -13,7 +13,7 @@ class NewsList extends React.Component {
   }
 
   handle_data = () => {
-    switch(this.base) {
+    switch(this.type) {
       case 'market':
         for (let symbol in this.news) {
           const all_symbol_news = this.news[symbol].news;
