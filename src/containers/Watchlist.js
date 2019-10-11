@@ -49,7 +49,7 @@ class Watchlist extends React.Component {
         <Grid.Row>
           <Grid.Column width={14}>
             <h3>Your Watchlist News:</h3>
-            <NewsList news={this.props.news}/>
+            <NewsList news={this.props.news} base='watchlist'/>
           </Grid.Column>
         </Grid.Row>
       </React.Fragment>

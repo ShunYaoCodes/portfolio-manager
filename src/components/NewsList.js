@@ -21,8 +21,9 @@ class NewsList extends React.Component {
         }
         break;
       case 'quote':
+      case 'watchlist':
+      default:
           this.handle_news(this.news);
-        break;
     }
   }
 

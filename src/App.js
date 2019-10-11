@@ -50,7 +50,7 @@ class App extends Component {
       this.getGainers();
       this.getLosers();
       this.getSearchHistoryQuotes();
-      // this.getWatchlistQuotes();
+      this.getWatchlistQuotes();
       // this.getPortfolio();
     }.bind(this),3000);
 
@@ -104,7 +104,7 @@ class App extends Component {
 
   getWatchlistQuotes = () => {
     const symbols = this.state.watchlistNames.map(watchlistName => watchlistName.symbol);
-    const adapter = this.state.watchlistNames.length > 0 ? ApiAdapter.getBatchQuotesNews(symbols) : ApiAdapter.getBatchQuotesNews();
+    const adapter = this.state.watchlistNames.length > 0 ? ApiAdapter.getBatchQuotesNews(symbols) : ApiAdapter.getIndexQuotesNews();
 
     fetch(adapter).then(r => r.json()).then(watchlistQuotesNews => {
       // console.log(watchlistQuotesNews);
