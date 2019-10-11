@@ -102,9 +102,15 @@ class App extends Component {
   }
 
   getWatchlistQuotes = () => {
-    const symbols = this.state.watchlistNames.map(watchlistName => watchlistName.symbol);
-    const adapter = this.state.watchlistNames.length > 0 ? ApiAdapter.getBatchQuotesNews(symbols) : ApiAdapter.getIndexQuotesNews();
+    let adapter;
 
+    if (this.state.watchlistNames.length > 0) {
+      const symbols = this.state.watchlistNames.map(watchlistName => watchlistName.symbol);
+      adapter = ApiAdapter.getBatchQuotesNews(symbols);
+    } else {
+      adapter = ApiAdapter.getIndexQuotesNews();
+    }
+     
     fetch(adapter).then(r => r.json()).then(watchlistQuotesNews => {
       // console.log(watchlistQuotesNews);
       const quotes = [];
@@ -144,6 +150,7 @@ class App extends Component {
           for(const symbol in quotes) {
             const quote = this.state.portfolioNames.find(each => each.symbol === symbol);
             quotes[symbol].position_type = quote.position_type;
+            quotes[symbol].id = quote.id; // add corresponding stock's backend id
           }
           //console.log(quotes);
           this.setState({ portfolioQuotes: quotes })
@@ -299,21 +306,22 @@ class App extends Component {
     }
   }
 
-  handleType = (symbol, position_type) => {
+  handleType = (symbolId, position_type) => {
     const newPortfolioQuotes = {...this.state.portfolioQuotes};
 
     for(const quote in newPortfolioQuotes) {
-      if (quote === symbol) {
+      if (newPortfolioQuotes[quote].id === symbolId) {
         newPortfolioQuotes[quote].position_type = position_type;
       }
     }
 
-    fetch(`${ApiAdapter.backendHost()}/portfolio_assets/1`, {
+    fetch(`${ApiAdapter.backendHost()}/portfolio_assets/${symbolId}`, {
       method: "PATCH",
       headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({ symbol, position_type })
+        "Content-Type": "application/json",
+        "Authorization": localStorage.getItem("token")
+  		},
+      body: JSON.stringify({ position_type })
     })
 
     this.setState({

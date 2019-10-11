@@ -4,7 +4,7 @@ import { Table, Radio } from 'semantic-ui-react'
 
 const Positions = props => {
   const handleChange = (e, { value }) => {
-    props.type(props.symbol, value)
+    props.type(props.id, value)
   }
 
   const link = `/quote?symbol=${props.symbol}`;
