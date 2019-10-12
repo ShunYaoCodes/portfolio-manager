@@ -95,8 +95,7 @@ class App extends Component {
 
   getSearchHistoryQuotes = () => {
     if (this.state.searchHistory.length > 0) {
-      const searchHistorySymbols = this.state.searchHistory.map(stock => stock.symbol);
-      fetch(ApiAdapter.getBatchQuotes(searchHistorySymbols)).then(r => r.json()).then(searchHistoryQuotes => {
+      fetch(ApiAdapter.getBatchQuotes(this.state.searchHistory)).then(r => r.json()).then(searchHistoryQuotes => {
         this.setState({ searchHistoryQuotes })
       })
     }
@@ -176,14 +175,18 @@ class App extends Component {
   }
 
   getSearchHistories = () => {
-    fetch(`${ApiAdapter.backendHost()}/users/${localStorage.getItem("id")}/search_histories`, {
-      headers: {
-        "Content-Type": "application/json",
-        "Authorization": localStorage.getItem("token")
-  		},
-    }).then(r => r.json()).then(searchHistory => {
-      this.setState({ searchHistory });
-    })
+    const searchHistory = localStorage.getItem('searchHistory');
+    if (searchHistory) this.setState({ 
+      searchHistory: searchHistory.split(','),
+    });
+    // fetch(`${ApiAdapter.backendHost()}/users/${localStorage.getItem("id")}/search_histories`, {
+    //   headers: {
+    //     "Content-Type": "application/json",
+    //     "Authorization": localStorage.getItem("token")
+  	// 	},
+    // }).then(r => r.json()).then(searchHistory => {
+    //   this.setState({ searchHistory });
+    // })
   }
 
   getWatchlists = () => {
@@ -245,33 +248,54 @@ class App extends Component {
   }
   
   updateSearchHistory = (symbol) => {
-    fetch(`${ApiAdapter.backendHost()}/users/${localStorage.getItem("id")}/search_histories`, {
-  		method: "POST",
-  		headers: {
-        "Content-Type": "application/json",
-        "Authorization": localStorage.getItem("token")
-  		},
-  		body: JSON.stringify({ symbol })
-  	}).then(r => r.json()).then(newSearch => {
-      let newSearchHistory = [];
+    const searchHistory = localStorage.getItem('searchHistory');
+    let newSearchHistory = [];
 
-      if (this.state.searchHistory.length > 0) {
-        newSearchHistory = this.state.searchHistory.filter(history => history.symbol !== newSearch.symbol);
-        newSearchHistory.unshift(newSearch); // add to the beginning of array
-      } else {
-        newSearchHistory.push(newSearch);
-      }
-      
-      const searchHistorySymbols = newSearchHistory.map(stock => stock.symbol);
+    if (searchHistory) {
+      newSearchHistory = searchHistory.split(',').filter(stock => stock !== symbol);
+      newSearchHistory.unshift(symbol); // add to the beginning of array
+    } else {
+      newSearchHistory.push(symbol);
+    }
 
-      fetch(ApiAdapter.getBatchQuotes(searchHistorySymbols))
-      .then(r => r.json()).then(searchHistoryQuotes => {
-        this.setState({
-          searchHistory: newSearchHistory,
-          searchHistoryQuotes,
-        })
+    localStorage.setItem('searchHistory', newSearchHistory.join(',')); 
+
+    fetch(ApiAdapter.getBatchQuotes(newSearchHistory))
+    .then(r => r.json()).then(searchHistoryQuotes => {
+      this.setState({
+        searchHistory: newSearchHistory,
+        searchHistoryQuotes,
       })
     })
+
+
+    // fetch(`${ApiAdapter.backendHost()}/users/${localStorage.getItem("id")}/search_histories`, {
+  	// 	method: "POST",
+  	// 	headers: {
+    //     "Content-Type": "application/json",
+    //     "Authorization": localStorage.getItem("token")
+  	// 	},
+  	// 	body: JSON.stringify({ symbol })
+  	// }).then(r => r.json()).then(newSearch => {
+    //   let newSearchHistory = [];
+
+    //   if (this.state.searchHistory.length > 0) {
+    //     newSearchHistory = this.state.searchHistory.filter(history => history.symbol !== newSearch.symbol);
+    //     newSearchHistory.unshift(newSearch); // add to the beginning of array
+    //   } else {
+    //     newSearchHistory.push(newSearch);
+    //   }
+      
+    //   const searchHistorySymbols = newSearchHistory.map(stock => stock.symbol);
+
+    //   fetch(ApiAdapter.getBatchQuotes(searchHistorySymbols))
+    //   .then(r => r.json()).then(searchHistoryQuotes => {
+    //     this.setState({
+    //       searchHistory: newSearchHistory,
+    //       searchHistoryQuotes,
+    //     })
+    //   })
+    // })
   }
 
   handleClick = (name, checked, symbol) => {
