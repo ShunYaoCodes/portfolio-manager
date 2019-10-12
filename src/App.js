@@ -54,7 +54,7 @@ class App extends Component {
     }.bind(this),3000);
 
     this.getNews();
-    // this.getSearchHistories();
+    this.getSearchHistories();
     this.getWatchlists();
   }
 
@@ -95,7 +95,8 @@ class App extends Component {
 
   getSearchHistoryQuotes = () => {
     if (this.state.searchHistory.length > 0) {
-      fetch(ApiAdapter.getBatchQuotes(this.state.searchHistory)).then(r => r.json()).then(searchHistoryQuotes => {
+      const searchHistorySymbols = this.state.searchHistory.map(stock => stock.symbol);
+      fetch(ApiAdapter.getBatchQuotes(searchHistorySymbols)).then(r => r.json()).then(searchHistoryQuotes => {
         this.setState({ searchHistoryQuotes })
       })
     }
@@ -144,17 +145,19 @@ class App extends Component {
         this.setState({ portfolioNames });
       })
       .then(() => {
-        const portfolioStocks = this.state.portfolioNames.map(each => each.symbol);
-        fetch(ApiAdapter.getBatchStatsPrice(portfolioStocks))
-        .then(r => r.json()).then(quotes => {
-          for(const symbol in quotes) {
-            const quote = this.state.portfolioNames.find(each => each.symbol === symbol);
-            quotes[symbol].position_type = quote.position_type;
-            quotes[symbol].id = quote.id; // add corresponding stock's backend id
-          }
-          //console.log(quotes);
-          this.setState({ portfolioQuotes: quotes })
-        })
+        if (this.state.portfolioNames.length > 0) {
+          const portfolioStocks = this.state.portfolioNames.map(each => each.symbol);
+          fetch(ApiAdapter.getBatchStatsPrice(portfolioStocks))
+          .then(r => r.json()).then(quotes => {
+            for(const symbol in quotes) {
+              const quote = this.state.portfolioNames.find(each => each.symbol === symbol);
+              quotes[symbol].position_type = quote.position_type;
+              quotes[symbol].id = quote.id; // add corresponding stock's backend id
+            }
+            //console.log(quotes);
+            this.setState({ portfolioQuotes: quotes })
+          })
+        }
       })
   }
 
@@ -173,9 +176,13 @@ class App extends Component {
   }
 
   getSearchHistories = () => {
-    fetch(`${ApiAdapter.backendHost()}/search_histories/1`)
-    .then(r => r.json()).then(searchHistory => {
-      this.setState({ searchHistory: searchHistory.join(',') });
+    fetch(`${ApiAdapter.backendHost()}/users/${localStorage.getItem("id")}/search_histories`, {
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": localStorage.getItem("token")
+  		},
+    }).then(r => r.json()).then(searchHistory => {
+      this.setState({ searchHistory });
     })
   }
 
@@ -233,31 +240,36 @@ class App extends Component {
     } else {
       this.setState({ inWatchlist: false })
     }
-    
+ 
     this.updateSearchHistory(keyword);
   }
   
-  updateSearchHistory = (keyword) => {
-    fetch(ApiAdapter.postSearchHistory(), {
+  updateSearchHistory = (symbol) => {
+    fetch(`${ApiAdapter.backendHost()}/users/${localStorage.getItem("id")}/search_histories`, {
   		method: "POST",
   		headers: {
         "Content-Type": "application/json",
         "Authorization": localStorage.getItem("token")
   		},
-  		body: JSON.stringify({
-        userId: localStorage.getItem("id"),
-        keyword 
-      })
-  	})
+  		body: JSON.stringify({ symbol })
+  	}).then(r => r.json()).then(newSearch => {
+      let newSearchHistory = [];
 
-    const newSearchHistory = this.state.searchHistory.filter(history => history !== keyword);
-    newSearchHistory.unshift(keyword); // add to the beginning of array
+      if (this.state.searchHistory.length > 0) {
+        newSearchHistory = this.state.searchHistory.filter(history => history.symbol !== newSearch.symbol);
+        newSearchHistory.unshift(newSearch); // add to the beginning of array
+      } else {
+        newSearchHistory.push(newSearch);
+      }
+      
+      const searchHistorySymbols = newSearchHistory.map(stock => stock.symbol);
 
-    fetch(ApiAdapter.getBatchQuotes(newSearchHistory))
-    .then(r => r.json()).then(searchHistoryQuotes => {
-      this.setState({
-        searchHistory: newSearchHistory,
-        searchHistoryQuotes,
+      fetch(ApiAdapter.getBatchQuotes(searchHistorySymbols))
+      .then(r => r.json()).then(searchHistoryQuotes => {
+        this.setState({
+          searchHistory: newSearchHistory,
+          searchHistoryQuotes,
+        })
       })
     })
   }
