@@ -49,13 +49,13 @@ class App extends Component {
       this.getGainers();
       this.getLosers();
       this.getSearchHistoryQuotes();
-      this.getWatchlistQuotes();
-      this.getPortfolio();
+      if (AuthAdapter.loggedIn()) this.getWatchlistQuotes();
+      if (AuthAdapter.loggedIn()) this.getPortfolio();
     }.bind(this),3000);
 
     this.getNews();
     this.getSearchHistories();
-    this.getWatchlists();
+    if (AuthAdapter.loggedIn()) this.getWatchlists();
   }
 
   componentWillUnmount() {
@@ -232,18 +232,20 @@ class App extends Component {
       this.setState({ quote: `No results for ${error.message}. Please enter a valid stock symbol.` })
     }.bind(this));
 
-    if (this.state.portfolioNames && !!this.state.portfolioNames.find(portfolioName => portfolioName.symbol.toLowerCase() === keyword.toLowerCase())) {
-      this.setState({ inPortfolio: true })
-    } else {
-      this.setState({ inPortfolio: false })
+    if (AuthAdapter.loggedIn()) {
+      if (this.state.portfolioNames && !!this.state.portfolioNames.find(portfolioName => portfolioName.symbol.toLowerCase() === keyword.toLowerCase())) {
+        this.setState({ inPortfolio: true })
+      } else {
+        this.setState({ inPortfolio: false })
+      }
+  
+      if (this.state.watchlistNames && !!this.state.watchlistNames.find(watchlistName => watchlistName.symbol.toLowerCase() === keyword.toLowerCase())) {
+        this.setState({ inWatchlist: true })
+      } else {
+        this.setState({ inWatchlist: false })
+      }
     }
-
-    if (this.state.watchlistNames && !!this.state.watchlistNames.find(watchlistName => watchlistName.symbol.toLowerCase() === keyword.toLowerCase())) {
-      this.setState({ inWatchlist: true })
-    } else {
-      this.setState({ inWatchlist: false })
-    }
- 
+    
     this.updateSearchHistory(keyword);
   }
   
@@ -305,40 +307,42 @@ class App extends Component {
     const inStateName = 'in'+ stateName.slice(0,1).toUpperCase() + stateName.slice(1);
     let newState;
 
-    if (checked) {
-      fetch(`${ApiAdapter.backendHost()}/users/${localStorage.getItem("id")}/${name}s`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": localStorage.getItem("token")
-        },
-        body: JSON.stringify({ symbol })
-      }).then(r => r.json()).then(stock => {
-        newState = [...this.state[fullStateName], stock];
-        console.log(this.state)
-        this.setState({
-          [inStateName]: !this.state[inStateName],
-          [fullStateName]: newState,
-        }, () => console.log(this.state));
-      })
-    } else {
-      const watchlistId = this.state[fullStateName].find(name => name.symbol.toLowerCase() === symbol.toLowerCase()).id;
-      fetch(`${ApiAdapter.backendHost()}/${name}s/${watchlistId}`, {
-        method: "DELETE",
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": localStorage.getItem("token")
-        }
-      }).then(r => r.json()).then(() => {
-        const entry = this.state[fullStateName].find(name => name.symbol.toLowerCase() === symbol.toLowerCase());
-        const index = this.state[fullStateName].indexOf(entry);
-        newState = [...this.state[fullStateName].slice(0, index), ...this.state[fullStateName].slice(index+1)];
-    
-        this.setState({
-          [inStateName]: !this.state[inStateName],
-          [fullStateName]: newState,
-        }, () => console.log(this.state));
-      })
+    if (AuthAdapter.loggedIn()) {
+      if (checked) {
+        fetch(`${ApiAdapter.backendHost()}/users/${localStorage.getItem("id")}/${name}s`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": localStorage.getItem("token")
+          },
+          body: JSON.stringify({ symbol })
+        }).then(r => r.json()).then(stock => {
+          newState = [...this.state[fullStateName], stock];
+          console.log(this.state)
+          this.setState({
+            [inStateName]: !this.state[inStateName],
+            [fullStateName]: newState,
+          }, () => console.log(this.state));
+        })
+      } else {
+        const watchlistId = this.state[fullStateName].find(name => name.symbol.toLowerCase() === symbol.toLowerCase()).id;
+        fetch(`${ApiAdapter.backendHost()}/${name}s/${watchlistId}`, {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": localStorage.getItem("token")
+          }
+        }).then(r => r.json()).then(() => {
+          const entry = this.state[fullStateName].find(name => name.symbol.toLowerCase() === symbol.toLowerCase());
+          const index = this.state[fullStateName].indexOf(entry);
+          newState = [...this.state[fullStateName].slice(0, index), ...this.state[fullStateName].slice(index+1)];
+      
+          this.setState({
+            [inStateName]: !this.state[inStateName],
+            [fullStateName]: newState,
+          }, () => console.log(this.state));
+        })
+      }
     }
   }
 

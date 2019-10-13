@@ -4,6 +4,7 @@ import NewsList from '../components/NewsList';
 import Asset from '../components/Quote/Asset';
 import { Grid } from 'semantic-ui-react'
 import { Checkbox } from 'semantic-ui-react'
+import AuthAdapter from '../adapters/AuthAdapter';
 
 class Quote extends React.Component {
   handleClick = (event, data) => {
@@ -23,18 +24,26 @@ class Quote extends React.Component {
 
           <Grid.Row>
             <Grid.Column width={7}>
-              {this.props.inWatchlist ?
-                <div><Checkbox toggle checked onClick={this.handleClick} name="watchlist"/>Remove from your watchlist</div>
+              {AuthAdapter.loggedIn() ? 
+                (this.props.inWatchlist ?
+                  <div><Checkbox toggle checked onClick={this.handleClick} name="watchlist"/>Remove from your watchlist</div>
+                  :
+                  <div><Checkbox toggle onClick={this.handleClick} name="watchlist"/> Add to your watchlist</div>
+                )
                 :
-                <div><Checkbox toggle onClick={this.handleClick} name="watchlist"/> Add to your watchlist</div>
+                <p>Sign in to add to your watchlist</p>
               }
             </Grid.Column>
 
             <Grid.Column width={7}>
-              {this.props.inPortfolio ?
-                <div><Checkbox toggle checked onClick={this.handleClick} name="portfolio_asset"/> Remove from your portfolio</div>
+              {AuthAdapter.loggedIn() ? 
+                (this.props.inPortfolio ?
+                  <div><Checkbox toggle checked onClick={this.handleClick} name="portfolio_asset"/> Remove from your portfolio</div>
+                  :
+                  <div><Checkbox toggle onClick={this.handleClick} name="portfolio_asset"/> Add to your portfolio</div>
+                )
                 :
-                <div><Checkbox toggle onClick={this.handleClick} name="portfolio_asset"/> Add to your portfolio</div>
+                <p>Sign in to add to your portfolio</p>
               }
             </Grid.Column>
           </Grid.Row>
