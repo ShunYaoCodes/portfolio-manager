@@ -14,6 +14,7 @@ import Login from './components/Login';
 import LoginForm from './components/LoginForm';
 import RegistrationForm from './components/RegistrationForm';
 import AuthAdapter from './adapters/AuthAdapter';
+import { map } from 'lodash';
 
 //import { BrowserRouter, Route, Link } from 'react-router-dom'
 const parseDate = timeParse("%Y-%m-%d");
@@ -28,13 +29,11 @@ class App extends Component {
     quoteChart: [],
     searchHistory: [],
     portfolioNames: [],
-    watchlistNames: [],
-    watchlistNews: [],
+    watchlist: [],
     inPortfolio: false,
     inWatchlist: false,
     searchHistoryQuotes: [],
     portfolioQuotes: [],
-    watchlistQuotes: [],
     mostActive: [],
     gainers: [],
     losers: [],
@@ -49,12 +48,11 @@ class App extends Component {
       this.getGainers();
       this.getLosers();
       this.getSearchHistoryQuotes();
-      if (AuthAdapter.loggedIn()) this.getWatchlistQuotes();
       if (AuthAdapter.loggedIn()) this.getPortfolio();
     }.bind(this),3000);
 
     this.getNews();
-    this.getSearchHistories();
+    this.getSearchHistory();
     if (AuthAdapter.loggedIn()) this.getWatchlists();
   }
 
@@ -65,13 +63,9 @@ class App extends Component {
 
   getIndexes = () => {
     fetch(ApiAdapter.getIndexQuotes()).then(r => r.json()).then(indexes => {
-      const indexArr = [];
-
-      for(const index in indexes) {
-        indexArr.push(indexes[index].quote)
-      }
-      //console.log(indexArr);
-      this.setState({ indexes: indexArr })
+      this.setState({ 
+        indexes: map(indexes, index => index.quote),
+      })
     })
   }
 
@@ -99,39 +93,6 @@ class App extends Component {
         this.setState({ searchHistoryQuotes })
       })
     }
-  }
-
-  getWatchlistQuotes = () => {
-    let adapter;
-
-    if (this.state.watchlistNames.length > 0) {
-      const symbols = this.state.watchlistNames.map(watchlistName => watchlistName.symbol);
-      adapter = ApiAdapter.getBatchQuotesNews(symbols);
-    } else {
-      adapter = ApiAdapter.getIndexQuotesNews();
-    }
-     
-    fetch(adapter).then(r => r.json()).then(watchlistQuotesNews => {
-      // console.log(watchlistQuotesNews);
-      const quotes = [];
-      let news = [];
-
-      for(const each in watchlistQuotesNews) {
-        quotes.push(watchlistQuotesNews[each].quote);
-        news.push(watchlistQuotesNews[each].news);
-      }
-
-      if (news.length > 0) {
-        news = news.reduce(
-          (accumulator, currentValue) => accumulator.concat(currentValue),[]
-        );
-      }
-
-      this.setState({
-        watchlistQuotes: quotes,
-        watchlistNews: news,
-      })
-    })
   }
 
   getPortfolio = () => {
@@ -174,7 +135,7 @@ class App extends Component {
     }.bind(this),20000);
   }
 
-  getSearchHistories = () => {
+  getSearchHistory = () => {
     const searchHistory = localStorage.getItem('searchHistory');
     if (searchHistory) this.setState({ 
       searchHistory: searchHistory.split(','),
@@ -195,8 +156,8 @@ class App extends Component {
         "Content-Type": "application/json",
         "Authorization": localStorage.getItem("token")
   		},
-    }).then(r => r.json()).then(watchlistNames => {
-      this.setState({ watchlistNames });
+    }).then(r => r.json()).then(watchlist => {
+      this.setState({ watchlist });
     })
   }
 
@@ -239,7 +200,7 @@ class App extends Component {
         this.setState({ inPortfolio: false })
       }
   
-      if (this.state.watchlistNames && !!this.state.watchlistNames.find(watchlistName => watchlistName.symbol.toLowerCase() === keyword.toLowerCase())) {
+      if (this.state.watchlist && !!this.state.watchlist.find(watchlistName => watchlistName.symbol.toLowerCase() === keyword.toLowerCase())) {
         this.setState({ inWatchlist: true })
       } else {
         this.setState({ inWatchlist: false })
@@ -420,7 +381,7 @@ class App extends Component {
 
               <Route exact path='/' render={() => <Market indexes={this.state.indexes} news={this.state.news} searchHistory={this.state.searchHistoryQuotes} mostActive={this.state.mostActive} gainers={this.state.gainers} losers={this.state.losers} search={this.handleSearch}/>} />
               <Route exact path='/portfolio' render={() => <Portfolio indexes={this.state.indexes} portfolio={this.state.portfolioQuotes} search={this.handleSearch} type={this.handleType}/>} />
-              <Route exact path='/watchlist' render={() => <Watchlist indexes={this.state.indexes} news={this.state.watchlistNews} watchlist={this.state.watchlistQuotes} search={this.handleSearch}/>} />
+              <Route exact path='/watchlist' render={() => <Watchlist indexes={this.state.indexes} watchlist={this.state.watchlist} search={this.handleSearch}/>} />
               <Route path='/quote' render={() => <Quote quote={this.state.quote} news={this.state.quoteNews} chart={this.state.quoteChart} click={this.handleClick} inPortfolio={this.state.inPortfolio} inWatchlist={this.state.inWatchlist}/>} />
             </Grid>
           </div>

@@ -9,8 +9,8 @@ const Watchlists = props => {
     <Table.Row>
       <Table.Cell><NavLink to={link} onClick={() => props.search(props.symbol)}>{props.symbol}</NavLink></Table.Cell>
       <Table.Cell>{props.latestPrice}</Table.Cell>
-      <Table.Cell>{props.change.toFixed(2)}</Table.Cell>
-      <Table.Cell>{(props.changePercent*100).toFixed(2)}%</Table.Cell>
+      <Table.Cell>{props.change ? props.change.toFixed(2) : 'N/A'}</Table.Cell>
+      <Table.Cell>{props.changePercent ? (props.changePercent*100).toFixed(2) : 'N/A'}%</Table.Cell>
       <Table.Cell>{props.high}</Table.Cell>
       <Table.Cell>{props.low}</Table.Cell>
       <Table.Cell>{props.latestVolume}</Table.Cell>
@@ -20,7 +20,7 @@ const Watchlists = props => {
       <Table.Cell>{props.peRatio}</Table.Cell>
       <Table.Cell>{props.week52High}</Table.Cell>
       <Table.Cell>{props.week52Low}</Table.Cell>
-      <Table.Cell>{(props.ytdChange*100).toFixed(2)}%</Table.Cell>
+      <Table.Cell>{props.ytdChange ? (props.ytdChange*100).toFixed(2) : 'N/A'}%</Table.Cell>
     </Table.Row>
   )
 }
