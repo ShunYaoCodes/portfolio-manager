@@ -6,7 +6,6 @@ import UUID from 'uuid';
 import { Grid, Table } from 'semantic-ui-react';
 import AuthAdapter from '../adapters/AuthAdapter';
 import ApiAdapter from '../adapters/ApiAdapter';
-import { map, flatten } from 'lodash';
 
 class Watchlist extends React.Component {
   state = {
@@ -19,38 +18,29 @@ class Watchlist extends React.Component {
   }
   
   getWatchlistQuotes = () => {
-    const symbols = this.props.watchlist.map(stock => stock.symbol);
-  
-    fetch(ApiAdapter.getBatchQuotesNews(symbols)).then(r => r.json()).then(watchlistQuotesNews => {
-      this.quotes = map(watchlistQuotesNews, stock => stock.quote);
-      this.news = flatten(map(watchlistQuotesNews, stock => stock.news));
+    fetch(ApiAdapter.getBatchQuotesNews(this.watchlistSymbols)).then(r => r.json()).then(watchlistQuotesNews => {
+      const quotes = [];
+      const news = [];
 
-      // const quotes = [];
-      // const news = [];
+      for(const stock in watchlistQuotesNews) {
+        quotes.push(watchlistQuotesNews[stock].quote);
+        news.push(...watchlistQuotesNews[stock].news);  // flatten each news array
+      }
 
-      // for(const stock in watchlistQuotesNews) {
-      //   quotes.push(watchlistQuotesNews[stock].quote);
-      //   news.push(...watchlistQuotesNews[stock].news);  // flatten each news array
-      // }
-
-      // this.setState({
-      //   quotes,
-      //   news,
-      // })
+      this.setState({
+        quotes,
+        news,
+      })
     })
   }
 
-  set quotes(quotes) {
-    this.setState({ quotes });
-  }
-
-  set news(news) {
-    this.setState({ news });
+  get watchlistSymbols() {
+    return this.props.watchlist.map(stock => stock.symbol);
   }
 
   render()  {
     if (AuthAdapter.loggedIn()) {
-      if (this.state.quotes.length > 0 && this.state.news.length > 0) {
+      if (this.state.quotes.length > 0) {
         const list = this.state.quotes.map(each => <Watchlists key={UUID()} {...each} search={this.props.search}/>)
     
         return (
@@ -88,13 +78,16 @@ class Watchlist extends React.Component {
                 </Table>
               </Grid.Column>
             </Grid.Row>
-    
-            <Grid.Row>
-              <Grid.Column width={14}>
-                <h3>Your Watchlist News:</h3>
-                <NewsList news={this.state.news} type='watchlist'/>
-              </Grid.Column>
-            </Grid.Row>
+
+            {this.state.news.length > 0 ?
+              <Grid.Row>
+                <Grid.Column width={14}>
+                  <h3>Your Watchlist News:</h3>
+                  <NewsList news={this.state.news} type='watchlist'/>
+                </Grid.Column>
+              </Grid.Row>
+            : null}
+            
           </React.Fragment>
         ) 
       } else {
