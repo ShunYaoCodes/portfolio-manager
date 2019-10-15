@@ -1,11 +1,9 @@
 import React from 'react';
 import IndexList from '../components/IndexList';
 import NewsList from '../components/NewsList';
-import SearchedList from '../components/Market/SearchedList';
-import MostActiveList from '../components/Market/MostActiveList';
-import GainersList from '../components/Market/GainersList';
-import LosersList from '../components/Market/LosersList';
+import SearchHistory from '../components/Market/SearchHistory';
 import { Grid, Icon } from 'semantic-ui-react'
+import QuoteTable from '../components/Market/QuoteTable/QuoteTable';
 
 class Market extends React.Component {
   render() {
@@ -24,10 +22,10 @@ class Market extends React.Component {
             <NewsList news={this.props.news} type='market'/>
           </Grid.Column>
           <Grid.Column computer={4} mobile={8}>
-            <SearchedList searchHistory={this.props.searchHistory} search={this.props.search}/>
-            <MostActiveList mostActive={this.props.mostActive} search={this.props.search}/>
-            <GainersList gainers={this.props.gainers} search={this.props.search}/>
-            <LosersList losers={this.props.mostActive} search={this.props.search}/>
+            <SearchHistory searchHistory={this.props.searchHistory} search={this.props.search}/>
+            <QuoteTable tableName='Most Active' tableRows={this.props.mostActive} search={this.props.search}/>
+            <QuoteTable tableName='Gainers' tableRows={this.props.gainers} search={this.props.search}/>
+            <QuoteTable tableName='Losers' tableRows={this.props.losers} search={this.props.search}/>
           </Grid.Column>
         </Grid.Row>
       </React.Fragment>

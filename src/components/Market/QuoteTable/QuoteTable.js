@@ -1,14 +1,15 @@
 import React from 'react';
-import MostActive from './MostActive';
+import QuoteTableRow from './QuoteTableRow';
 import UUID from 'uuid';
 import { Table } from 'semantic-ui-react';
 
-const MostActiveList = props => {
-  const list = props.mostActive.map(quote => <MostActive key={UUID()} {...quote} search={props.search}/>)
+const QuoteTable = props => {
+    console.log(props);
+  const tableRows = props.tableRows.map(quote => <QuoteTableRow key={UUID()} {...quote} search={props.search}/>)
 
   return (
     <div>
-      <h3>Most Active:</h3>
+      <h3>{props.tableName}:</h3>
       <Table color='blue' columns={4}>
         <Table.Header>
           <Table.Row>
@@ -20,11 +21,11 @@ const MostActiveList = props => {
         </Table.Header>
 
         <Table.Body>
-          {list}
+          {tableRows}
         </Table.Body>
       </Table>
     </div>
   )
 }
 
-export default MostActiveList;
+export default QuoteTable;
