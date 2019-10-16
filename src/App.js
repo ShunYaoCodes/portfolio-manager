@@ -14,6 +14,7 @@ import Login from './components/Login';
 import LoginForm from './components/LoginForm';
 import RegistrationForm from './components/RegistrationForm';
 import AuthAdapter from './adapters/AuthAdapter';
+import AppAdapter from './adapters/AppAdapter';
 import { map } from 'lodash';
 
 //import { BrowserRouter, Route, Link } from 'react-router-dom'
@@ -21,7 +22,6 @@ const parseDate = timeParse("%Y-%m-%d");
 
 class App extends Component {
   state = {
-    news: [],
     indexes: [],
     symbol: '',
     quote: null,
@@ -33,30 +33,20 @@ class App extends Component {
     inWatchlist: false,
     searchHistoryQuotes: [],
     portfolioQuotes: [],
-    mostActive: [],
-    gainers: [],
-    losers: [],
-    pageStatus: 'main',
-    token: '',
   }
 
   componentDidMount() {
     this.intervalID = setInterval(function(){
       this.getIndexes();
-      this.getMostActive();
-      this.getGainers();
-      this.getLosers();
       this.getSearchHistoryQuotes();
       if (AuthAdapter.loggedIn()) this.getPortfolio();
     }.bind(this),3000);
 
-    this.getNews();
     if (AuthAdapter.loggedIn()) this.getWatchlists();
   }
 
   componentWillUnmount() {
     clearInterval(this.intervalID);
-    clearInterval(this.intervalID1);
   }
 
   getIndexes = () => {
@@ -64,24 +54,6 @@ class App extends Component {
       this.setState({ 
         indexes: map(indexes, index => index.quote),
       })
-    })
-  }
-
-  getMostActive = () => {
-    fetch(ApiAdapter.mostActive()).then(r => r.json()).then(mostActive => {
-      this.setState({ mostActive })
-    })
-  }
-
-  getGainers = () => {
-    fetch(ApiAdapter.gainers()).then(r => r.json()).then(gainers => {
-      this.setState({ gainers })
-    })
-  }
-
-  getLosers = () => {
-    fetch(ApiAdapter.losers()).then(r => r.json()).then(losers => {
-      this.setState({ losers })
     })
   }
 
@@ -111,28 +83,9 @@ class App extends Component {
       })
   }
 
-  getNews = () => {
-    const adapter = this.searchHistory.length > 0 ? ApiAdapter.getBatchNews(this.searchHistory) : ApiAdapter.getIndexNews();
-
-    fetch(adapter).then(r => r.json()).then(news => {
-      this.setState({ news })
-    })
-
-    this.intervalID1 = setInterval(function(){
-      fetch(adapter).then(r => r.json()).then(news => {
-        this.setState({ news })
-      })
-    }.bind(this),20000);
-  }
-
-  get searchHistory() {
-    const searchHistory = localStorage.getItem('searchHistory');
-    return searchHistory ? searchHistory.split(',') : [];
-  }
-
   getSearchHistoryQuotes = () => {
-    if (this.searchHistory.length > 0) {
-      fetch(ApiAdapter.getBatchQuotes(this.searchHistory)).then(r => r.json()).then(searchHistoryQuotes => {
+    if (AppAdapter.searchHistory().length > 0) {
+      fetch(ApiAdapter.getBatchQuotes(AppAdapter.searchHistory())).then(r => r.json()).then(searchHistoryQuotes => {
           this.setState({ searchHistoryQuotes })
       })
     }
@@ -201,8 +154,8 @@ class App extends Component {
   updateSearchHistory = (symbol) => {
     let newSearchHistory = [];
 
-    if (this.searchHistory.length > 0) {
-      newSearchHistory = this.searchHistory.filter(stock => stock !== symbol);
+    if (AppAdapter.searchHistory().length > 0) {
+      newSearchHistory = AppAdapter.searchHistory().filter(stock => stock !== symbol);
       newSearchHistory.unshift(symbol); // add to the beginning of array
     } else {
       newSearchHistory.push(symbol);
@@ -333,7 +286,7 @@ class App extends Component {
                   <Redirect to="/"/>
               }
 
-              <Route exact path='/' render={() => <Market indexes={this.state.indexes} news={this.state.news} searchHistory={this.state.searchHistoryQuotes} mostActive={this.state.mostActive} gainers={this.state.gainers} losers={this.state.losers} search={this.handleSearch}/>} />
+              <Route exact path='/' render={() => <Market indexes={this.state.indexes} searchHistory={this.state.searchHistoryQuotes} search={this.handleSearch}/>} />
               <Route exact path='/portfolio' render={() => <Portfolio indexes={this.state.indexes} portfolio={this.state.portfolioQuotes} search={this.handleSearch} type={this.handleType}/>} />
               <Route exact path='/watchlist' render={() => <Watchlist indexes={this.state.indexes} watchlist={this.state.watchlist} search={this.handleSearch}/>} />
               <Route path='/quote' render={() => <Quote quote={this.state.quote} news={this.state.quoteNews} chart={this.state.quoteChart} click={this.handleClick} inPortfolio={this.state.inPortfolio} inWatchlist={this.state.inWatchlist}/>} />
