@@ -26,8 +26,6 @@ class App extends Component {
     detailQuote: {},
     watchlist: [],
     portfolio: [],
-    inPortfolio: false,
-    inWatchlist: false,
     searchHistoryQuotes: [],
   }
 
@@ -96,6 +94,8 @@ class App extends Component {
           quote: item.quote,
           news: item.news,
           chart: this.transformItemDataForChart(item),
+          inWatchlist: this.inWatchlistStatus(keyword),
+          inPortfolio: this.inPortfolioStatus(keyword),
         },
       })
     }).catch((error) => {
@@ -105,20 +105,6 @@ class App extends Component {
         }
       })
     });
-
-    if (AuthAdapter.loggedIn()) {
-      if (this.state.portfolio && !!this.state.portfolio.find(portfolioName => portfolioName.symbol.toLowerCase() === keyword.toLowerCase())) {
-        this.setState({ inPortfolio: true })
-      } else {
-        this.setState({ inPortfolio: false })
-      }
-  
-      if (this.state.watchlist && !!this.state.watchlist.find(watchlistName => watchlistName.symbol.toLowerCase() === keyword.toLowerCase())) {
-        this.setState({ inWatchlist: true })
-      } else {
-        this.setState({ inWatchlist: false })
-      }
-    }
     
     this.updateSearchHistory(keyword);
   }
@@ -138,6 +124,22 @@ class App extends Component {
     data.columns = ['date', 'open', 'high', 'low', 'close', 'volume']
 
     return data;
+  }
+
+  inWatchlistStatus(keyword) {
+    if (AuthAdapter.loggedIn() && this.state.portfolio && !!this.state.portfolio.find(portfolioName => portfolioName.symbol.toLowerCase() === keyword.toLowerCase())) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  inPortfolioStatus(keyword) {
+    if (AuthAdapter.loggedIn() && this.state.watchlist && !!this.state.watchlist.find(watchlistName => watchlistName.symbol.toLowerCase() === keyword.toLowerCase())) {
+      return true;
+    } else {
+      return false;
+    }
   }
   
   updateSearchHistory = (symbol) => {
@@ -221,48 +223,48 @@ class App extends Component {
   }
 
   render() {
-      return (
-        <Router>
-          <div>
-            <Grid centered>
-              <Grid.Row>
-                <Grid.Column computer={6} mobile={14}>
-                  <NavLink to='/' exact><h1 style={{marginTop: '5px'}}>Portfolio Manager and Hedger</h1></NavLink>
-                </Grid.Column>
-                <Grid.Column computer={6} mobile={12}>
-                  <SearchBar search={this.handleSearch}/>
-                </Grid.Column>
-                <Grid.Column computer={2} mobile={2}>
-                  {
-                    AuthAdapter.notLoggedIn() ?
-                      <Login signIn={this.handleSignIn}/>
-                    :
-                      <Button primary name='sign_out' onClick={this.handleSignOut} style={{marginTop: '10px'}}>Sign Out</Button>
-                  }
-                </Grid.Column>
-                <Grid.Column width={14}>
-                  <NavBar {...this.state}/>
-                </Grid.Column>
-              </Grid.Row>
+    return (
+      <Router>
+        <div>
+          <Grid centered>
+            <Grid.Row>
+              <Grid.Column computer={6} mobile={14}>
+                <NavLink to='/' exact><h1 style={{marginTop: '5px'}}>Portfolio Manager and Hedger</h1></NavLink>
+              </Grid.Column>
+              <Grid.Column computer={6} mobile={12}>
+                <SearchBar search={this.handleSearch}/>
+              </Grid.Column>
+              <Grid.Column computer={2} mobile={2}>
+                {
+                  AuthAdapter.notLoggedIn() ?
+                    <Login signIn={this.handleSignIn}/>
+                  :
+                    <Button primary name='sign_out' onClick={this.handleSignOut} style={{marginTop: '10px'}}>Sign Out</Button>
+                }
+              </Grid.Column>
+              <Grid.Column width={14}>
+                <NavBar {...this.state}/>
+              </Grid.Column>
+            </Grid.Row>
 
-              {
-                AuthAdapter.notLoggedIn() ?
-                  <React.Fragment>
-                    <Route exact path="/login" render={(props) => <LoginForm {...props} /> } />
-                    <Route exact path="/register" render={(props) => <RegistrationForm {...props} /> } />
-                  </React.Fragment>
-                :
-                  <Redirect to="/"/>
-              }
+            {
+              AuthAdapter.notLoggedIn() ?
+                <React.Fragment>
+                  <Route exact path="/login" render={(props) => <LoginForm {...props} /> } />
+                  <Route exact path="/register" render={(props) => <RegistrationForm {...props} /> } />
+                </React.Fragment>
+              :
+                <Redirect to="/"/>
+            }
 
-              <Route exact path='/' render={() => <Market indexes={this.state.indexes} searchHistory={this.state.searchHistoryQuotes} search={this.handleSearch}/>} />
-              <Route exact path='/portfolio' render={() => <Portfolio indexes={this.state.indexes} portfolio={this.state.portfolio} search={this.handleSearch} updatePortfolio={this.updatePortfolio}/>} />
-              <Route exact path='/watchlist' render={() => <Watchlist indexes={this.state.indexes} watchlist={this.state.watchlist} search={this.handleSearch}/>} />
-              <Route path='/quote' render={() => <DetailQuote {...this.state.detailQuote} click={this.handleClick} inPortfolio={this.state.inPortfolio} inWatchlist={this.state.inWatchlist}/>} />
-            </Grid>
-          </div>
-        </Router>
-      );
+            <Route exact path='/' render={() => <Market indexes={this.state.indexes} searchHistory={this.state.searchHistoryQuotes} search={this.handleSearch}/>} />
+            <Route exact path='/portfolio' render={() => <Portfolio indexes={this.state.indexes} portfolio={this.state.portfolio} search={this.handleSearch} updatePortfolio={this.updatePortfolio}/>} />
+            <Route exact path='/watchlist' render={() => <Watchlist indexes={this.state.indexes} watchlist={this.state.watchlist} search={this.handleSearch}/>} />
+            <Route path='/quote' render={() => <DetailQuote {...this.state.detailQuote} click={this.handleClick}/>} />
+          </Grid>
+        </div>
+      </Router>
+    );
   }
 }
 

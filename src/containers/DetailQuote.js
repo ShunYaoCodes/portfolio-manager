@@ -1,13 +1,22 @@
 import React from 'react';
 //import IndexList from '../components/IndexList';
 import NewsList from '../components/NewsList';
-import Asset from '../components/Quote/Asset';
+import Asset from '../components/DetailQuote/Asset';
 import { Grid } from 'semantic-ui-react'
 import { Checkbox } from 'semantic-ui-react'
 import AuthAdapter from '../adapters/AuthAdapter';
 
 class DetailQuote extends React.Component {
-  // this.props consists of {quote, news, chart} or {error}
+  /****
+   * this.props consists of 
+   *  {
+   *    quote (Array), 
+   *    news (Array), 
+   *    chart (Array), 
+   *    inWatchlist (Boolean), 
+   *    inPortfolio (Boolean), 
+   *  } 
+   */
   
   handleClick = (event, data) => {
     this.props.click(data.name, data.checked, this.props.quote.symbol)

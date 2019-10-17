@@ -1,6 +1,6 @@
 import React from 'react';
-import Stats from './Stats.js';
-import StockChart from './Chart.js';
+import Stats from './Stats';
+import StockChart from './Chart';
 import { Grid } from 'semantic-ui-react'
 import { TypeChooser } from "react-stockcharts/lib/helper";
 
