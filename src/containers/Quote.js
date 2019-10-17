@@ -7,13 +7,14 @@ import { Checkbox } from 'semantic-ui-react'
 import AuthAdapter from '../adapters/AuthAdapter';
 
 class Quote extends React.Component {
+  // this.props consists of {quote, news, chart} or {error}
+  
   handleClick = (event, data) => {
     this.props.click(data.name, data.checked, this.props.quote.symbol)
   }
 
   render() {
-    //console.log(this.props.quote);
-    if (this.props.quote && typeof(this.props.quote) !== 'string') {
+    if (this.props.quote && !this.props.error) {
       return (
         <React.Fragment>
           <Grid.Row>
@@ -53,7 +54,7 @@ class Quote extends React.Component {
           <Grid.Row>
             <Grid.Column width={14}>
               <h2>{this.props.quote.symbol} News:</h2>
-              <NewsList news={this.props.news}  type='quote'/>
+              <NewsList news={this.props.news}  type='detailQuote'/>
             </Grid.Column>
           </Grid.Row>
         </React.Fragment>
@@ -61,7 +62,7 @@ class Quote extends React.Component {
     } else {
       return (
         <Grid.Row>
-          <h3>{this.props.quote}</h3>
+          <h3>{this.props.error}</h3>
         </Grid.Row>
       )
     }

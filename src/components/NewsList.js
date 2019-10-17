@@ -20,7 +20,7 @@ class NewsList extends React.Component {
           this.handle_news(all_symbol_news);
         }
         break;
-      case 'quote':
+      case 'detailQuote':
       case 'watchlist':
       default:
           this.handle_news(this.news);

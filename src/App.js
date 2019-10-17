@@ -23,10 +23,7 @@ const parseDate = timeParse("%Y-%m-%d");
 class App extends Component {
   state = {
     indexes: [],
-    symbol: '',
-    quote: null,
-    quoteNews: [],
-    quoteChart: [],
+    detailQuote: {},
     watchlist: [],
     portfolio: [],
     inPortfolio: false,
@@ -89,34 +86,25 @@ class App extends Component {
   handleSearch = keyword => {
     fetch(ApiAdapter.getStockInfo(keyword))
     .then(function(response) {
-      if (response.ok) {
-        return response;
-      }
+      if (response.ok) return response;
       throw new Error(keyword);
     })
     .then(res => res.json())
     .then(item => {
-      let data = item.chart.map(d => {
-        return {
-          date: parseDate(d.date),
-          open: d.open,
-          high: d.high,
-          low: d.low,
-          close: d.close,
-          volume: d.volume,
+      this.setState({
+        detailQuote: {
+          quote: item.quote,
+          news: item.news,
+          chart: this.transformItemDataForChart(item),
+        },
+      })
+    }).catch((error) => {
+      this.setState({ 
+        detailQuote: {
+          error: `No results for ${error.message}. Please enter a valid stock symbol.`,
         }
       })
-      data.columns = ['date', 'open', 'high', 'low', 'close', 'volume']
-
-      this.setState({
-        symbol: keyword,
-        quote: item.quote,
-        quoteNews: item.news,
-        quoteChart: data,
-      })
-    }).catch(function(error) {
-      this.setState({ quote: `No results for ${error.message}. Please enter a valid stock symbol.` })
-    }.bind(this));
+    });
 
     if (AuthAdapter.loggedIn()) {
       if (this.state.portfolio && !!this.state.portfolio.find(portfolioName => portfolioName.symbol.toLowerCase() === keyword.toLowerCase())) {
@@ -133,6 +121,23 @@ class App extends Component {
     }
     
     this.updateSearchHistory(keyword);
+  }
+
+  transformItemDataForChart = (item) => {
+    let data = item.chart.map(d => {
+      return {
+        date: parseDate(d.date),
+        open: d.open,
+        high: d.high,
+        low: d.low,
+        close: d.close,
+        volume: d.volume,
+      }
+    })
+
+    data.columns = ['date', 'open', 'high', 'low', 'close', 'volume']
+
+    return data;
   }
   
   updateSearchHistory = (symbol) => {
@@ -256,7 +261,7 @@ class App extends Component {
               <Route exact path='/' render={() => <Market indexes={this.state.indexes} searchHistory={this.state.searchHistoryQuotes} search={this.handleSearch}/>} />
               <Route exact path='/portfolio' render={() => <Portfolio indexes={this.state.indexes} portfolio={this.state.portfolio} search={this.handleSearch} updatePortfolio={this.updatePortfolio}/>} />
               <Route exact path='/watchlist' render={() => <Watchlist indexes={this.state.indexes} watchlist={this.state.watchlist} search={this.handleSearch}/>} />
-              <Route path='/quote' render={() => <Quote quote={this.state.quote} news={this.state.quoteNews} chart={this.state.quoteChart} click={this.handleClick} inPortfolio={this.state.inPortfolio} inWatchlist={this.state.inWatchlist}/>} />
+              <Route path='/quote' render={() => <Quote {...this.state.detailQuote} click={this.handleClick} inPortfolio={this.state.inPortfolio} inWatchlist={this.state.inWatchlist}/>} />
             </Grid>
           </div>
         </Router>
