@@ -5,7 +5,7 @@ import SearchBar from './components/SearchBar';
 import NavBar from './components/NavBar';
 import Portfolio from './containers/Portfolio'
 import Watchlist from './containers/Watchlist'
-import Quote from './containers/Quote';
+import DetailQuote from './containers/DetailQuote';
 import { timeParse } from "d3-time-format";
 import { BrowserRouter as Router, Route, NavLink, Redirect } from 'react-router-dom';
 import './App.css'
@@ -160,7 +160,6 @@ class App extends Component {
   handleClick = (name, checked, symbol) => {
     const stateName = name.split('_')[0];
     const fullStateName = stateName + 'Names';
-    //console.log(`${stateName}:`, this.state[stateName]);
     const inStateName = 'in'+ stateName.slice(0,1).toUpperCase() + stateName.slice(1);
     let newState;
 
@@ -175,11 +174,11 @@ class App extends Component {
           body: JSON.stringify({ symbol })
         }).then(r => r.json()).then(stock => {
           newState = [...this.state[fullStateName], stock];
-          console.log(this.state)
+
           this.setState({
             [inStateName]: !this.state[inStateName],
             [fullStateName]: newState,
-          }, () => console.log(this.state));
+          });
         })
       } else {
         const watchlistId = this.state[fullStateName].find(name => name.symbol.toLowerCase() === symbol.toLowerCase()).id;
@@ -197,7 +196,7 @@ class App extends Component {
           this.setState({
             [inStateName]: !this.state[inStateName],
             [fullStateName]: newState,
-          }, () => console.log(this.state));
+          });
         })
       }
     }
@@ -222,8 +221,6 @@ class App extends Component {
   }
 
   render() {
-    // console.log(this.state.watchlistNews);
-    
       return (
         <Router>
           <div>
@@ -261,7 +258,7 @@ class App extends Component {
               <Route exact path='/' render={() => <Market indexes={this.state.indexes} searchHistory={this.state.searchHistoryQuotes} search={this.handleSearch}/>} />
               <Route exact path='/portfolio' render={() => <Portfolio indexes={this.state.indexes} portfolio={this.state.portfolio} search={this.handleSearch} updatePortfolio={this.updatePortfolio}/>} />
               <Route exact path='/watchlist' render={() => <Watchlist indexes={this.state.indexes} watchlist={this.state.watchlist} search={this.handleSearch}/>} />
-              <Route path='/quote' render={() => <Quote {...this.state.detailQuote} click={this.handleClick} inPortfolio={this.state.inPortfolio} inWatchlist={this.state.inWatchlist}/>} />
+              <Route path='/quote' render={() => <DetailQuote {...this.state.detailQuote} click={this.handleClick} inPortfolio={this.state.inPortfolio} inWatchlist={this.state.inWatchlist}/>} />
             </Grid>
           </div>
         </Router>

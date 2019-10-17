@@ -5,7 +5,6 @@ import { Grid } from 'semantic-ui-react'
 import { TypeChooser } from "react-stockcharts/lib/helper";
 
 const Asset = (props) => {
-  //console.log('in asset', props);
   return (
     <React.Fragment>
       <Grid.Row>

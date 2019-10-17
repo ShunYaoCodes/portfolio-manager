@@ -63,8 +63,6 @@ class Market extends React.Component {
   }
 
   render() {
-    //console.log(this.props.searchHistory);
-    // console.log(this.state.indexes)
     return (
 
       <React.Fragment>
@@ -90,5 +88,3 @@ class Market extends React.Component {
 }
 
 export default Market;
-
-// indexes={this.state.indexes} news={this.state.news} mostActive={this.state.mostActive} gainers={this.state.gainers} losers={this.state.losers}

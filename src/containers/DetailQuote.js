@@ -6,7 +6,7 @@ import { Grid } from 'semantic-ui-react'
 import { Checkbox } from 'semantic-ui-react'
 import AuthAdapter from '../adapters/AuthAdapter';
 
-class Quote extends React.Component {
+class DetailQuote extends React.Component {
   // this.props consists of {quote, news, chart} or {error}
   
   handleClick = (event, data) => {
@@ -69,4 +69,4 @@ class Quote extends React.Component {
   }
 }
 
-export default Quote;
+export default DetailQuote;

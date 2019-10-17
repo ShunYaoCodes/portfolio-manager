@@ -2,7 +2,6 @@ import React from 'react';
 import { Table } from 'semantic-ui-react'
 
 const EachStats = props => {
-  //console.log(props.shares);
   return (
     <Table.Row>
       <Table.Cell className='head'>{props.type}</Table.Cell>
