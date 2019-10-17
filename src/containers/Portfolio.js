@@ -10,38 +10,25 @@ class Portfolio extends React.Component {
   state = {
     value: null,
     amount: 25000,
-    portfolio: [],
     portfolioQuotes: [],
   }
 
   componentDidMount() {
-    if (AuthAdapter.loggedIn()) this.getPortfolio();
+    if (this.props.portfolio.length > 0) {
+      this.intervalID = setInterval(() => {
+        this.getPortfolioQuotes();
+      },3000);
+    }
   }
 
   componentWillUnmount() {
     clearInterval(this.intervalID);
   }
 
-  getPortfolio = () => {
-    fetch(`${ApiAdapter.backendHost()}/users/${localStorage.getItem("id")}/portfolio_assets`, {
-      headers: {
-        "Content-Type": "application/json",
-        "Authorization": localStorage.getItem("token")
-  		},
-    }).then(r => r.json()).then(portfolio => {
-      if (portfolio.length > 0){
-        this.setState({ portfolio });
-        this.intervalID = setInterval(() => {
-          this.getPortfolioQuotes();
-        },3000);
-      }
-    })
-  }
-
   getPortfolioQuotes = () => {
     fetch(ApiAdapter.getBatchStatsPrice(this.portfolioSymbols)).then(r => r.json()).then(quotes => {
       for(const symbol in quotes) {
-        const quote = this.state.portfolio.find(each => each.symbol === symbol);
+        const quote = this.props.portfolio.find(each => each.symbol === symbol);
         quotes[symbol].position_type = quote.position_type;
         quotes[symbol].id = quote.id; // add corresponding stock's backend id
       }
@@ -53,7 +40,7 @@ class Portfolio extends React.Component {
   }
 
   get portfolioSymbols() {
-    return this.state.portfolio.map(stock => stock.symbol);
+    return this.props.portfolio.map(stock => stock.symbol);
   }
 
   handleChange = (e, { value }) => {
@@ -67,7 +54,7 @@ class Portfolio extends React.Component {
   }
 
   handleType = (symbolId, position_type) => {
-    const newPortfolio = [...this.state.portfolio];
+    const newPortfolio = [...this.props.portfolio];
 
     for(const quote in newPortfolio) {
       if (newPortfolio[quote].id === symbolId) {
@@ -84,9 +71,7 @@ class Portfolio extends React.Component {
       body: JSON.stringify({ position_type })
     })
 
-    this.setState({
-      portfolio: newPortfolio,
-    });
+    this.props.updatePortfolio(newPortfolio);
   }
 
   render() {

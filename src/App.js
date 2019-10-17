@@ -28,6 +28,7 @@ class App extends Component {
     quoteNews: [],
     quoteChart: [],
     watchlist: [],
+    portfolio: [],
     inPortfolio: false,
     inWatchlist: false,
     searchHistoryQuotes: [],
@@ -39,6 +40,7 @@ class App extends Component {
       this.getSearchHistoryQuotes();
     }.bind(this),3000);
 
+    if (AuthAdapter.loggedIn()) this.getPortfolio();
     if (AuthAdapter.loggedIn()) this.getWatchlists();
   }
 
@@ -70,6 +72,17 @@ class App extends Component {
   		},
     }).then(r => r.json()).then(watchlist => {
       this.setState({ watchlist });
+    })
+  }
+
+  getPortfolio = () => {
+    fetch(`${ApiAdapter.backendHost()}/users/${localStorage.getItem("id")}/portfolio_assets`, {
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": localStorage.getItem("token")
+  		},
+    }).then(r => r.json()).then(portfolio => {
+      if (portfolio.length > 0) this.setState({ portfolio });
     })
   }
 
@@ -185,6 +198,12 @@ class App extends Component {
     }
   }
 
+  updatePortfolio = (newPortfolio) => {
+    this.setState({
+      portfolio: newPortfolio,
+    })
+  }
+
   handleSignIn = (pageStatus) => {
     this.setState({
       pageStatus
@@ -235,7 +254,7 @@ class App extends Component {
               }
 
               <Route exact path='/' render={() => <Market indexes={this.state.indexes} searchHistory={this.state.searchHistoryQuotes} search={this.handleSearch}/>} />
-              <Route exact path='/portfolio' render={() => <Portfolio indexes={this.state.indexes} search={this.handleSearch}/>} />
+              <Route exact path='/portfolio' render={() => <Portfolio indexes={this.state.indexes} portfolio={this.state.portfolio} search={this.handleSearch} updatePortfolio={this.updatePortfolio}/>} />
               <Route exact path='/watchlist' render={() => <Watchlist indexes={this.state.indexes} watchlist={this.state.watchlist} search={this.handleSearch}/>} />
               <Route path='/quote' render={() => <Quote quote={this.state.quote} news={this.state.quoteNews} chart={this.state.quoteChart} click={this.handleClick} inPortfolio={this.state.inPortfolio} inWatchlist={this.state.inWatchlist}/>} />
             </Grid>
