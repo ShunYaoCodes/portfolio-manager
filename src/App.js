@@ -27,19 +27,16 @@ class App extends Component {
     quote: null,
     quoteNews: [],
     quoteChart: [],
-    portfolioNames: [],
     watchlist: [],
     inPortfolio: false,
     inWatchlist: false,
     searchHistoryQuotes: [],
-    portfolioQuotes: [],
   }
 
   componentDidMount() {
     this.intervalID = setInterval(function(){
       this.getIndexes();
       this.getSearchHistoryQuotes();
-      if (AuthAdapter.loggedIn()) this.getPortfolio();
     }.bind(this),3000);
 
     if (AuthAdapter.loggedIn()) this.getWatchlists();
@@ -55,32 +52,6 @@ class App extends Component {
         indexes: map(indexes, index => index.quote),
       })
     })
-  }
-
-  getPortfolio = () => {
-    fetch(`${ApiAdapter.backendHost()}/users/${localStorage.getItem("id")}/portfolio_assets`, {
-      headers: {
-        "Content-Type": "application/json",
-        "Authorization": localStorage.getItem("token")
-  		},
-    }).then(r => r.json()).then(portfolioNames => {
-        this.setState({ portfolioNames });
-      })
-      .then(() => {
-        if (this.state.portfolioNames.length > 0) {
-          const portfolioStocks = this.state.portfolioNames.map(each => each.symbol);
-          fetch(ApiAdapter.getBatchStatsPrice(portfolioStocks))
-          .then(r => r.json()).then(quotes => {
-            for(const symbol in quotes) {
-              const quote = this.state.portfolioNames.find(each => each.symbol === symbol);
-              quotes[symbol].position_type = quote.position_type;
-              quotes[symbol].id = quote.id; // add corresponding stock's backend id
-            }
-            //console.log(quotes);
-            this.setState({ portfolioQuotes: quotes })
-          })
-        }
-      })
   }
 
   getSearchHistoryQuotes = () => {
@@ -135,7 +106,7 @@ class App extends Component {
     }.bind(this));
 
     if (AuthAdapter.loggedIn()) {
-      if (this.state.portfolioNames && !!this.state.portfolioNames.find(portfolioName => portfolioName.symbol.toLowerCase() === keyword.toLowerCase())) {
+      if (this.state.portfolio && !!this.state.portfolio.find(portfolioName => portfolioName.symbol.toLowerCase() === keyword.toLowerCase())) {
         this.setState({ inPortfolio: true })
       } else {
         this.setState({ inPortfolio: false })
@@ -214,29 +185,6 @@ class App extends Component {
     }
   }
 
-  handleType = (symbolId, position_type) => {
-    const newPortfolioQuotes = {...this.state.portfolioQuotes};
-
-    for(const quote in newPortfolioQuotes) {
-      if (newPortfolioQuotes[quote].id === symbolId) {
-        newPortfolioQuotes[quote].position_type = position_type;
-      }
-    }
-
-    fetch(`${ApiAdapter.backendHost()}/portfolio_assets/${symbolId}`, {
-      method: "PATCH",
-      headers: {
-        "Content-Type": "application/json",
-        "Authorization": localStorage.getItem("token")
-  		},
-      body: JSON.stringify({ position_type })
-    })
-
-    this.setState({
-      portfolioQuotes: newPortfolioQuotes,
-    });
-  }
-
   handleSignIn = (pageStatus) => {
     this.setState({
       pageStatus
@@ -287,7 +235,7 @@ class App extends Component {
               }
 
               <Route exact path='/' render={() => <Market indexes={this.state.indexes} searchHistory={this.state.searchHistoryQuotes} search={this.handleSearch}/>} />
-              <Route exact path='/portfolio' render={() => <Portfolio indexes={this.state.indexes} portfolio={this.state.portfolioQuotes} search={this.handleSearch} type={this.handleType}/>} />
+              <Route exact path='/portfolio' render={() => <Portfolio indexes={this.state.indexes} search={this.handleSearch}/>} />
               <Route exact path='/watchlist' render={() => <Watchlist indexes={this.state.indexes} watchlist={this.state.watchlist} search={this.handleSearch}/>} />
               <Route path='/quote' render={() => <Quote quote={this.state.quote} news={this.state.quoteNews} chart={this.state.quoteChart} click={this.handleClick} inPortfolio={this.state.inPortfolio} inWatchlist={this.state.inWatchlist}/>} />
             </Grid>
