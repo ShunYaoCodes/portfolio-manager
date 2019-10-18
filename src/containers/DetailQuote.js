@@ -48,9 +48,9 @@ class DetailQuote extends React.Component {
             <Grid.Column width={7}>
               {AuthAdapter.loggedIn() ? 
                 (this.props.inPortfolio ?
-                  <div><Checkbox toggle checked onClick={this.handleClick} name="portfolio_asset"/> Remove from your portfolio</div>
+                  <div><Checkbox toggle checked onClick={this.handleClick} name="portfolio"/> Remove from your portfolio</div>
                   :
-                  <div><Checkbox toggle onClick={this.handleClick} name="portfolio_asset"/> Add to your portfolio</div>
+                  <div><Checkbox toggle onClick={this.handleClick} name="portfolio"/> Add to your portfolio</div>
                 )
                 :
                 <p>Sign in to add to your portfolio</p>

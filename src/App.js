@@ -126,7 +126,7 @@ class App extends Component {
     return data;
   }
 
-  inWatchlistStatus(keyword) {
+  inPortfolioStatus(keyword) {
     if (AuthAdapter.loggedIn() && this.state.portfolio && !!this.state.portfolio.find(portfolioName => portfolioName.symbol.toLowerCase() === keyword.toLowerCase())) {
       return true;
     } else {
@@ -134,7 +134,7 @@ class App extends Component {
     }
   }
 
-  inPortfolioStatus(keyword) {
+  inWatchlistStatus(keyword) {
     if (AuthAdapter.loggedIn() && this.state.watchlist && !!this.state.watchlist.find(watchlistName => watchlistName.symbol.toLowerCase() === keyword.toLowerCase())) {
       return true;
     } else {
@@ -159,15 +159,13 @@ class App extends Component {
     })
   }
 
-  handleClick = (name, checked, symbol) => {
-    const stateName = name.split('_')[0];
-    const fullStateName = stateName + 'Names';
-    const inStateName = 'in'+ stateName.slice(0,1).toUpperCase() + stateName.slice(1);
-    let newState;
+  handleClick = (stateName, checked, symbol) => {
+    const statusName = 'in'+ stateName.slice(0,1).toUpperCase() + stateName.slice(1); // inWatchlist or inPortfolio
+    const endpoint = stateName === 'portfolio' ? 'portfolio_assets' : `${stateName}s`;
 
     if (AuthAdapter.loggedIn()) {
       if (checked) {
-        fetch(`${ApiAdapter.backendHost()}/users/${localStorage.getItem("id")}/${name}s`, {
+        fetch(`${ApiAdapter.backendHost()}/users/${localStorage.getItem("id")}/${endpoint}`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -175,33 +173,48 @@ class App extends Component {
           },
           body: JSON.stringify({ symbol })
         }).then(r => r.json()).then(stock => {
-          newState = [...this.state[fullStateName], stock];
-
           this.setState({
-            [inStateName]: !this.state[inStateName],
-            [fullStateName]: newState,
+            [stateName]: this.addStock(this.state[stateName], stock),
+            detailQuote: {
+              ...this.state.detailQuote,
+              [statusName]: !this.state.detailQuote[statusName],  // toggle inWatchlist or inPortfolio status
+            }
           });
         })
       } else {
-        const watchlistId = this.state[fullStateName].find(name => name.symbol.toLowerCase() === symbol.toLowerCase()).id;
-        fetch(`${ApiAdapter.backendHost()}/${name}s/${watchlistId}`, {
+        const id = this.state[stateName].find(name => name.symbol.toLowerCase() === symbol.toLowerCase()).id;
+        fetch(`${ApiAdapter.backendHost()}/${endpoint}/${id}`, {
           method: "DELETE",
           headers: {
             "Content-Type": "application/json",
             "Authorization": localStorage.getItem("token")
           }
         }).then(r => r.json()).then(() => {
-          const entry = this.state[fullStateName].find(name => name.symbol.toLowerCase() === symbol.toLowerCase());
-          const index = this.state[fullStateName].indexOf(entry);
-          newState = [...this.state[fullStateName].slice(0, index), ...this.state[fullStateName].slice(index+1)];
+          const stock = this.state[stateName].find(stock => stock.id === id);
       
           this.setState({
-            [inStateName]: !this.state[inStateName],
-            [fullStateName]: newState,
+            [stateName]: this.removeStock(this.state[stateName], stock),
+            detailQuote: {
+              ...this.state.detailQuote,
+              [statusName]: !this.state.detailQuote[statusName],  // toggle inWatchlist or inPortfolio status
+            }
           });
         })
       }
     }
+  }
+
+  addStock = (array, stock) => {
+    return [...array, stock];
+  }
+
+  removeStock = (array, stock) => {
+    const index = array.indexOf(stock);
+    
+    return [
+      ...array.slice(0, index), 
+      ...array.slice(index + 1)
+    ];
   }
 
   updatePortfolio = (newPortfolio) => {
