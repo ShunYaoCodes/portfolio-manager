@@ -5,7 +5,7 @@ import QuoteTable from './QuoteTable/QuoteTable';
 const SearchHistory = props => {
   let stocks = [];
 
-  if (Object.keys(props.searchHistory).length > 0) {
+  if (Object.keys(props.searchHistory).length) {
     let count = 0;
     
     for(const stock in props.searchHistory) {

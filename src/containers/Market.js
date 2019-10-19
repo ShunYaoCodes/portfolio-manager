@@ -49,7 +49,7 @@ class Market extends React.Component {
   }
 
   getNews = () => {
-    const adapter = AppAdapter.searchHistory().length > 0 ? ApiAdapter.getBatchNews(AppAdapter.searchHistory()) : ApiAdapter.getIndexNews();
+    const adapter = AppAdapter.searchHistory().length ? ApiAdapter.getBatchNews(AppAdapter.searchHistory()) : ApiAdapter.getIndexNews();
 
     fetch(adapter).then(r => r.json()).then(news => {
       this.setState({ news })

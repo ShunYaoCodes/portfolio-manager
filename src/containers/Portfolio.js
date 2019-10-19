@@ -14,7 +14,7 @@ class Portfolio extends React.Component {
   }
 
   componentDidMount() {
-    if (this.props.portfolio.length > 0) {
+    if (this.props.portfolio.length) {
       this.intervalID = setInterval(() => {
         this.getPortfolioQuotes();
       },3000);
@@ -64,10 +64,7 @@ class Portfolio extends React.Component {
 
     fetch(`${ApiAdapter.backendHost()}/portfolio_assets/${symbolId}`, {
       method: "PATCH",
-      headers: {
-        "Content-Type": "application/json",
-        "Authorization": localStorage.getItem("token")
-  		},
+      headers: AuthAdapter.headers(),
       body: JSON.stringify({ position_type })
     })
 

@@ -52,7 +52,7 @@ class App extends Component {
   }
 
   getSearchHistoryQuotes = () => {
-    if (AppAdapter.searchHistory().length > 0) {
+    if (AppAdapter.searchHistory().length) {
       fetch(ApiAdapter.getBatchQuotes(AppAdapter.searchHistory())).then(r => r.json()).then(searchHistoryQuotes => {
           this.setState({ searchHistoryQuotes })
       })
@@ -61,10 +61,7 @@ class App extends Component {
 
   getWatchlists = () => {
     fetch(`${ApiAdapter.backendHost()}/users/${localStorage.getItem("id")}/watchlists`, {
-      headers: {
-        "Content-Type": "application/json",
-        "Authorization": localStorage.getItem("token")
-  		},
+      headers: AuthAdapter.headers(),
     }).then(r => r.json()).then(watchlist => {
       this.setState({ watchlist });
     })
@@ -72,12 +69,9 @@ class App extends Component {
 
   getPortfolio = () => {
     fetch(`${ApiAdapter.backendHost()}/users/${localStorage.getItem("id")}/portfolio_assets`, {
-      headers: {
-        "Content-Type": "application/json",
-        "Authorization": localStorage.getItem("token")
-  		},
+      headers: AuthAdapter.headers(),
     }).then(r => r.json()).then(portfolio => {
-      if (portfolio.length > 0) this.setState({ portfolio });
+      if (portfolio.length) this.setState({ portfolio });
     })
   }
 
@@ -145,7 +139,7 @@ class App extends Component {
   updateSearchHistory = (symbol) => {
     let newSearchHistory = [];
 
-    if (AppAdapter.searchHistory().length > 0) {
+    if (AppAdapter.searchHistory().length) {
       newSearchHistory = AppAdapter.searchHistory().filter(stock => stock !== symbol);
       newSearchHistory.unshift(symbol); // add to the beginning of array
     } else {
@@ -167,10 +161,7 @@ class App extends Component {
       if (checked) {
         fetch(`${ApiAdapter.backendHost()}/users/${localStorage.getItem("id")}/${endpoint}`, {
           method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            "Authorization": localStorage.getItem("token")
-          },
+          headers: AuthAdapter.headers(),
           body: JSON.stringify({ symbol })
         }).then(r => r.json()).then(stock => {
           this.setState({
@@ -185,10 +176,7 @@ class App extends Component {
         const id = this.state[stateName].find(name => name.symbol.toLowerCase() === symbol.toLowerCase()).id;
         fetch(`${ApiAdapter.backendHost()}/${endpoint}/${id}`, {
           method: "DELETE",
-          headers: {
-            "Content-Type": "application/json",
-            "Authorization": localStorage.getItem("token")
-          }
+          headers: AuthAdapter.headers(),
         }).then(r => r.json()).then(() => {
           const stock = this.state[stateName].find(stock => stock.id === id);
       

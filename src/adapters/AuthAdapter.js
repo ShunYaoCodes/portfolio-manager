@@ -6,6 +6,13 @@ class AuthAdapter {
     static notLoggedIn() {
         return !localStorage.getItem("token")
     }
+
+    static headers() {
+        return {
+            "Content-Type": "application/json",
+            "Authorization": localStorage.getItem("token"),
+        };
+    }
 }
 
 export default AuthAdapter

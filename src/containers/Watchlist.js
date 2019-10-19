@@ -14,7 +14,7 @@ class Watchlist extends React.Component {
   }
 
   componentDidMount() {
-    if (this.props.watchlist.length > 0) this.getWatchlistQuotes();
+    if (this.props.watchlist.length) this.getWatchlistQuotes();
   }
   
   getWatchlistQuotes = () => {
@@ -40,7 +40,7 @@ class Watchlist extends React.Component {
 
   render()  {
     if (AuthAdapter.loggedIn()) {
-      if (this.state.quotes.length > 0) {
+      if (this.state.quotes.length) {
         const list = this.state.quotes.map(each => <Watchlists key={UUID()} {...each} search={this.props.search}/>)
     
         return (
@@ -79,7 +79,7 @@ class Watchlist extends React.Component {
               </Grid.Column>
             </Grid.Row>
 
-            {this.state.news.length > 0 ?
+            {this.state.news.length ?
               <Grid.Row>
                 <Grid.Column width={14}>
                   <h3>Your Watchlist News:</h3>
