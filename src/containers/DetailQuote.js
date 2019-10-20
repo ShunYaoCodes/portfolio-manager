@@ -1,5 +1,7 @@
 import React from 'react';
-//import IndexList from '../components/IndexList';
+import { withRouter } from 'react-router-dom'
+import { connect } from "react-redux";
+import { toggleList } from "../redux/actions";
 import NewsList from '../components/NewsList';
 import Asset from '../components/DetailQuote/Asset';
 import { Grid } from 'semantic-ui-react'
@@ -19,7 +21,8 @@ class DetailQuote extends React.Component {
    */
   
   handleClick = (event, data) => {
-    this.props.click(data.name, data.checked, this.props.quote.symbol)
+    // this.props.click(data.name, data.checked, this.props.quote.symbol)
+    this.props.toggleList(data.name, data.checked, this.props.quote.symbol);
   }
 
   render() {
@@ -78,4 +81,7 @@ class DetailQuote extends React.Component {
   }
 }
 
-export default DetailQuote;
+export default withRouter(connect(
+  null, 
+  { toggleList }
+)(DetailQuote));
