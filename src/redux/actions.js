@@ -1,4 +1,4 @@
-import { TOGGLE_LIST, TOGGLE_TODO, SET_FILTER } from "./actionTypes";
+import { TOGGLE_LIST, GET_INDEX } from "./actionTypes";
 
 // let nextTodoId = 0;
 
@@ -8,6 +8,13 @@ export const toggleList = (stateName, checked, symbol) => ({
     stateName, 
     checked, 
     symbol,
+  }
+});
+
+export const getIndex = indexQuotes => ({
+  type: GET_INDEX,
+  payload: {
+    indexQuotes,
   }
 });
 

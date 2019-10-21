@@ -81,7 +81,14 @@ class DetailQuote extends React.Component {
   }
 }
 
+const mapStateToProps = state => {
+  // const { visibilityFilter } = state;
+  // const todos = getTodosByVisibilityFilter(state, visibilityFilter);
+  // return { todos };
+  // return { activeFilter: state.visibilityFilter };
+};
+
 export default withRouter(connect(
-  null, 
+  mapStateToProps,
   { toggleList }
 )(DetailQuote));

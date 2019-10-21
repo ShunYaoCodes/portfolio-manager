@@ -16,13 +16,14 @@ import RegistrationForm from './components/RegistrationForm';
 import AuthAdapter from './adapters/AuthAdapter';
 import AppAdapter from './adapters/AppAdapter';
 import { map } from 'lodash';
+import { connect } from 'react-redux';
+import { getIndex } from "./redux/actions";
 
 //import { BrowserRouter, Route, Link } from 'react-router-dom'
 const parseDate = timeParse("%Y-%m-%d");
 
 class App extends Component {
   state = {
-    indexes: [],
     detailQuote: {},
     watchlist: [],
     portfolio: [],
@@ -31,7 +32,7 @@ class App extends Component {
 
   componentDidMount() {
     this.intervalID = setInterval(function(){
-      this.getIndexes();
+      this.fetchIndex();
       this.getSearchHistoryQuotes();
     }.bind(this),3000);
 
@@ -43,11 +44,10 @@ class App extends Component {
     clearInterval(this.intervalID);
   }
 
-  getIndexes = () => {
+  fetchIndex = () => {
     fetch(ApiAdapter.getIndexQuotes()).then(r => r.json()).then(indexes => {
-      this.setState({ 
-        indexes: map(indexes, index => index.quote),
-      })
+      const indexQuotes = map(indexes, index => index.quote);
+      this.props.getIndex(indexQuotes);
     })
   }
 
@@ -258,9 +258,9 @@ class App extends Component {
                 <Redirect to="/"/>
             }
 
-            <Route exact path='/' render={() => <Market indexes={this.state.indexes} searchHistory={this.state.searchHistoryQuotes} search={this.handleSearch}/>} />
-            <Route exact path='/portfolio' render={() => <Portfolio indexes={this.state.indexes} portfolio={this.state.portfolio} search={this.handleSearch} updatePortfolio={this.updatePortfolio}/>} />
-            <Route exact path='/watchlist' render={() => <Watchlist indexes={this.state.indexes} watchlist={this.state.watchlist} search={this.handleSearch}/>} />
+            <Route exact path='/' render={() => <Market searchHistory={this.state.searchHistoryQuotes} search={this.handleSearch}/>} />
+            <Route exact path='/portfolio' render={() => <Portfolio portfolio={this.state.portfolio} search={this.handleSearch} updatePortfolio={this.updatePortfolio}/>} />
+            <Route exact path='/watchlist' render={() => <Watchlist watchlist={this.state.watchlist} search={this.handleSearch}/>} />
             <Route path='/quote' render={() => <DetailQuote {...this.state.detailQuote} click={this.handleClick}/>} />
           </Grid>
         </div>
@@ -269,4 +269,17 @@ class App extends Component {
   }
 }
 
-export default App;
+// export default App;
+
+// const mapStateToProps = state => {
+//   const { indexes } = state;
+//   // const todos = getTodosByVisibilityFilter(state, visibilityFilter);
+//   return { indexes };
+//   // return { activeFilter: state.visibilityFilter };
+// };
+
+export default connect(
+  null,// mapStateToProps,
+  { getIndex }
+)(App);
+

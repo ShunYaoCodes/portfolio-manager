@@ -1,6 +1,8 @@
 import { combineReducers } from "redux";
-// import visibilityFilter from "./visibilityFilter";
+import indexQuotes from "./indexQuotes";
 import toggleList from "./toggleList";
 
-// export default combineReducers({ todos, visibilityFilter });
-export default combineReducers({ toggleList });
+export default combineReducers({ 
+    toggleList,
+    indexQuotes,
+});

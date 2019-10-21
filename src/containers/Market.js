@@ -67,7 +67,7 @@ class Market extends React.Component {
 
       <React.Fragment>
         <Grid.Row>
-          <IndexList indexes={this.props.indexes} search={this.props.search}/>
+          <IndexList search={this.props.search}/>
         </Grid.Row>
 
         <Grid.Row>
