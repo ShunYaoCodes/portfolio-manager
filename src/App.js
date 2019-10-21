@@ -17,7 +17,7 @@ import AuthAdapter from './adapters/AuthAdapter';
 import AppAdapter from './adapters/AppAdapter';
 import { map } from 'lodash';
 import { connect } from 'react-redux';
-import { getIndex } from "./redux/actions";
+import { getIndex, getSearchHistory } from "./redux/actions";
 
 //import { BrowserRouter, Route, Link } from 'react-router-dom'
 const parseDate = timeParse("%Y-%m-%d");
@@ -27,13 +27,12 @@ class App extends Component {
     detailQuote: {},
     watchlist: [],
     portfolio: [],
-    searchHistoryQuotes: [],
   }
 
   componentDidMount() {
     this.intervalID = setInterval(function(){
       this.fetchIndex();
-      this.getSearchHistoryQuotes();
+      this.fetchSearchHistoryQuotes();
     }.bind(this),3000);
 
     if (AuthAdapter.loggedIn()) this.getPortfolio();
@@ -51,10 +50,10 @@ class App extends Component {
     })
   }
 
-  getSearchHistoryQuotes = () => {
+  fetchSearchHistoryQuotes = () => {
     if (AppAdapter.searchHistory().length) {
       fetch(ApiAdapter.getBatchQuotes(AppAdapter.searchHistory())).then(r => r.json()).then(searchHistoryQuotes => {
-          this.setState({ searchHistoryQuotes })
+          this.props.getSearchHistory(searchHistoryQuotes);
       })
     }
   }
@@ -258,7 +257,7 @@ class App extends Component {
                 <Redirect to="/"/>
             }
 
-            <Route exact path='/' render={() => <Market searchHistory={this.state.searchHistoryQuotes} search={this.handleSearch}/>} />
+            <Route exact path='/' render={() => <Market search={this.handleSearch}/>} />
             <Route exact path='/portfolio' render={() => <Portfolio portfolio={this.state.portfolio} search={this.handleSearch} updatePortfolio={this.updatePortfolio}/>} />
             <Route exact path='/watchlist' render={() => <Watchlist watchlist={this.state.watchlist} search={this.handleSearch}/>} />
             <Route path='/quote' render={() => <DetailQuote {...this.state.detailQuote} click={this.handleClick}/>} />
@@ -280,6 +279,6 @@ class App extends Component {
 
 export default connect(
   null,// mapStateToProps,
-  { getIndex }
+  { getIndex, getSearchHistory }
 )(App);
 
