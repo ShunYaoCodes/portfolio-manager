@@ -25,7 +25,6 @@ const parseDate = timeParse("%Y-%m-%d");
 class App extends Component {
   state = {
     detailQuote: {},
-    watchlist: [],
     portfolio: [],
   }
 
@@ -36,7 +35,6 @@ class App extends Component {
     }.bind(this),3000);
 
     if (AuthAdapter.loggedIn()) this.getPortfolio();
-    if (AuthAdapter.loggedIn()) this.getWatchlists();
   }
 
   componentWillUnmount() {
@@ -56,14 +54,6 @@ class App extends Component {
           this.props.getSearchHistory(searchHistoryQuotes);
       })
     }
-  }
-
-  getWatchlists = () => {
-    fetch(`${ApiAdapter.backendHost()}/users/${localStorage.getItem("id")}/watchlists`, {
-      headers: AuthAdapter.headers(),
-    }).then(r => r.json()).then(watchlist => {
-      this.setState({ watchlist });
-    })
   }
 
   getPortfolio = () => {
@@ -259,7 +249,7 @@ class App extends Component {
 
             <Route exact path='/' render={() => <Market search={this.handleSearch}/>} />
             <Route exact path='/portfolio' render={() => <Portfolio portfolio={this.state.portfolio} search={this.handleSearch} updatePortfolio={this.updatePortfolio}/>} />
-            <Route exact path='/watchlist' render={() => <Watchlist watchlist={this.state.watchlist} search={this.handleSearch}/>} />
+            <Route exact path='/watchlist' render={() => <Watchlist search={this.handleSearch}/>} />
             <Route path='/quote' render={() => <DetailQuote {...this.state.detailQuote} click={this.handleClick}/>} />
           </Grid>
         </div>

@@ -1,4 +1,4 @@
-import { TOGGLE_LIST, GET_INDEX, GET_SEARCH_HISTORY } from "./actionTypes";
+import { TOGGLE_LIST, GET_INDEX, GET_SEARCH_HISTORY, GET_WATCHLIST } from "./actionTypes";
 
 // let nextTodoId = 0;
 
@@ -22,6 +22,13 @@ export const getSearchHistory = searchHistoryQuotes => ({
   type: GET_SEARCH_HISTORY,
   payload: {
     searchHistoryQuotes,
+  }
+});
+
+export const getWatchlist = watchlist => ({
+  type: GET_WATCHLIST,
+  payload: {
+    watchlist,
   }
 });
 
