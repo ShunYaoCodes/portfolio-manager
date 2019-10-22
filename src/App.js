@@ -25,7 +25,6 @@ const parseDate = timeParse("%Y-%m-%d");
 class App extends Component {
   state = {
     detailQuote: {},
-    portfolio: [],
   }
 
   componentDidMount() {
@@ -33,8 +32,6 @@ class App extends Component {
       this.fetchIndex();
       this.fetchSearchHistoryQuotes();
     }.bind(this),3000);
-
-    if (AuthAdapter.loggedIn()) this.getPortfolio();
   }
 
   componentWillUnmount() {
@@ -54,14 +51,6 @@ class App extends Component {
           this.props.getSearchHistory(searchHistoryQuotes);
       })
     }
-  }
-
-  getPortfolio = () => {
-    fetch(`${ApiAdapter.backendHost()}/users/${localStorage.getItem("id")}/portfolio_assets`, {
-      headers: AuthAdapter.headers(),
-    }).then(r => r.json()).then(portfolio => {
-      if (portfolio.length) this.setState({ portfolio });
-    })
   }
 
   handleSearch = keyword => {

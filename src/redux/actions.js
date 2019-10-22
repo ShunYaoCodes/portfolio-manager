@@ -1,4 +1,4 @@
-import { TOGGLE_LIST, GET_INDEX, GET_SEARCH_HISTORY, GET_WATCHLIST } from "./actionTypes";
+import { TOGGLE_LIST, GET_INDEX, GET_SEARCH_HISTORY, GET_WATCHLIST, GET_PORTFOLIO } from "./actionTypes";
 
 // let nextTodoId = 0;
 
@@ -32,10 +32,9 @@ export const getWatchlist = watchlist => ({
   }
 });
 
-
-// export const toggleTodo = id => ({
-//   type: TOGGLE_TODO,
-//   payload: { id }
-// });
-
-// export const setFilter = filter => ({ type: SET_FILTER, payload: { filter } });
+export const getPortfolio = portfolio => ({
+  type: GET_PORTFOLIO,
+  payload: {
+    portfolio,
+  }
+});

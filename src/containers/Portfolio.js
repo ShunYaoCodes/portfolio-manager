@@ -5,6 +5,8 @@ import UUID from 'uuid';
 import { Grid, Table, Form, Input, Button, Message } from 'semantic-ui-react';
 import AuthAdapter from '../adapters/AuthAdapter';
 import ApiAdapter from '../adapters/ApiAdapter';
+import { connect } from 'react-redux';
+import { getPortfolio } from "../redux/actions";
 
 class Portfolio extends React.Component {
   state = {
@@ -14,18 +16,29 @@ class Portfolio extends React.Component {
   }
 
   componentDidMount() {
-    if (this.props.portfolio.length) {
-      this.intervalID = setInterval(() => {
-        this.getPortfolioQuotes();
-      },3000);
-    }
+    if (AuthAdapter.loggedIn()) this.fetchPortfolio();
+
+    this.intervalID = setInterval(() => {
+      if (this.props.portfolio.length) this.fetchPortfolioQuotes();
+    },3000);
   }
 
   componentWillUnmount() {
     clearInterval(this.intervalID);
   }
 
-  getPortfolioQuotes = () => {
+  fetchPortfolio = () => {
+    fetch(`${ApiAdapter.backendHost()}/users/${localStorage.getItem("id")}/portfolio_assets`, {
+      headers: AuthAdapter.headers(),
+    }).then(r => r.json()).then(portfolio => {
+      if (portfolio.length) {
+        this.props.getPortfolio(portfolio);
+        this.fetchPortfolioQuotes();
+      }
+    })
+  }
+
+  fetchPortfolioQuotes = () => {
     fetch(ApiAdapter.getBatchStatsPrice(this.portfolioSymbols)).then(r => r.json()).then(quotes => {
       for(const symbol in quotes) {
         const quote = this.props.portfolio.find(each => each.symbol === symbol);
@@ -139,4 +152,12 @@ class Portfolio extends React.Component {
   }
 }
 
-export default Portfolio;
+const mapStateToProps = state => {
+  const { portfolio } = state;
+  return portfolio;
+};
+
+export default connect(
+  mapStateToProps,
+  { getPortfolio },
+)(Portfolio);
