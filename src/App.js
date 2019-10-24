@@ -189,16 +189,12 @@ class App extends Component {
     })
   }
 
-  handleSignIn = (pageStatus) => {
-    this.setState({
-      pageStatus
-    });
-  }
-
   handleSignOut = () => {
-    localStorage.removeItem('token');
-    localStorage.removeItem('id');
-    window.location.reload();
+    if (window.confirm('Are you sure you want to sign out?')) {
+      localStorage.removeItem('token');
+      localStorage.removeItem('id');
+      window.location.reload();
+    }
   }
 
   render() {
@@ -216,7 +212,7 @@ class App extends Component {
               <Grid.Column computer={2} mobile={2}>
                 {
                   AuthAdapter.notLoggedIn() ?
-                    <Login signIn={this.handleSignIn}/>
+                    <Login />
                   :
                     <Button primary name='sign_out' onClick={this.handleSignOut} style={{marginTop: '10px'}}>Sign Out</Button>
                 }
