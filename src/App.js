@@ -10,7 +10,6 @@ import { timeParse } from "d3-time-format";
 import { BrowserRouter as Router, Route, NavLink, Redirect } from 'react-router-dom';
 import './App.css'
 import ApiAdapter from './adapters/ApiAdapter';
-import Login from './components/Login';
 import LoginForm from './components/LoginForm';
 import RegistrationForm from './components/RegistrationForm';
 import AuthAdapter from './adapters/AuthAdapter';
@@ -212,7 +211,14 @@ class App extends Component {
               <Grid.Column computer={2} mobile={2}>
                 {
                   AuthAdapter.notLoggedIn() ?
-                    <Login />
+                    <div style={{marginTop: '10px'}}>
+                        <NavLink exact to="/login">
+                            <Button primary>Sign In</Button>
+                        </NavLink>
+                        <NavLink exact to="/register">
+                            <Button secondary>Sign Up</Button>
+                        </NavLink>
+                    </div>
                   :
                     <Button primary name='sign_out' onClick={this.handleSignOut} style={{marginTop: '10px'}}>Sign Out</Button>
                 }
