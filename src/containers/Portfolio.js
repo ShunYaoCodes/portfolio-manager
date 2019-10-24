@@ -33,7 +33,7 @@ class Portfolio extends React.Component {
     }).then(r => r.json()).then(portfolio => {
       if (portfolio.length) {
         this.props.getPortfolio(portfolio);
-        this.fetchPortfolioQuotes();
+        if (this.props.portfolio.length) this.fetchPortfolioQuotes();
       }
     })
   }
@@ -66,24 +66,6 @@ class Portfolio extends React.Component {
     }
   }
 
-  handleType = (symbolId, position_type) => {
-    const newPortfolio = [...this.props.portfolio];
-
-    for(const quote in newPortfolio) {
-      if (newPortfolio[quote].id === symbolId) {
-        newPortfolio[quote].position_type = position_type;
-      }
-    }
-
-    fetch(`${ApiAdapter.backendHost()}/portfolio_assets/${symbolId}`, {
-      method: "PATCH",
-      headers: AuthAdapter.headers(),
-      body: JSON.stringify({ position_type })
-    })
-
-    this.props.updatePortfolio(newPortfolio);
-  }
-
   render() {
     if (AuthAdapter.loggedIn()) {
       let list = [];
@@ -91,7 +73,7 @@ class Portfolio extends React.Component {
 
       //if (Object.keys(this.state.portfolioQuotes) !== []) {
         for(const quote in this.state.portfolioQuotes) {
-          list.push(<Positions key={UUID()} {...this.state.portfolioQuotes[quote]} symbol={quote} search={this.props.search} type={this.handleType}/>)
+          list.push(<Positions key={UUID()} {...this.state.portfolioQuotes[quote]} symbol={quote} search={this.props.search} />)
         }
       //}
 

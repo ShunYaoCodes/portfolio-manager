@@ -1,4 +1,11 @@
-import { TOGGLE_LIST, GET_INDEX, GET_SEARCH_HISTORY, GET_WATCHLIST, GET_PORTFOLIO } from "./actionTypes";
+import { 
+  TOGGLE_LIST, 
+  GET_INDEX, 
+  GET_SEARCH_HISTORY, 
+  GET_WATCHLIST, 
+  GET_PORTFOLIO,
+  UPDATE_POSITION_TYPE,
+} from "./actionTypes";
 
 // let nextTodoId = 0;
 
@@ -36,5 +43,13 @@ export const getPortfolio = portfolio => ({
   type: GET_PORTFOLIO,
   payload: {
     portfolio,
+  }
+});
+
+export const updatePositionType = (symbolId, positionType) => ({
+  type: UPDATE_POSITION_TYPE,
+  payload: {
+    symbolId,
+    positionType,
   }
 });
