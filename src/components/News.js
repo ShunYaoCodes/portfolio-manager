@@ -2,7 +2,6 @@ import React from 'react';
 import { Item } from 'semantic-ui-react';
 
 const News = props => {
-  //console.log(props);
   const heading = props.heading.replace(/amp;/g, ``).replace(/&apos;/g, `'`).replace(/&#xAE;/g,`®`).replace(/&quot;/g, `'`).replace(/&#xF6;/g, 'ö').replace(/&#xE4;/g, 'ä');
   //<Item.Image size='tiny' src={props.thumbnail} bordered/>
   return (

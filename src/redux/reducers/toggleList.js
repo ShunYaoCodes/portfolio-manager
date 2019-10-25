@@ -1,4 +1,3 @@
-// import { ADD_TODO, TOGGLE_TODO } from "../actionTypes";
 import { TOGGLE_LIST } from "../actionTypes";
 
 const initialState = {

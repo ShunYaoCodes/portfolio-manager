@@ -18,7 +18,6 @@ import { map } from 'lodash';
 import { connect } from 'react-redux';
 import { getIndex, getSearchHistory } from "./redux/actions";
 
-//import { BrowserRouter, Route, Link } from 'react-router-dom'
 const parseDate = timeParse("%Y-%m-%d");
 
 class App extends Component {
@@ -123,7 +122,7 @@ class App extends Component {
       newSearchHistory.push(symbol);
     }
 
-    localStorage.setItem('searchHistory', newSearchHistory.join(',')); 
+    localStorage.setItem('searchHistory', JSON.stringify(newSearchHistory)); 
 
     fetch(ApiAdapter.getBatchQuotes(newSearchHistory)).then(r => r.json()).then(searchHistoryQuotes => {
       this.setState({ searchHistoryQuotes })
@@ -182,12 +181,6 @@ class App extends Component {
     ];
   }
 
-  updatePortfolio = (newPortfolio) => {
-    this.setState({
-      portfolio: newPortfolio,
-    })
-  }
-
   handleSignOut = () => {
     if (window.confirm('Are you sure you want to sign out?')) {
       localStorage.removeItem('token');
@@ -239,7 +232,7 @@ class App extends Component {
             }
 
             <Route exact path='/' render={() => <Market search={this.handleSearch}/>} />
-            <Route exact path='/portfolio' render={() => <Portfolio portfolio={this.state.portfolio} search={this.handleSearch} updatePortfolio={this.updatePortfolio}/>} />
+            <Route exact path='/portfolio' render={() => <Portfolio portfolio={this.state.portfolio} search={this.handleSearch} />} />
             <Route exact path='/watchlist' render={() => <Watchlist search={this.handleSearch}/>} />
             <Route path='/quote' render={() => <DetailQuote {...this.state.detailQuote} click={this.handleClick}/>} />
           </Grid>
@@ -249,17 +242,8 @@ class App extends Component {
   }
 }
 
-// export default App;
-
-// const mapStateToProps = state => {
-//   const { indexes } = state;
-//   // const todos = getTodosByVisibilityFilter(state, visibilityFilter);
-//   return { indexes };
-//   // return { activeFilter: state.visibilityFilter };
-// };
-
 export default connect(
-  null,// mapStateToProps,
+  null,
   { getIndex, getSearchHistory }
 )(App);
 

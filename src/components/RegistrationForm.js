@@ -1,14 +1,11 @@
 import React, { Component } from 'react';
 import { Button, Form, Grid, Header, Image, Message, Segment } from 'semantic-ui-react'
-// import AuthAdapter from './'
-// AuthAdapter.saveToken(token)
 
 class RegistrationForm extends Component {
   state = {
     username: "",
     password: "",
     password_confirmation: "",
-    // token: "" // This will disappear on page refresh!!
   }
 
   handleChange = (event) => {
