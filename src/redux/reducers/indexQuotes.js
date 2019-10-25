@@ -1,4 +1,4 @@
-import { GET_INDEX } from "../actionTypes";
+import { SET_INDEX } from "../actionTypes";
 
 const initialState = {
     indexQuotes: []
@@ -6,7 +6,7 @@ const initialState = {
 
 export default function(state = initialState, action) {
     switch (action.type) {
-        case GET_INDEX: {
+        case SET_INDEX: {
             const { indexQuotes } = action.payload;
             return {
                 ...state,

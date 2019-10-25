@@ -16,7 +16,7 @@ import AuthAdapter from './adapters/AuthAdapter';
 import AppAdapter from './adapters/AppAdapter';
 import { map } from 'lodash';
 import { connect } from 'react-redux';
-import { getIndex, getSearchHistory } from "./redux/actions";
+import { fetchIndex, getSearchHistory } from "./redux/actions";
 
 const parseDate = timeParse("%Y-%m-%d");
 
@@ -27,7 +27,7 @@ class App extends Component {
 
   componentDidMount() {
     this.intervalID = setInterval(function(){
-      this.fetchIndex();
+      this.props.dispatch(fetchIndex());
       this.fetchSearchHistoryQuotes();
     }.bind(this),3000);
   }
@@ -36,12 +36,12 @@ class App extends Component {
     clearInterval(this.intervalID);
   }
 
-  fetchIndex = () => {
-    fetch(ApiAdapter.getIndexQuotes()).then(r => r.json()).then(indexes => {
-      const indexQuotes = map(indexes, index => index.quote);
-      this.props.getIndex(indexQuotes);
-    })
-  }
+  // fetchIndex = () => {
+  //   fetch(ApiAdapter.getIndexQuotes()).then(r => r.json()).then(indexes => {
+  //     const indexQuotes = map(indexes, index => index.quote);
+  //     this.props.getIndex(indexQuotes);
+  //   })
+  // }
 
   fetchSearchHistoryQuotes = () => {
     if (AppAdapter.searchHistory().length) {
@@ -242,8 +242,15 @@ class App extends Component {
   }
 }
 
+const mapDispatchToProps = dispatch => {
+  return {
+    getSearchHistory,
+    dispatch,
+  }
+}
+
 export default connect(
   null,
-  { getIndex, getSearchHistory }
+  mapDispatchToProps,
 )(App);
 

@@ -1,6 +1,7 @@
+import ApiAdapter from "../adapters/ApiAdapter";
+import { map } from 'lodash';
 import { 
   TOGGLE_LIST, 
-  GET_INDEX, 
   GET_SEARCH_HISTORY, 
   GET_WATCHLIST, 
   GET_PORTFOLIO,
@@ -18,12 +19,14 @@ export const toggleList = (stateName, checked, symbol) => ({
   }
 });
 
-export const getIndex = indexQuotes => ({
-  type: GET_INDEX,
-  payload: {
-    indexQuotes,
+export function fetchIndex() {
+  return (dispatch, getState) => {
+    fetch(ApiAdapter.getIndexQuotes()).then(r => r.json()).then(indexes => {
+      const indexQuotes = map(indexes, index => index.quote);
+      return dispatch({ type: "SET_INDEX", payload: { indexQuotes } })
+    })
   }
-});
+};
 
 export const getSearchHistory = searchHistoryQuotes => ({
   type: GET_SEARCH_HISTORY,
