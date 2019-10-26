@@ -7,7 +7,7 @@ import { Grid, Table } from 'semantic-ui-react';
 import AuthAdapter from '../adapters/AuthAdapter';
 import ApiAdapter from '../adapters/ApiAdapter';
 import { connect } from 'react-redux';
-import { getWatchlist } from "../redux/actions";
+import { fetchWatchlist } from "../redux/actions";
 
 class Watchlist extends React.Component {
   state = {
@@ -16,7 +16,8 @@ class Watchlist extends React.Component {
   }
 
   componentDidMount() {
-    if (AuthAdapter.loggedIn()) this.fetchWatchlist();
+    if (AuthAdapter.loggedIn()) this.props.dispatch(fetchWatchlist());
+    if (this.props.watchlist.length) this.fetchWatchlistQuotes();
 
     this.intervalID = setInterval(function(){
       if (this.props.watchlist.length) this.fetchWatchlistQuotes();
@@ -25,17 +26,6 @@ class Watchlist extends React.Component {
 
   componentWillUnmount() {
     clearInterval(this.intervalID);
-  }
-
-  fetchWatchlist = () => {
-    fetch(`${ApiAdapter.backendHost()}/users/${localStorage.getItem("id")}/watchlists`, {
-      headers: AuthAdapter.headers(),
-    }).then(r => r.json()).then(watchlist => {
-      if (this.props.watchlist.length) {
-      this.props.getWatchlist(watchlist);
-      this.fetchWatchlistQuotes();
-      }
-    })
   }
   
   fetchWatchlistQuotes = () => {
@@ -125,7 +115,9 @@ const mapStateToProps = state => {
   return watchlist;
 };
 
+const mapDispatchToProps = dispatch => ({ dispatch });
+
 export default connect(
   mapStateToProps,
-  { getWatchlist },
+  mapDispatchToProps
 )(Watchlist);

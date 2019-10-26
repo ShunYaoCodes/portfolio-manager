@@ -1,9 +1,9 @@
 import ApiAdapter from "../adapters/ApiAdapter";
 import AppAdapter from "../adapters/AppAdapter";
+import AuthAdapter from "../adapters/AuthAdapter";
 import { map } from 'lodash';
 import { 
   TOGGLE_LIST, 
-  GET_WATCHLIST, 
   GET_PORTFOLIO,
   UPDATE_POSITION_TYPE,
 } from "./actionTypes";
@@ -38,12 +38,14 @@ export function fetchSearchHistory() {
   };
 };
 
-export const getWatchlist = watchlist => ({
-  type: GET_WATCHLIST,
-  payload: {
-    watchlist,
-  }
-});
+export function fetchWatchlist() {
+  return (dispatch, getState) => {
+    fetch(`${ApiAdapter.backendHost()}/users/${localStorage.getItem("id")}/watchlists`, {
+      headers: AuthAdapter.headers(),
+    }).then(r => r.json())
+    .then(watchlist => dispatch({ type: "SET_WATCHLIST", payload: { watchlist } }))
+  };
+};
 
 export const getPortfolio = portfolio => ({
   type: GET_PORTFOLIO,

@@ -1,4 +1,4 @@
-import { GET_WATCHLIST } from "../actionTypes";
+import { SET_WATCHLIST } from "../actionTypes";
 
 const initialState = {
     watchlist: []
@@ -6,7 +6,7 @@ const initialState = {
 
 export default function(state = initialState, action) {
     switch (action.type) {
-        case GET_WATCHLIST: {
+        case SET_WATCHLIST: {
             const { watchlist } = action.payload;
             return {
                 ...state,
