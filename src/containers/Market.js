@@ -67,7 +67,7 @@ class Market extends React.Component {
 
       <React.Fragment>
         <Grid.Row>
-          <IndexList search={this.props.search}/>
+          <IndexList />
         </Grid.Row>
 
         <Grid.Row>
@@ -76,10 +76,10 @@ class Market extends React.Component {
             <NewsList news={this.state.news} type='market'/>
           </Grid.Column>
           <Grid.Column computer={4} mobile={8}>
-            <SearchHistory search={this.props.search}/>
-            <QuoteTable tableName='Most Active' tableRows={this.state.mostActive} search={this.props.search}/>
-            <QuoteTable tableName='Gainers' tableRows={this.state.gainers} search={this.props.search}/>
-            <QuoteTable tableName='Losers' tableRows={this.state.losers} search={this.props.search}/>
+            <SearchHistory />
+            <QuoteTable tableName='Most Active' tableRows={this.state.mostActive} />
+            <QuoteTable tableName='Gainers' tableRows={this.state.gainers} />
+            <QuoteTable tableName='Losers' tableRows={this.state.losers} />
           </Grid.Column>
         </Grid.Row>
       </React.Fragment>

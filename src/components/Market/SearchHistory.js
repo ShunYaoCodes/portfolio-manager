@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { Table } from 'semantic-ui-react';
 import QuoteTable from './QuoteTable/QuoteTable';
 
-const SearchHistory = ({searchHistoryQuotes, search}) => {
+const SearchHistory = ({searchHistoryQuotes}) => {
   let stocks = [];
 
   if (searchHistoryQuotes && Object.keys(searchHistoryQuotes).length) {
@@ -15,7 +15,7 @@ const SearchHistory = ({searchHistoryQuotes, search}) => {
       count++;
     }
 
-    return <QuoteTable tableName='Recently Viewed' tableRows={stocks} search={search}/>;
+    return <QuoteTable tableName='Recently Viewed' tableRows={stocks} />;
   } else {
     return (
       <div>

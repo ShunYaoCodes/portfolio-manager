@@ -1,6 +1,8 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom'
 import { Grid, Icon } from 'semantic-ui-react'
+import { connect } from 'react-redux';
+import { fetchStockDetail } from '../redux/actions';
 
 const Index = props => {
   const link = `/quote?symbol=${props.symbol}`;
@@ -26,10 +28,14 @@ const Index = props => {
       return symbol;
   }
 
+  const handleClick = (symbol) => {
+    props.dispatch(fetchStockDetail(symbol));
+  };
+
   const vix = <React.Fragment>
               {props.change >= 0 ?
               <Grid.Column textAlign='right' color='green' width={2}>
-                <NavLink style={{color: 'white'}} to={link} onClick={() => props.search(props.symbol)}>
+                <NavLink style={{color: 'white'}} to={link} onClick={handleClick(props.symbol)}>
                   <p>{symbol}</p>
                   <p>{props.latestPrice}&nbsp;&nbsp;+{props.change}</p>
                   <p><Icon name='triangle up' />&nbsp;(+{(props.changePercent*100).toFixed(2)}%)</p>
@@ -37,7 +43,7 @@ const Index = props => {
               </Grid.Column>
             :
               <Grid.Column textAlign='right' color='red' width={2}>
-                <NavLink style={{color: 'white'}} to={link} onClick={() => props.search(props.symbol)}>
+                <NavLink style={{color: 'white'}} to={link} onClick={handleClick(props.symbol)}>
                   <p>{symbol}</p>
                   <p>{props.latestPrice}&nbsp;&nbsp;{props.change}</p>
                   <p><Icon name='triangle down' />&nbsp;({(props.changePercent*100).toFixed(2)}%)</p>
@@ -49,7 +55,7 @@ const Index = props => {
     const indexes = <React.Fragment>
             {props.change >= 0 ?
                 <Grid.Column textAlign='right' color='green' width={2}>
-                  <NavLink style={{color: 'white'}} to={link} onClick={() => props.search(props.symbol)}>
+                  <NavLink style={{color: 'white'}} to={link} onClick={handleClick(props.symbol)}>
                     <p>{symbol}</p>
                     <p>{props.latestPrice}&nbsp;&nbsp;+{props.change}</p>
                     <p><Icon name='triangle up' />&nbsp;(+{(props.changePercent*100).toFixed(2)}%)</p>
@@ -57,7 +63,7 @@ const Index = props => {
                 </Grid.Column>
               :
                 <Grid.Column textAlign='right' color='red' width={2}>
-                  <NavLink style={{color: 'white'}} to={link} onClick={() => props.search(props.symbol)}>
+                  <NavLink style={{color: 'white'}} to={link} onClick={handleClick(props.symbol)}>
                     <p>{symbol}</p>
                     <p>{props.latestPrice}&nbsp;&nbsp;{props.change}</p>
                     <p><Icon name='triangle down' />&nbsp;({(props.changePercent*100).toFixed(2)}%)</p>
@@ -77,4 +83,9 @@ const Index = props => {
   )
 }
 
-export default Index;
+const mapDispatchToProps = dispatch => ({ dispatch });
+
+export default connect(
+  null,
+  mapDispatchToProps
+)(Index);

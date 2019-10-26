@@ -3,9 +3,9 @@ import React from 'react';
 import Index from './Index';
 import UUID from 'uuid';
 
-const IndexList = ({indexQuotes, search}) => {
+const IndexList = ({indexQuotes}) => {
   if (indexQuotes && indexQuotes.length) {
-    const indexList = indexQuotes.map(index => <Index key={UUID()} {...index} search={search}/>)
+    const indexList = indexQuotes.map(index => <Index key={UUID()} {...index} />)
     return (
       <React.Fragment>
         {indexList}

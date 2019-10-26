@@ -4,7 +4,7 @@ import UUID from 'uuid';
 import { Table } from 'semantic-ui-react';
 
 const QuoteTable = props => {
-  const tableRows = props.tableRows.map(quote => <QuoteTableRow key={UUID()} {...quote} search={props.search}/>)
+  const tableRows = props.tableRows.map(quote => <QuoteTableRow key={UUID()} {...quote} />)
 
   return (
     <div>
