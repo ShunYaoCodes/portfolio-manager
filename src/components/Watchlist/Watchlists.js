@@ -1,13 +1,19 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom'
 import { Table } from 'semantic-ui-react'
+import { connect } from 'react-redux';
+import { fetchStockDetail } from "../../redux/actions";
 
 const Watchlists = props => {
   const link = `/quote?symbol=${props.symbol}`;
 
+  const handleClick = event => {
+    props.dispatch(fetchStockDetail(event.target.name));
+  };
+
   return (
     <Table.Row>
-      <Table.Cell><NavLink to={link} onClick={() => props.search(props.symbol)}>{props.symbol}</NavLink></Table.Cell>
+      <Table.Cell><NavLink to={link} name={props.symbol} onClick={handleClick}>{props.symbol}</NavLink></Table.Cell>
       <Table.Cell>{props.latestPrice}</Table.Cell>
       <Table.Cell>{props.change ? props.change.toFixed(2) : 'N/A'}</Table.Cell>
       <Table.Cell>{props.changePercent ? (props.changePercent*100).toFixed(2) : 'N/A'}%</Table.Cell>
@@ -25,4 +31,9 @@ const Watchlists = props => {
   )
 }
 
-export default Watchlists;
+const mapDispatchToProps = dispatch => ({ dispatch });
+
+export default connect(
+  null,
+  mapDispatchToProps
+)(Watchlists);

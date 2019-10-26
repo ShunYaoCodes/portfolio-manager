@@ -63,7 +63,7 @@ class Portfolio extends React.Component {
 
       //if (Object.keys(this.state.portfolioQuotes) !== []) {
         for(const quote in this.state.portfolioQuotes) {
-          list.push(<Positions key={UUID()} {...this.state.portfolioQuotes[quote]} symbol={quote} search={this.props.search} />)
+          list.push(<Positions key={UUID()} {...this.state.portfolioQuotes[quote]} symbol={quote} />)
         }
       //}
 

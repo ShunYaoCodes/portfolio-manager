@@ -4,9 +4,9 @@ import { Table, Radio } from 'semantic-ui-react'
 import AuthAdapter from '../../adapters/AuthAdapter';
 import ApiAdapter from '../../adapters/ApiAdapter';
 import { connect } from 'react-redux';
-import { updatePositionType } from "../../redux/actions";
+import { updatePositionType, fetchStockDetail } from "../../redux/actions";
 
-const Positions = ({id, position_type, search, stats, symbol, updatePositionType}) => {
+const Positions = ({id, position_type, stats, symbol, updatePositionType, dispatch}) => {
   const link = `/quote?symbol=${symbol}`;
   const divDate = stats.exDividendDate;
 
@@ -22,13 +22,17 @@ const Positions = ({id, position_type, search, stats, symbol, updatePositionType
     updatePositionType(id, position_type);
   }
 
+  const handleClick = event => {
+    dispatch(fetchStockDetail(event.target.name));
+  };
+
   return (
     <Table.Row>
       <Table.Cell>
         <Radio label='Long' value='Long' defaultChecked={position_type === 'Long'} onChange={handlePositionTypeChange}/>
         <Radio label='Short' value='Short' defaultChecked={position_type === 'Short'} onChange={handlePositionTypeChange}/>
       </Table.Cell>
-      <Table.Cell><NavLink to={link} onClick={() => search(symbol)}>{symbol}</NavLink></Table.Cell>
+      <Table.Cell><NavLink to={link} name={symbol} onClick={handleClick}>{symbol}</NavLink></Table.Cell>
       <Table.Cell>{stats.beta.toFixed(2)}</Table.Cell>
       <Table.Cell>{stats.shortInterest}</Table.Cell>
       <Table.Cell>{stats.shortDate}</Table.Cell>
@@ -46,7 +50,9 @@ const Positions = ({id, position_type, search, stats, symbol, updatePositionType
   )
 }
 
+const mapDispatchToProps = dispatch => ({ updatePositionType, dispatch });
+
 export default connect(
   null,
-  { updatePositionType },
+  mapDispatchToProps
 )(Positions);

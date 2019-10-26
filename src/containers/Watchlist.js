@@ -52,12 +52,12 @@ class Watchlist extends React.Component {
   render()  {
     if (AuthAdapter.loggedIn()) {
       if (this.state.quotes.length) {
-        const list = this.state.quotes.map(each => <Watchlists key={UUID()} {...each} search={this.props.search}/>)
+        const list = this.state.quotes.map(each => <Watchlists key={UUID()} {...each} />)
     
         return (
           <React.Fragment>
             <Grid.Row>
-              <IndexList search={this.props.search}/>
+              <IndexList />
             </Grid.Row>
     
             <Grid.Row>

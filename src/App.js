@@ -134,8 +134,8 @@ class App extends Component {
             }
 
             <Route exact path='/' render={() => <Market />} />
-            <Route exact path='/portfolio' render={() => <Portfolio portfolio={this.state.portfolio} search={this.handleSearch} />} />
-            <Route exact path='/watchlist' render={() => <Watchlist search={this.handleSearch}/>} />
+            <Route exact path='/portfolio' render={() => <Portfolio />} />
+            <Route exact path='/watchlist' render={() => <Watchlist />} />
             <Route path='/quote' render={() => <DetailQuote click={this.handleClick}/>} />
           </Grid>
         </div>
