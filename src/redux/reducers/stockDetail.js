@@ -75,20 +75,3 @@ function transformChartData(chartData) {
 //         return false;
 //     }
 // }
-  
-// function updateSearchHistory(symbol) {
-//     let newSearchHistory = [];
-
-//     if (AppAdapter.searchHistory().length) {
-//         newSearchHistory = AppAdapter.searchHistory().filter(stock => stock !== symbol);
-//         newSearchHistory.unshift(symbol); // add to the beginning of array
-//     } else {
-//         newSearchHistory.push(symbol);
-//     }
-
-//     localStorage.setItem('searchHistory', JSON.stringify(newSearchHistory)); 
-
-//     fetch(ApiAdapter.getBatchQuotes(newSearchHistory)).then(r => r.json()).then(searchHistoryQuotes => {
-//         this.setState({ searchHistoryQuotes })
-//     })
-// }

@@ -5,6 +5,7 @@ import { map } from 'lodash';
 import { 
   TOGGLE_LIST, 
   UPDATE_POSITION_TYPE,
+  UPDATE_SERACH_HISTORY,
 } from "./actionTypes";
 
 // let nextTodoId = 0;
@@ -86,7 +87,12 @@ export function fetchStockDetail(symbol) {
           }
         }
       })
-    }).catch((error) => {
+    })
+    .then(() => {
+      updateSearchHistory(symbol);
+      return dispatch(fetchSearchHistory());
+    })
+    .catch((error) => {
       return dispatch({ 
         type: 'SET_STOCK_ERROR', 
         payload: {
@@ -96,3 +102,16 @@ export function fetchStockDetail(symbol) {
     });
   };
 };
+
+function updateSearchHistory(symbol) {
+  let newSearchHistory = [];
+
+  if (AppAdapter.searchHistory().length) {
+      newSearchHistory = AppAdapter.searchHistory().filter(stock => stock !== symbol);
+      newSearchHistory.unshift(symbol); // add to the beginning of array
+  } else {
+      newSearchHistory.push(symbol);
+  }
+
+  localStorage.setItem('searchHistory', JSON.stringify(newSearchHistory)); 
+}
