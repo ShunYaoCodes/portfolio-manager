@@ -1,8 +1,8 @@
 import ApiAdapter from "../adapters/ApiAdapter";
+import AppAdapter from "../adapters/AppAdapter";
 import { map } from 'lodash';
 import { 
   TOGGLE_LIST, 
-  GET_SEARCH_HISTORY, 
   GET_WATCHLIST, 
   GET_PORTFOLIO,
   UPDATE_POSITION_TYPE,
@@ -25,15 +25,18 @@ export function fetchIndex() {
       const indexQuotes = map(indexes, index => index.quote);
       return dispatch({ type: "SET_INDEX", payload: { indexQuotes } })
     })
-  }
+  };
 };
 
-export const getSearchHistory = searchHistoryQuotes => ({
-  type: GET_SEARCH_HISTORY,
-  payload: {
-    searchHistoryQuotes,
-  }
-});
+export function fetchSearchHistory() {
+  return (dispatch, getState) => {
+    if (AppAdapter.searchHistory().length) {
+      fetch(ApiAdapter.getBatchQuotes(AppAdapter.searchHistory()))
+      .then(r => r.json())
+      .then(searchHistoryQuotes => dispatch({ type: "SET_SEARCH_HISTORY", payload: { searchHistoryQuotes } }))
+    }
+  };
+};
 
 export const getWatchlist = watchlist => ({
   type: GET_WATCHLIST,

@@ -14,9 +14,8 @@ import LoginForm from './components/LoginForm';
 import RegistrationForm from './components/RegistrationForm';
 import AuthAdapter from './adapters/AuthAdapter';
 import AppAdapter from './adapters/AppAdapter';
-import { map } from 'lodash';
 import { connect } from 'react-redux';
-import { fetchIndex, getSearchHistory } from "./redux/actions";
+import { fetchIndex, fetchSearchHistory } from "./redux/actions";
 
 const parseDate = timeParse("%Y-%m-%d");
 
@@ -28,27 +27,12 @@ class App extends Component {
   componentDidMount() {
     this.intervalID = setInterval(function(){
       this.props.dispatch(fetchIndex());
-      this.fetchSearchHistoryQuotes();
+      this.props.dispatch(fetchSearchHistory());
     }.bind(this),3000);
   }
 
   componentWillUnmount() {
     clearInterval(this.intervalID);
-  }
-
-  // fetchIndex = () => {
-  //   fetch(ApiAdapter.getIndexQuotes()).then(r => r.json()).then(indexes => {
-  //     const indexQuotes = map(indexes, index => index.quote);
-  //     this.props.getIndex(indexQuotes);
-  //   })
-  // }
-
-  fetchSearchHistoryQuotes = () => {
-    if (AppAdapter.searchHistory().length) {
-      fetch(ApiAdapter.getBatchQuotes(AppAdapter.searchHistory())).then(r => r.json()).then(searchHistoryQuotes => {
-          this.props.getSearchHistory(searchHistoryQuotes);
-      })
-    }
   }
 
   handleSearch = keyword => {
@@ -242,15 +226,10 @@ class App extends Component {
   }
 }
 
-const mapDispatchToProps = dispatch => {
-  return {
-    getSearchHistory,
-    dispatch,
-  }
-}
+const mapDispatchToProps = dispatch => ({ dispatch });
 
 export default connect(
   null,
-  mapDispatchToProps,
+  mapDispatchToProps
 )(App);
 
