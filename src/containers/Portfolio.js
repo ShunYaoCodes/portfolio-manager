@@ -125,8 +125,7 @@ class Portfolio extends React.Component {
 }
 
 const mapStateToProps = state => {
-  const { portfolio } = state;
-  return portfolio;
+  return { portfolio: state.portfolio };
 };
 
 const mapDispatchToProps = dispatch => ({ dispatch });

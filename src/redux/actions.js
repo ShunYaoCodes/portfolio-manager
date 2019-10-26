@@ -74,16 +74,14 @@ export function fetchStockDetail(symbol) {
     .then(stock => stock.json())
     .then(stock => {
       const { watchlist, portfolio } = getState();
-      const watchlistState = watchlist.watchlist;
-      const portfolioState = portfolio.portfolio;
 
       return dispatch({ 
         type: 'SET_STOCK', 
         payload: {
           stock: {
             ...stock,
-            inWatchlist: !!watchlistState.find(stock => stock.symbol === symbol.toUpperCase()),
-            inPortfolio: !!portfolioState.find(stock => stock.symbol === symbol.toUpperCase())
+            inWatchlist: !!watchlist.find(stock => stock.symbol === symbol.toUpperCase()),
+            inPortfolio: !!portfolio.find(stock => stock.symbol === symbol.toUpperCase())
           }
         }
       })

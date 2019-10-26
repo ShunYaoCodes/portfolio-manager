@@ -111,8 +111,7 @@ class Watchlist extends React.Component {
 }
 
 const mapStateToProps = state => {
-  const { watchlist } = state;
-  return watchlist;
+  return { watchlist: state.watchlist };
 };
 
 const mapDispatchToProps = dispatch => ({ dispatch });
