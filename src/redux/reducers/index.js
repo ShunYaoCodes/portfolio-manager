@@ -4,6 +4,7 @@ import toggleList from "./toggleList";
 import searchHistoryQuotes from "./searchHistoryQuotes";
 import watchlist from "./watchlist";
 import portfolio from "./portfolio";
+import stockDetail from "./stockDetail";
 
 export default combineReducers({ 
     toggleList,
@@ -11,4 +12,5 @@ export default combineReducers({
     searchHistoryQuotes,
     watchlist,
     portfolio,
+    stockDetail,
 });

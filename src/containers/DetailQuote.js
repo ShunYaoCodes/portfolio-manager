@@ -1,5 +1,4 @@
 import React from 'react';
-import { withRouter } from 'react-router-dom'
 import { connect } from "react-redux";
 import { toggleList } from "../redux/actions";
 import NewsList from '../components/NewsList';
@@ -12,11 +11,12 @@ class DetailQuote extends React.Component {
   /****
    * this.props consists of 
    *  {
-   *    quote (Array), 
+   *    quote (Object), 
    *    news (Array), 
    *    chart (Array), 
    *    inWatchlist (Boolean), 
    *    inPortfolio (Boolean), 
+   *    error (String),
    *  } 
    */
   
@@ -26,7 +26,7 @@ class DetailQuote extends React.Component {
   }
 
   render() {
-    if (this.props.quote && !this.props.error) {
+    if (Object.keys(this.props.quote).length && !this.props.error) {
       return (
         <React.Fragment>
           <Grid.Row>
@@ -82,13 +82,11 @@ class DetailQuote extends React.Component {
 }
 
 const mapStateToProps = state => {
-  // const { visibilityFilter } = state;
-  // const todos = getTodosByVisibilityFilter(state, visibilityFilter);
-  // return { todos };
-  // return { activeFilter: state.visibilityFilter };
+  const { stockDetail } = state;
+  return { ...stockDetail };
 };
 
-export default withRouter(connect(
+export default connect(
   mapStateToProps,
   { toggleList }
-)(DetailQuote));
+)(DetailQuote);

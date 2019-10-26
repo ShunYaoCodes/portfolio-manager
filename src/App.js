@@ -6,18 +6,14 @@ import NavBar from './components/NavBar';
 import Portfolio from './containers/Portfolio'
 import Watchlist from './containers/Watchlist'
 import DetailQuote from './containers/DetailQuote';
-import { timeParse } from "d3-time-format";
 import { BrowserRouter as Router, Route, NavLink, Redirect } from 'react-router-dom';
 import './App.css'
 import ApiAdapter from './adapters/ApiAdapter';
 import LoginForm from './components/LoginForm';
 import RegistrationForm from './components/RegistrationForm';
 import AuthAdapter from './adapters/AuthAdapter';
-import AppAdapter from './adapters/AppAdapter';
 import { connect } from 'react-redux';
 import { fetchIndex, fetchSearchHistory } from "./redux/actions";
-
-const parseDate = timeParse("%Y-%m-%d");
 
 class App extends Component {
   state = {
@@ -33,84 +29,6 @@ class App extends Component {
 
   componentWillUnmount() {
     clearInterval(this.intervalID);
-  }
-
-  handleSearch = keyword => {
-    fetch(ApiAdapter.getStockInfo(keyword))
-    .then(function(response) {
-      if (response.ok) return response;
-      throw new Error(keyword);
-    })
-    .then(res => res.json())
-    .then(item => {
-      this.setState({
-        detailQuote: {
-          quote: item.quote,
-          news: item.news,
-          chart: this.transformItemDataForChart(item),
-          inWatchlist: this.inWatchlistStatus(keyword),
-          inPortfolio: this.inPortfolioStatus(keyword),
-        },
-      })
-    }).catch((error) => {
-      this.setState({ 
-        detailQuote: {
-          error: `No results for ${error.message}. Please enter a valid stock symbol.`,
-        }
-      })
-    });
-    
-    this.updateSearchHistory(keyword);
-  }
-
-  transformItemDataForChart = (item) => {
-    let data = item.chart.map(d => {
-      return {
-        date: parseDate(d.date),
-        open: d.open,
-        high: d.high,
-        low: d.low,
-        close: d.close,
-        volume: d.volume,
-      }
-    })
-
-    data.columns = ['date', 'open', 'high', 'low', 'close', 'volume']
-
-    return data;
-  }
-
-  inPortfolioStatus(keyword) {
-    if (AuthAdapter.loggedIn() && this.state.portfolio && !!this.state.portfolio.find(portfolioName => portfolioName.symbol.toLowerCase() === keyword.toLowerCase())) {
-      return true;
-    } else {
-      return false;
-    }
-  }
-
-  inWatchlistStatus(keyword) {
-    if (AuthAdapter.loggedIn() && this.state.watchlist && !!this.state.watchlist.find(watchlistName => watchlistName.symbol.toLowerCase() === keyword.toLowerCase())) {
-      return true;
-    } else {
-      return false;
-    }
-  }
-  
-  updateSearchHistory = (symbol) => {
-    let newSearchHistory = [];
-
-    if (AppAdapter.searchHistory().length) {
-      newSearchHistory = AppAdapter.searchHistory().filter(stock => stock !== symbol);
-      newSearchHistory.unshift(symbol); // add to the beginning of array
-    } else {
-      newSearchHistory.push(symbol);
-    }
-
-    localStorage.setItem('searchHistory', JSON.stringify(newSearchHistory)); 
-
-    fetch(ApiAdapter.getBatchQuotes(newSearchHistory)).then(r => r.json()).then(searchHistoryQuotes => {
-      this.setState({ searchHistoryQuotes })
-    })
   }
 
   handleClick = (stateName, checked, symbol) => {
@@ -183,7 +101,7 @@ class App extends Component {
                 <NavLink to='/' exact><h1 style={{marginTop: '5px'}}>Portfolio Manager and Hedger</h1></NavLink>
               </Grid.Column>
               <Grid.Column computer={6} mobile={12}>
-                <SearchBar search={this.handleSearch}/>
+                <SearchBar />
               </Grid.Column>
               <Grid.Column computer={2} mobile={2}>
                 {
@@ -218,7 +136,7 @@ class App extends Component {
             <Route exact path='/' render={() => <Market search={this.handleSearch}/>} />
             <Route exact path='/portfolio' render={() => <Portfolio portfolio={this.state.portfolio} search={this.handleSearch} />} />
             <Route exact path='/watchlist' render={() => <Watchlist search={this.handleSearch}/>} />
-            <Route path='/quote' render={() => <DetailQuote {...this.state.detailQuote} click={this.handleClick}/>} />
+            <Route path='/quote' render={() => <DetailQuote click={this.handleClick}/>} />
           </Grid>
         </div>
       </Router>

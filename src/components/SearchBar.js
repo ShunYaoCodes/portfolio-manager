@@ -1,6 +1,8 @@
 import React from 'react';
 import { withRouter } from 'react-router-dom';
 import { Icon } from 'semantic-ui-react';
+import { connect } from 'react-redux';
+import { fetchStockDetail } from '../redux/actions';
 
 const inputStyle = {
   width: '80%',
@@ -24,7 +26,7 @@ class SearchBar extends React.Component {
     event.preventDefault();
     const symbol = this.state.value.toUpperCase();
     this.props.history.push(`/quote?symbol=${symbol}`);
-    this.props.search(symbol);
+    this.props.dispatch(fetchStockDetail(symbol));
     this.setState({ value: '' });
   }
 
@@ -40,4 +42,9 @@ class SearchBar extends React.Component {
   }
 }
 
-export default withRouter(SearchBar);
+const mapDispatchToProps = dispatch => ({ dispatch });
+
+export default withRouter(connect(
+  null,
+  mapDispatchToProps
+)(SearchBar));

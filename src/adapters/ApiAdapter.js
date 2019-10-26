@@ -6,7 +6,7 @@ class ApiAdapter {
         return 'https://sandbox.iexapis.com/stable/stock';
     }
 
-    static getStockInfo(symbol = '') {
+    static getStockDetail(symbol = '') {
         return `${this.host()}/${symbol}/batch?types=quote,news,chart&range=ytd&token=${publishableKey}`;
     }
 

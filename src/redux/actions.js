@@ -4,7 +4,6 @@ import AuthAdapter from "../adapters/AuthAdapter";
 import { map } from 'lodash';
 import { 
   TOGGLE_LIST, 
-  GET_PORTFOLIO,
   UPDATE_POSITION_TYPE,
 } from "./actionTypes";
 
@@ -63,3 +62,37 @@ export const updatePositionType = (symbolId, positionType) => ({
     positionType,
   }
 });
+
+export function fetchStockDetail(symbol) {
+  return (dispatch, getState) => {
+    fetch(ApiAdapter.getStockDetail(symbol))
+    .then(function(response) {
+      if (response.ok) return response;
+      throw new Error(symbol);
+    })
+    .then(stock => stock.json())
+    .then(stock => {
+      const { watchlist, portfolio } = getState();
+      const watchlistState = watchlist.watchlist;
+      const portfolioState = portfolio.portfolio;
+
+      return dispatch({ 
+        type: 'SET_STOCK', 
+        payload: {
+          stock: {
+            ...stock,
+            inWatchlist: !!watchlistState.find(stock => stock.symbol === symbol.toUpperCase()),
+            inPortfolio: !!portfolioState.find(stock => stock.symbol === symbol.toUpperCase())
+          }
+        }
+      })
+    }).catch((error) => {
+      return dispatch({ 
+        type: 'SET_STOCK_ERROR', 
+        payload: {
+          stockError: `No results for ${error.message}. Please enter a valid stock symbol.`,
+        }
+      })
+    });
+  };
+};
