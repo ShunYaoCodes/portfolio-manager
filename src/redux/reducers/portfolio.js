@@ -1,4 +1,4 @@
-import { GET_PORTFOLIO, UPDATE_POSITION_TYPE } from "../actionTypes";
+import { SET_PORTFOLIO, UPDATE_POSITION_TYPE } from "../actionTypes";
 
 const initialState = {
     portfolio: []
@@ -6,7 +6,7 @@ const initialState = {
 
 export default function(state = initialState, action) {
     switch (action.type) {
-        case GET_PORTFOLIO: {
+        case SET_PORTFOLIO: {
             const { portfolio } = action.payload;
             return {
                 ...state,

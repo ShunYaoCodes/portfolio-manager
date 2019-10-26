@@ -47,12 +47,14 @@ export function fetchWatchlist() {
   };
 };
 
-export const getPortfolio = portfolio => ({
-  type: GET_PORTFOLIO,
-  payload: {
-    portfolio,
-  }
-});
+export function fetchPortfolio() {
+  return (dispatch, getState) => {
+    fetch(`${ApiAdapter.backendHost()}/users/${localStorage.getItem("id")}/portfolio_assets`, {
+      headers: AuthAdapter.headers(),
+    }).then(r => r.json())
+    .then(portfolio => dispatch({ type: "SET_PORTFOLIO", payload: { portfolio } }))
+  };
+};
 
 export const updatePositionType = (symbolId, positionType) => ({
   type: UPDATE_POSITION_TYPE,

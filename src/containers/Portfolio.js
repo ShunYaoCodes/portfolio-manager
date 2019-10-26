@@ -6,7 +6,7 @@ import { Grid, Table, Form, Input, Button, Message } from 'semantic-ui-react';
 import AuthAdapter from '../adapters/AuthAdapter';
 import ApiAdapter from '../adapters/ApiAdapter';
 import { connect } from 'react-redux';
-import { getPortfolio } from "../redux/actions";
+import { fetchPortfolio } from "../redux/actions";
 
 class Portfolio extends React.Component {
   state = {
@@ -16,7 +16,8 @@ class Portfolio extends React.Component {
   }
 
   componentDidMount() {
-    if (AuthAdapter.loggedIn()) this.fetchPortfolio();
+    if (AuthAdapter.loggedIn()) this.props.dispatch(fetchPortfolio());
+    if (this.props.portfolio.length) this.fetchPortfolioQuotes();
 
     this.intervalID = setInterval(() => {
       if (this.props.portfolio.length) this.fetchPortfolioQuotes();
@@ -25,17 +26,6 @@ class Portfolio extends React.Component {
 
   componentWillUnmount() {
     clearInterval(this.intervalID);
-  }
-
-  fetchPortfolio = () => {
-    fetch(`${ApiAdapter.backendHost()}/users/${localStorage.getItem("id")}/portfolio_assets`, {
-      headers: AuthAdapter.headers(),
-    }).then(r => r.json()).then(portfolio => {
-      if (portfolio.length) {
-        this.props.getPortfolio(portfolio);
-        if (this.props.portfolio.length) this.fetchPortfolioQuotes();
-      }
-    })
   }
 
   fetchPortfolioQuotes = () => {
@@ -139,7 +129,9 @@ const mapStateToProps = state => {
   return portfolio;
 };
 
+const mapDispatchToProps = dispatch => ({ dispatch });
+
 export default connect(
   mapStateToProps,
-  { getPortfolio },
+  mapDispatchToProps
 )(Portfolio);
