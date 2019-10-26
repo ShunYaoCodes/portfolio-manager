@@ -5,7 +5,6 @@ import { map } from 'lodash';
 import { 
   TOGGLE_LIST, 
   UPDATE_POSITION_TYPE,
-  UPDATE_SERACH_HISTORY,
 } from "./actionTypes";
 
 // let nextTodoId = 0;
@@ -107,6 +106,7 @@ function updateSearchHistory(symbol) {
   if (AppAdapter.searchHistory().length) {
       newSearchHistory = AppAdapter.searchHistory().filter(stock => stock !== symbol);
       newSearchHistory.unshift(symbol); // add to the beginning of array
+      newSearchHistory.splice(10);  // only keep the latest 10 stocks
   } else {
       newSearchHistory.push(symbol);
   }

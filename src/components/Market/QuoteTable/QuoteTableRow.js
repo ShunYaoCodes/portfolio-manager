@@ -7,13 +7,13 @@ import { fetchStockDetail } from '../../../redux/actions';
 const QuoteTableRow = ({ symbol, latestPrice, change, changePercent, dispatch }) => {
   const link = `/quote?symbol=${symbol}`;
 
-  const handleClick = (symbol) => {
-    dispatch(fetchStockDetail(symbol));
+  const handleClick = event => {
+    dispatch(fetchStockDetail(event.target.name));
   };
 
   return (
     <Table.Row>
-      <Table.Cell><NavLink to={link} onClick={handleClick(symbol)}>{symbol}</NavLink></Table.Cell>
+      <Table.Cell><NavLink to={link} name={symbol} onClick={handleClick}>{symbol}</NavLink></Table.Cell>
       <Table.Cell>{latestPrice}</Table.Cell>
       <Table.Cell>{change ? change.toFixed(2) : 0}</Table.Cell>
       <Table.Cell>{changePercent ? (changePercent*100).toFixed(2) : 0}%</Table.Cell>

@@ -28,14 +28,14 @@ const Index = props => {
       return symbol;
   }
 
-  const handleClick = (symbol) => {
-    props.dispatch(fetchStockDetail(symbol));
+  const handleClick = event => {
+    props.dispatch(fetchStockDetail(event.target.name));
   };
 
   const vix = <React.Fragment>
               {props.change >= 0 ?
               <Grid.Column textAlign='right' color='green' width={2}>
-                <NavLink style={{color: 'white'}} to={link} onClick={handleClick(props.symbol)}>
+                <NavLink style={{color: 'white'}} to={link} name={props.symbol} onClick={handleClick}>
                   <p>{symbol}</p>
                   <p>{props.latestPrice}&nbsp;&nbsp;+{props.change}</p>
                   <p><Icon name='triangle up' />&nbsp;(+{(props.changePercent*100).toFixed(2)}%)</p>
@@ -43,7 +43,7 @@ const Index = props => {
               </Grid.Column>
             :
               <Grid.Column textAlign='right' color='red' width={2}>
-                <NavLink style={{color: 'white'}} to={link} onClick={handleClick(props.symbol)}>
+                <NavLink style={{color: 'white'}} to={link} name={props.symbol} onClick={handleClick}>
                   <p>{symbol}</p>
                   <p>{props.latestPrice}&nbsp;&nbsp;{props.change}</p>
                   <p><Icon name='triangle down' />&nbsp;({(props.changePercent*100).toFixed(2)}%)</p>
@@ -55,7 +55,7 @@ const Index = props => {
     const indexes = <React.Fragment>
             {props.change >= 0 ?
                 <Grid.Column textAlign='right' color='green' width={2}>
-                  <NavLink style={{color: 'white'}} to={link} onClick={handleClick(props.symbol)}>
+                  <NavLink style={{color: 'white'}} to={link} name={props.symbol} onClick={handleClick}>
                     <p>{symbol}</p>
                     <p>{props.latestPrice}&nbsp;&nbsp;+{props.change}</p>
                     <p><Icon name='triangle up' />&nbsp;(+{(props.changePercent*100).toFixed(2)}%)</p>
@@ -63,7 +63,7 @@ const Index = props => {
                 </Grid.Column>
               :
                 <Grid.Column textAlign='right' color='red' width={2}>
-                  <NavLink style={{color: 'white'}} to={link} onClick={handleClick(props.symbol)}>
+                  <NavLink style={{color: 'white'}} to={link} name={props.symbol} onClick={handleClick}>
                     <p>{symbol}</p>
                     <p>{props.latestPrice}&nbsp;&nbsp;{props.change}</p>
                     <p><Icon name='triangle down' />&nbsp;({(props.changePercent*100).toFixed(2)}%)</p>

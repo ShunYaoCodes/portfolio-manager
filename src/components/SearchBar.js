@@ -34,7 +34,7 @@ class SearchBar extends React.Component {
     return (
       <React.Fragment>
         <form onSubmit={this.handleSubmit}>
-          <input style={inputStyle} type="text" placeholder='Search for symbols' value={this.state.value} onChange={this.handleChange } />
+          <input style={inputStyle} type="text" placeholder='Search for symbols' value={this.state.value} onChange={this.handleChange} />
           <Icon color='blue' size='large' name='search' circular onClick={this.handleSubmit}/>
         </form>
       </React.Fragment>
