@@ -1,25 +1,15 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom'
 import { Table, Radio } from 'semantic-ui-react'
-import AuthAdapter from '../../adapters/AuthAdapter';
-import ApiAdapter from '../../adapters/ApiAdapter';
 import { connect } from 'react-redux';
 import { updatePositionType, fetchStockDetail } from "../../redux/actions";
 
-const Positions = ({id, position_type, stats, symbol, updatePositionType, dispatch}) => {
+const Positions = ({id, position_type, stats, symbol, dispatch}) => {
   const link = `/quote?symbol=${symbol}`;
   const divDate = stats.exDividendDate;
 
   const handlePositionTypeChange = (e, { value }) => {
-    const position_type = value;
-
-    fetch(`${ApiAdapter.backendHost()}/portfolio_assets/${id}`, {
-      method: "PATCH",
-      headers: AuthAdapter.headers(),
-      body: JSON.stringify({ position_type })
-    })
-    
-    updatePositionType(id, position_type);
+    dispatch(updatePositionType(id, value));
   }
 
   const handleClick = event => {
@@ -50,7 +40,7 @@ const Positions = ({id, position_type, stats, symbol, updatePositionType, dispat
   )
 }
 
-const mapDispatchToProps = dispatch => ({ updatePositionType, dispatch });
+const mapDispatchToProps = dispatch => ({ dispatch });
 
 export default connect(
   null,

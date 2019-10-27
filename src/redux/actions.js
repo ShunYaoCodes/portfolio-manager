@@ -55,13 +55,17 @@ export function fetchPortfolio() {
   };
 };
 
-export const updatePositionType = (symbolId, positionType) => ({
-  type: UPDATE_POSITION_TYPE,
-  payload: {
-    symbolId,
-    positionType,
-  }
-});
+export function updatePositionType(symbolId, positionType) {
+  return (dispatch, getState) => {
+    fetch(`${ApiAdapter.backendHost()}/portfolio_assets/${symbolId}`, {
+      method: "PATCH",
+      headers: AuthAdapter.headers(),
+      body: JSON.stringify({ position_type: positionType })
+    })
+
+    return dispatch({ type: UPDATE_POSITION_TYPE, payload: { symbolId, positionType } });
+  };
+};
 
 export function fetchStockDetail(symbol) {
   return (dispatch, getState) => {
