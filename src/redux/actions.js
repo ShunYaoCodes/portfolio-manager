@@ -1,11 +1,7 @@
 import ApiAdapter from "../adapters/ApiAdapter";
 import AppAdapter from "../adapters/AppAdapter";
 import AuthAdapter from "../adapters/AuthAdapter";
-import { map } from 'lodash';
-import { 
-  TOGGLE_LIST, 
-  UPDATE_POSITION_TYPE,
-} from "./actionTypes";
+import { TOGGLE_LIST, SET_INDEX, SET_SEARCH_HISTORY, SET_WATCHLIST, SET_PORTFOLIO, SET_STOCK, SET_STOCK_ERROR, UPDATE_POSITION_TYPE } from "./actionTypes";
 
 // let nextTodoId = 0;
 
@@ -21,8 +17,8 @@ export const toggleList = (stateName, checked, symbol) => ({
 export function fetchIndex() {
   return (dispatch, getState) => {
     fetch(ApiAdapter.getIndexQuotes()).then(r => r.json()).then(indexes => {
-      const indexQuotes = map(indexes, index => index.quote);
-      return dispatch({ type: "SET_INDEX", payload: { indexQuotes } })
+      const indexQuotes = Object.values(indexes).map(index => index.quote);
+      return dispatch({ type: SET_INDEX, payload: { indexQuotes } })
     })
   };
 };
@@ -32,7 +28,7 @@ export function fetchSearchHistory() {
     if (AppAdapter.searchHistory().length) {
       fetch(ApiAdapter.getBatchQuotes(AppAdapter.searchHistory()))
       .then(r => r.json())
-      .then(searchHistoryQuotes => dispatch({ type: "SET_SEARCH_HISTORY", payload: { searchHistoryQuotes } }))
+      .then(searchHistoryQuotes => dispatch({ type: SET_SEARCH_HISTORY, payload: { searchHistoryQuotes } }))
     }
   };
 };
@@ -42,7 +38,7 @@ export function fetchWatchlist() {
     fetch(`${ApiAdapter.backendHost()}/users/${localStorage.getItem("id")}/watchlists`, {
       headers: AuthAdapter.headers(),
     }).then(r => r.json())
-    .then(watchlist => dispatch({ type: "SET_WATCHLIST", payload: { watchlist } }))
+    .then(watchlist => dispatch({ type: SET_WATCHLIST, payload: { watchlist } }))
   };
 };
 
@@ -51,7 +47,7 @@ export function fetchPortfolio() {
     fetch(`${ApiAdapter.backendHost()}/users/${localStorage.getItem("id")}/portfolio_assets`, {
       headers: AuthAdapter.headers(),
     }).then(r => r.json())
-    .then(portfolio => dispatch({ type: "SET_PORTFOLIO", payload: { portfolio } }))
+    .then(portfolio => dispatch({ type: SET_PORTFOLIO, payload: { portfolio } }))
   };
 };
 
@@ -79,7 +75,7 @@ export function fetchStockDetail(symbol) {
       const { watchlist, portfolio } = getState();
 
       return dispatch({ 
-        type: 'SET_STOCK', 
+        type: SET_STOCK, 
         payload: {
           stock: {
             ...stock,
@@ -95,7 +91,7 @@ export function fetchStockDetail(symbol) {
     })
     .catch((error) => {
       return dispatch({ 
-        type: 'SET_STOCK_ERROR', 
+        type: SET_STOCK_ERROR, 
         payload: {
           stockError: `No results for ${error.message}. Please enter a valid stock symbol.`,
         }

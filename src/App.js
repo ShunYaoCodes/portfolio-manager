@@ -16,10 +16,6 @@ import { connect } from 'react-redux';
 import { fetchIndex, fetchSearchHistory } from "./redux/actions";
 
 class App extends Component {
-  state = {
-    detailQuote: {},
-  }
-
   componentDidMount() {
     this.intervalID = setInterval(function(){
       this.props.dispatch(fetchIndex());
