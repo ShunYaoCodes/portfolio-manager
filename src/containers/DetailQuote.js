@@ -37,11 +37,10 @@ class DetailQuote extends React.Component {
           <Grid.Row>
             <Grid.Column width={7}>
               {AuthAdapter.loggedIn() ? 
-                (this.props.inWatchlist ?
-                  <div><Checkbox toggle checked onClick={this.handleToggle} name="watchlist"/>Remove from your watchlist</div>
-                  :
-                  <div><Checkbox toggle onClick={this.handleToggle} name="watchlist"/> Add to your watchlist</div>
-                )
+                <div>
+                  <Checkbox toggle checked={this.props.inWatchlist} onClick={this.handleToggle} name="watchlist"/>
+                  {this.props.inWatchlist ? " Remove from your watchlist" : " Add to your watchlist"}
+                </div>
                 :
                 <p>Sign in to add to your watchlist</p>
               }
@@ -49,11 +48,10 @@ class DetailQuote extends React.Component {
 
             <Grid.Column width={7}>
               {AuthAdapter.loggedIn() ? 
-                (this.props.inPortfolio ?
-                  <div><Checkbox toggle checked onClick={this.handleToggle} name="portfolio"/> Remove from your portfolio</div>
-                  :
-                  <div><Checkbox toggle onClick={this.handleToggle} name="portfolio"/> Add to your portfolio</div>
-                )
+                <div>
+                  <Checkbox toggle checked={this.props.inPortfolio} onClick={this.handleToggle} name="portfolio"/>
+                  {this.props.inPortfolio ? " Remove from your portfolio" : " Add to your portfolio"}
+                </div>
                 :
                 <p>Sign in to add to your portfolio</p>
               }
@@ -82,6 +80,7 @@ class DetailQuote extends React.Component {
 
 const mapStateToProps = state => {
   const { stockDetail } = state;
+  console.log(stockDetail);
   return { ...stockDetail };
 };
 
