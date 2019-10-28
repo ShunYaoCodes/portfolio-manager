@@ -1,9 +1,10 @@
-import { SET_PORTFOLIO, UPDATE_POSITION_TYPE } from "../actionTypes";
+import { SET_PORTFOLIO, UPDATE_POSITION_TYPE, ADD_TO_PORTFOLIO, REMOVE_FROM_PORTFOLIO } from "../actionTypes";
 
 export default function(state = [], action) {
     switch (action.type) {
         case SET_PORTFOLIO: {
             const { portfolio } = action.payload;
+
             return [
                 ...portfolio,
             ];
@@ -21,6 +22,23 @@ export default function(state = [], action) {
                     position_type: positionType,
                 },
                 ...state.slice(index + 1),
+            ];
+        }
+        case ADD_TO_PORTFOLIO: {
+            const { stock } = action.payload;
+
+            return [
+                ...state,
+                stock,
+            ];
+        }
+        case REMOVE_FROM_PORTFOLIO: {
+            const { stock } = action.payload;
+            const index = state.indexOf(stock);
+
+            return [
+              ...state.slice(0, index), 
+              ...state.slice(index + 1)
             ];
         }
         default:

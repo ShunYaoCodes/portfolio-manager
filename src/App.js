@@ -27,58 +27,6 @@ class App extends Component {
     clearInterval(this.intervalID);
   }
 
-  handleClick = (stateName, checked, symbol) => {
-    const statusName = 'in'+ stateName.slice(0,1).toUpperCase() + stateName.slice(1); // inWatchlist or inPortfolio
-    const endpoint = stateName === 'portfolio' ? 'portfolio_assets' : `${stateName}s`;
-
-    if (AuthAdapter.loggedIn()) {
-      if (checked) {
-        fetch(`${ApiAdapter.backendHost()}/users/${localStorage.getItem("id")}/${endpoint}`, {
-          method: "POST",
-          headers: AuthAdapter.headers(),
-          body: JSON.stringify({ symbol })
-        }).then(r => r.json()).then(stock => {
-          this.setState({
-            [stateName]: this.addStock(this.state[stateName], stock),
-            detailQuote: {
-              ...this.state.detailQuote,
-              [statusName]: !this.state.detailQuote[statusName],  // toggle inWatchlist or inPortfolio status
-            }
-          });
-        })
-      } else {
-        const id = this.state[stateName].find(name => name.symbol.toLowerCase() === symbol.toLowerCase()).id;
-        fetch(`${ApiAdapter.backendHost()}/${endpoint}/${id}`, {
-          method: "DELETE",
-          headers: AuthAdapter.headers(),
-        }).then(r => r.json()).then(() => {
-          const stock = this.state[stateName].find(stock => stock.id === id);
-      
-          this.setState({
-            [stateName]: this.removeStock(this.state[stateName], stock),
-            detailQuote: {
-              ...this.state.detailQuote,
-              [statusName]: !this.state.detailQuote[statusName],  // toggle inWatchlist or inPortfolio status
-            }
-          });
-        })
-      }
-    }
-  }
-
-  addStock = (array, stock) => {
-    return [...array, stock];
-  }
-
-  removeStock = (array, stock) => {
-    const index = array.indexOf(stock);
-    
-    return [
-      ...array.slice(0, index), 
-      ...array.slice(index + 1)
-    ];
-  }
-
   handleSignOut = () => {
     if (window.confirm('Are you sure you want to sign out?')) {
       localStorage.removeItem('token');
@@ -132,7 +80,7 @@ class App extends Component {
             <Route exact path='/' render={() => <Market />} />
             <Route exact path='/portfolio' render={() => <Portfolio />} />
             <Route exact path='/watchlist' render={() => <Watchlist />} />
-            <Route path='/quote' render={() => <DetailQuote click={this.handleClick}/>} />
+            <Route path='/quote' render={() => <DetailQuote />} />
           </Grid>
         </div>
       </Router>

@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from "react-redux";
-import { toggleList } from "../redux/actions";
+import { toggleStatus } from "../redux/actions";
 import NewsList from '../components/NewsList';
 import Asset from '../components/DetailQuote/Asset';
 import { Grid } from 'semantic-ui-react'
@@ -20,9 +20,8 @@ class DetailQuote extends React.Component {
    *  } 
    */
   
-  handleClick = (event, data) => {
-    // this.props.click(data.name, data.checked, this.props.quote.symbol)
-    this.props.toggleList(data.name, data.checked, this.props.quote.symbol);
+  handleToggle = (event, { name, checked }) => {
+    this.props.dispatch(toggleStatus(name, checked, this.props.quote.symbol));
   }
 
   render() {
@@ -39,9 +38,9 @@ class DetailQuote extends React.Component {
             <Grid.Column width={7}>
               {AuthAdapter.loggedIn() ? 
                 (this.props.inWatchlist ?
-                  <div><Checkbox toggle checked onClick={this.handleClick} name="watchlist"/>Remove from your watchlist</div>
+                  <div><Checkbox toggle checked onClick={this.handleToggle} name="watchlist"/>Remove from your watchlist</div>
                   :
-                  <div><Checkbox toggle onClick={this.handleClick} name="watchlist"/> Add to your watchlist</div>
+                  <div><Checkbox toggle onClick={this.handleToggle} name="watchlist"/> Add to your watchlist</div>
                 )
                 :
                 <p>Sign in to add to your watchlist</p>
@@ -51,9 +50,9 @@ class DetailQuote extends React.Component {
             <Grid.Column width={7}>
               {AuthAdapter.loggedIn() ? 
                 (this.props.inPortfolio ?
-                  <div><Checkbox toggle checked onClick={this.handleClick} name="portfolio"/> Remove from your portfolio</div>
+                  <div><Checkbox toggle checked onClick={this.handleToggle} name="portfolio"/> Remove from your portfolio</div>
                   :
-                  <div><Checkbox toggle onClick={this.handleClick} name="portfolio"/> Add to your portfolio</div>
+                  <div><Checkbox toggle onClick={this.handleToggle} name="portfolio"/> Add to your portfolio</div>
                 )
                 :
                 <p>Sign in to add to your portfolio</p>
@@ -86,7 +85,9 @@ const mapStateToProps = state => {
   return { ...stockDetail };
 };
 
+const mapDispatchToProps = dispatch => ({ dispatch });
+
 export default connect(
   mapStateToProps,
-  { toggleList }
+  mapDispatchToProps
 )(DetailQuote);

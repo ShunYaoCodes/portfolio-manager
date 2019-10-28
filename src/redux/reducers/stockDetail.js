@@ -1,6 +1,5 @@
-import AuthAdapter from "../../adapters/AuthAdapter";
 import { timeParse } from "d3-time-format";
-import { SET_STOCK, SET_STOCK_ERROR } from "../actionTypes";
+import { SET_STOCK, SET_STOCK_ERROR, SET_STOCK_STATUS } from "../actionTypes";
 
 const initialState = {
     quote: {},
@@ -27,6 +26,12 @@ export default function(state = initialState, action) {
                 error: '',
             };
         }
+        case SET_STOCK_STATUS: {
+            return {
+                ...state,
+                ...action.payload
+            };
+        }
         case SET_STOCK_ERROR: {
             const { error } = action.payload;
             return {
@@ -34,7 +39,6 @@ export default function(state = initialState, action) {
                 error,
             };
         }
-        // this.updateSearchHistory(symbol);
         default:
             return state;
     }
@@ -58,20 +62,3 @@ function transformChartData(chartData) {
 
     return data;
 }
-
-  
-// function getInWatchlistStatus(keyword) {
-//     if (AuthAdapter.loggedIn() && this.state.watchlist && !!this.state.watchlist.find(watchlistName => watchlistName.symbol.toLowerCase() === keyword.toLowerCase())) {
-//         return true;
-//     } else {
-//         return false;
-//     }
-// }
-
-// function getInPortfolioStatus(keyword) {
-//     if (AuthAdapter.loggedIn() && this.state.portfolio && !!this.state.portfolio.find(portfolioName => portfolioName.symbol.toLowerCase() === keyword.toLowerCase())) {
-//         return true;
-//     } else {
-//         return false;
-//     }
-// }

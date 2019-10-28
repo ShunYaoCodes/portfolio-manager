@@ -1,18 +1,8 @@
 import ApiAdapter from "../adapters/ApiAdapter";
 import AppAdapter from "../adapters/AppAdapter";
 import AuthAdapter from "../adapters/AuthAdapter";
-import { TOGGLE_LIST, SET_INDEX, SET_SEARCH_HISTORY, SET_WATCHLIST, SET_PORTFOLIO, SET_STOCK, SET_STOCK_ERROR, UPDATE_POSITION_TYPE } from "./actionTypes";
-
-// let nextTodoId = 0;
-
-export const toggleList = (stateName, checked, symbol) => ({
-  type: TOGGLE_LIST,
-  payload: {
-    stateName, 
-    checked, 
-    symbol,
-  }
-});
+import { SET_INDEX, SET_SEARCH_HISTORY, SET_WATCHLIST, SET_PORTFOLIO, 
+  SET_STOCK, SET_STOCK_ERROR, SET_STOCK_STATUS, UPDATE_POSITION_TYPE, } from "./actionTypes";
 
 export function fetchIndex() {
   return (dispatch, getState) => {
@@ -61,6 +51,48 @@ export function updatePositionType(symbolId, positionType) {
 
     return dispatch({ type: UPDATE_POSITION_TYPE, payload: { symbolId, positionType } });
   };
+};
+
+export function toggleStatus(stateName, checked, symbol) {
+  return (dispatch, getState) => {
+    let endpoint, statusName;
+
+    switch (stateName) {
+      case 'watchlist':
+        endpoint = 'watchlists';
+        statusName = 'inWatchlist';
+        break;
+      case 'portfolio':
+        endpoint = 'portfolio_assets';
+        statusName = 'inPortfolio';
+        break;
+      default:
+        endpoint = stateName + 's';
+        statusName = 'in'+ stateName.slice(0,1).toUpperCase() + stateName.slice(1);
+    }
+
+    if (checked) {
+      fetch(`${ApiAdapter.backendHost()}/users/${localStorage.getItem("id")}/${endpoint}`, {
+        method: "POST",
+        headers: AuthAdapter.headers(),
+        body: JSON.stringify({ symbol })
+      }).then(r => r.json()).then(stock => {
+        return dispatch({ type: `ADD_TO_${stateName.toUpperCase()}`, payload: { stock } })
+      }).then(() => {
+        return dispatch({ type: SET_STOCK_STATUS, payload: { [statusName]: checked } })
+      })
+    } else {
+      const stock = getState()[stateName].find(stock => stock.symbol === symbol);
+      fetch(`${ApiAdapter.backendHost()}/${endpoint}/${stock.id}`, {
+        method: "DELETE",
+        headers: AuthAdapter.headers(),
+      }).then(r => r.json()).then(() => {
+        return dispatch({ type: `REMOVE_FROM_${stateName.toUpperCase()}`, payload: { stock } })
+      }).then(() => {
+        return dispatch({ type: SET_STOCK_STATUS, payload: { [statusName]: checked } })
+      })
+    }
+  }
 };
 
 export function fetchStockDetail(symbol) {
