@@ -8,18 +8,21 @@ import Watchlist from './containers/Watchlist'
 import DetailQuote from './containers/DetailQuote';
 import { BrowserRouter as Router, Route, NavLink, Redirect } from 'react-router-dom';
 import './App.css'
-import ApiAdapter from './adapters/ApiAdapter';
 import LoginForm from './components/LoginForm';
 import RegistrationForm from './components/RegistrationForm';
 import AuthAdapter from './adapters/AuthAdapter';
 import { connect } from 'react-redux';
-import { fetchIndex, fetchSearchHistory } from "./redux/actions";
+import { fetchIndex, fetchSearchHistory, fetchPortfolio, fetchWatchlist } from "./redux/actions";
 
 class App extends Component {
   componentDidMount() {
     this.intervalID = setInterval(function(){
       this.props.dispatch(fetchIndex());
       this.props.dispatch(fetchSearchHistory());
+      if (AuthAdapter.loggedIn()) {
+        this.props.dispatch(fetchPortfolio());
+        this.props.dispatch(fetchWatchlist());
+      }
     }.bind(this),3000);
   }
 

@@ -6,7 +6,6 @@ import { Grid, Table, Form, Input, Button, Message } from 'semantic-ui-react';
 import AuthAdapter from '../adapters/AuthAdapter';
 import ApiAdapter from '../adapters/ApiAdapter';
 import { connect } from 'react-redux';
-import { fetchPortfolio } from "../redux/actions";
 
 class Portfolio extends React.Component {
   state = {
@@ -16,7 +15,6 @@ class Portfolio extends React.Component {
   }
 
   componentDidMount() {
-    if (AuthAdapter.loggedIn()) this.props.dispatch(fetchPortfolio());
     if (this.props.portfolio.length) this.fetchPortfolioQuotes();
 
     this.intervalID = setInterval(() => {
@@ -128,9 +126,6 @@ const mapStateToProps = state => {
   return { portfolio: state.portfolio };
 };
 
-const mapDispatchToProps = dispatch => ({ dispatch });
-
 export default connect(
-  mapStateToProps,
-  mapDispatchToProps
+  mapStateToProps
 )(Portfolio);

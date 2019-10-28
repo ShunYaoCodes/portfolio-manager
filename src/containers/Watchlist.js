@@ -7,7 +7,6 @@ import { Grid, Table } from 'semantic-ui-react';
 import AuthAdapter from '../adapters/AuthAdapter';
 import ApiAdapter from '../adapters/ApiAdapter';
 import { connect } from 'react-redux';
-import { fetchWatchlist } from "../redux/actions";
 
 class Watchlist extends React.Component {
   state = {
@@ -16,7 +15,6 @@ class Watchlist extends React.Component {
   }
 
   componentDidMount() {
-    if (AuthAdapter.loggedIn()) this.props.dispatch(fetchWatchlist());
     if (this.props.watchlist.length) this.fetchWatchlistQuotes();
 
     this.intervalID = setInterval(function(){
@@ -114,9 +112,6 @@ const mapStateToProps = state => {
   return { watchlist: state.watchlist };
 };
 
-const mapDispatchToProps = dispatch => ({ dispatch });
-
 export default connect(
-  mapStateToProps,
-  mapDispatchToProps
+  mapStateToProps
 )(Watchlist);
