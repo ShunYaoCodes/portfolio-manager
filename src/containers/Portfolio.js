@@ -17,9 +17,9 @@ class Portfolio extends React.Component {
   componentDidMount() {
     if (this.props.portfolio.length) this.fetchPortfolioQuotes();
 
-    this.intervalID = setInterval(() => {
+    this.intervalID = setInterval(function(){
       if (this.props.portfolio.length) this.fetchPortfolioQuotes();
-    },3000);
+    }.bind(this), 5000);
   }
 
   componentWillUnmount() {

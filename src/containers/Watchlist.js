@@ -19,7 +19,7 @@ class Watchlist extends React.Component {
 
     this.intervalID = setInterval(function(){
       if (this.props.watchlist.length) this.fetchWatchlistQuotes();
-    }.bind(this),3000);
+    }.bind(this), 5000);
   }
 
   componentWillUnmount() {

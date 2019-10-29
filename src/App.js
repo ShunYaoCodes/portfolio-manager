@@ -16,18 +16,24 @@ import { fetchIndex, fetchSearchHistory, fetchPortfolio, fetchWatchlist } from "
 
 class App extends Component {
   componentDidMount() {
+    this.fetchStockData();
+
     this.intervalID = setInterval(function(){
-      this.props.dispatch(fetchIndex());
-      this.props.dispatch(fetchSearchHistory());
-      if (AuthAdapter.loggedIn()) {
-        this.props.dispatch(fetchPortfolio());
-        this.props.dispatch(fetchWatchlist());
-      }
-    }.bind(this),3000);
+      this.fetchStockData();
+    }.bind(this), 5000);
   }
 
   componentWillUnmount() {
     clearInterval(this.intervalID);
+  }
+
+  fetchStockData = () => {
+    this.props.dispatch(fetchIndex());
+    this.props.dispatch(fetchSearchHistory());
+    if (AuthAdapter.loggedIn()) {
+      this.props.dispatch(fetchPortfolio());
+      this.props.dispatch(fetchWatchlist());
+    }
   }
 
   handleSignOut = () => {

@@ -16,13 +16,16 @@ class Market extends React.Component {
   }
 
   componentDidMount() {
-    this.intervalID = setInterval(function(){
-      this.getMostActive();
-      this.getGainers();
-      this.getLosers();
-    }.bind(this),3000);
+    this.fetchMarketData();
+    this.fetchNews();
 
-    this.getNews();
+    this.intervalID = setInterval(function(){
+      this.fetchMarketData();
+    }.bind(this), 5000);
+
+    this.intervalID1 = setInterval(function(){
+      this.fetchNews();
+    }.bind(this), 20000);
   }
 
   componentWillUnmount() {
@@ -30,36 +33,35 @@ class Market extends React.Component {
     clearInterval(this.intervalID1);
   }
 
-  getMostActive = () => {
+  fetchMarketData = () => {
+    this.fetchMostActive();
+    this.fetchGainers();
+    this.fetchLosers();
+  }
+
+  fetchMostActive = () => {
     fetch(ApiAdapter.mostActive()).then(r => r.json()).then(mostActive => {
       this.setState({ mostActive })
     })
   }
 
-  getGainers = () => {
+  fetchGainers = () => {
     fetch(ApiAdapter.gainers()).then(r => r.json()).then(gainers => {
       this.setState({ gainers })
     })
   }
 
-  getLosers = () => {
+  fetchLosers = () => {
     fetch(ApiAdapter.losers()).then(r => r.json()).then(losers => {
       this.setState({ losers })
     })
   }
 
-  getNews = () => {
+  fetchNews = () => {
     const adapter = AppAdapter.searchHistory().length ? ApiAdapter.getBatchNews(AppAdapter.searchHistory()) : ApiAdapter.getIndexNews();
-
     fetch(adapter).then(r => r.json()).then(news => {
       this.setState({ news })
     })
-
-    this.intervalID1 = setInterval(function(){
-      fetch(adapter).then(r => r.json()).then(news => {
-        this.setState({ news })
-      })
-    }.bind(this),20000);
   }
 
   render() {
