@@ -5,7 +5,7 @@ import SearchBar from './components/SearchBar';
 import NavBar from './components/NavBar';
 import Portfolio from './containers/Portfolio'
 import Watchlist from './containers/Watchlist'
-import DetailQuote from './containers/DetailQuote';
+import StockDetail from './containers/StockDetail';
 import { BrowserRouter as Router, Route, NavLink, Redirect } from 'react-router-dom';
 import './App.css'
 import LoginForm from './components/LoginForm';
@@ -83,7 +83,7 @@ class App extends Component {
             <Route exact path='/' render={() => <Market />} />
             <Route exact path='/portfolio' render={() => <Portfolio />} />
             <Route exact path='/watchlist' render={() => <Watchlist />} />
-            <Route path='/quote' render={() => <DetailQuote />} />
+            <Route path='/detail' render={() => <StockDetail />} />
           </Grid>
         </div>
       </Router>

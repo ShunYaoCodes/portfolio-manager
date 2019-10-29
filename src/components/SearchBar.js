@@ -25,7 +25,7 @@ class SearchBar extends React.Component {
   handleSubmit = event => {
     event.preventDefault();
     const symbol = this.state.value.toUpperCase();
-    this.props.history.push(`/quote?symbol=${symbol}`);
+    this.props.history.push(`/detail?symbol=${symbol}`);
     this.props.dispatch(fetchStockDetail(symbol));
     this.setState({ value: '' });
   }

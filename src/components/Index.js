@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 import { fetchStockDetail } from '../redux/actions';
 
 const Index = props => {
-  const link = `/quote?symbol=${props.symbol}`;
+  const link = `/detail?symbol=${props.symbol}`;
 
   let symbol;
   switch(props.symbol) {

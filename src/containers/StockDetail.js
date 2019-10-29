@@ -2,12 +2,12 @@ import React from 'react';
 import { connect } from "react-redux";
 import { toggleStatus } from "../redux/actions";
 import NewsList from '../components/NewsList';
-import Asset from '../components/DetailQuote/Asset';
+import Asset from '../components/StockDetail/Asset';
 import { Grid } from 'semantic-ui-react'
 import { Checkbox } from 'semantic-ui-react'
 import AuthAdapter from '../adapters/AuthAdapter';
 
-class DetailQuote extends React.Component {
+class StockDetail extends React.Component {
   /****
    * this.props consists of 
    *  {
@@ -63,7 +63,7 @@ class DetailQuote extends React.Component {
           <Grid.Row>
             <Grid.Column width={14}>
               <h2>{this.props.quote.symbol} News:</h2>
-              <NewsList news={this.props.news}  type='detailQuote'/>
+              <NewsList news={this.props.news}  type='detail'/>
             </Grid.Column>
           </Grid.Row>
         </React.Fragment>
@@ -89,4 +89,4 @@ const mapDispatchToProps = dispatch => ({ dispatch });
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(DetailQuote);
+)(StockDetail);

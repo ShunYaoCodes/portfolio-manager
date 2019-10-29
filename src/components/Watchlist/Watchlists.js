@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 import { fetchStockDetail } from "../../redux/actions";
 
 const Watchlists = props => {
-  const link = `/quote?symbol=${props.symbol}`;
+  const link = `/detail?symbol=${props.symbol}`;
 
   const handleClick = event => {
     props.dispatch(fetchStockDetail(event.target.name));

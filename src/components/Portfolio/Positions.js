@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 import { updatePositionType, fetchStockDetail } from "../../redux/actions";
 
 const Positions = ({id, position_type, stats, symbol, dispatch}) => {
-  const link = `/quote?symbol=${symbol}`;
+  const link = `/detail?symbol=${symbol}`;
   const divDate = stats.exDividendDate;
 
   const handlePositionTypeChange = (e, { value }) => {
