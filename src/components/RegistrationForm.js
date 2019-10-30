@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-import { Button, Form, Grid, Header, Image, Message, Segment } from 'semantic-ui-react'
+import { Button, Form, Grid, Header, Image, Message, Segment } from 'semantic-ui-react';
+import withAuth from '../hocs/withAuth';
 
 class RegistrationForm extends Component {
   state = {
@@ -93,4 +94,4 @@ class RegistrationForm extends Component {
   }
 }
 
-export default RegistrationForm;
+export default withAuth(RegistrationForm);

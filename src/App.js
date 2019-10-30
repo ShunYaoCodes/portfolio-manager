@@ -68,7 +68,7 @@ class App extends Component {
                         </NavLink>
                     </div>
                   :
-                    <Button primary name='sign_out' onClick={this.handleSignOut} style={{marginTop: '10px'}}>Sign Out</Button>
+                    <Button primary onClick={this.handleSignOut} style={{marginTop: '10px'}}>Sign Out</Button>
                 }
               </Grid.Column>
               <Grid.Column width={14}>
@@ -76,16 +76,8 @@ class App extends Component {
               </Grid.Column>
             </Grid.Row>
 
-            {
-              AuthAdapter.notLoggedIn() ?
-                <React.Fragment>
-                  <Route exact path="/login" render={(props) => <LoginForm {...props} /> } />
-                  <Route exact path="/register" render={(props) => <RegistrationForm {...props} /> } />
-                </React.Fragment>
-              :
-                <Redirect to="/"/>
-            }
-
+            <Route exact path="/login" render={(props) => <LoginForm {...props} /> } />
+            <Route exact path="/register" render={(props) => <RegistrationForm {...props} /> } />
             <Route exact path='/' render={() => <Market />} />
             <Route exact path='/portfolio' render={() => <Portfolio />} />
             <Route exact path='/watchlist' render={() => <Watchlist />} />
