@@ -12,6 +12,7 @@ class Portfolio extends React.Component {
     value: null,
     amount: 25000,
     portfolioQuotes: [],
+    isLoading: true,
   }
 
   componentDidMount() {
@@ -36,12 +37,20 @@ class Portfolio extends React.Component {
 
       this.setState({ 
         portfolioQuotes: quotes 
+      }, () => {
+        this.isLoaded();
       })
     })
   }
 
   get portfolioSymbols() {
     return this.props.portfolio.map(stock => stock.symbol);
+  }
+
+  isLoaded = () => {
+    this.setState({
+      isLoading: false,
+    })
   }
 
   handleChange = (e, { value }) => {
@@ -56,66 +65,70 @@ class Portfolio extends React.Component {
 
   render() {
     if (AuthAdapter.loggedIn()) {
-      let list = [];
-      let betaList = [];
+      if (this.state.isLoading) {
+        return <img alt="Spinny GIF" src="https://cdn-images-1.medium.com/max/1600/1*9EBHIOzhE1XfMYoKz1JcsQ.gif" />
+      } else {
+        let list = [];
+        let betaList = [];
 
-      //if (Object.keys(this.state.portfolioQuotes) !== []) {
+        //if (Object.keys(this.state.portfolioQuotes) !== []) {
+          for(const quote in this.state.portfolioQuotes) {
+            list.push(<Positions key={UUID()} {...this.state.portfolioQuotes[quote]} symbol={quote} />)
+          }
+        //}
+
         for(const quote in this.state.portfolioQuotes) {
-          list.push(<Positions key={UUID()} {...this.state.portfolioQuotes[quote]} symbol={quote} />)
+          betaList.push({symbol: quote, price: this.state.portfolioQuotes[quote].price, beta: this.state.portfolioQuotes[quote].stats.beta, position_type: this.state.portfolioQuotes[quote].position_type})
         }
-      //}
 
-      for(const quote in this.state.portfolioQuotes) {
-        betaList.push({symbol: quote, price: this.state.portfolioQuotes[quote].price, beta: this.state.portfolioQuotes[quote].stats.beta, position_type: this.state.portfolioQuotes[quote].position_type})
+        return (
+          <React.Fragment>
+            <Grid.Row>
+              <Grid.Column width={14}>
+                <h3>Adjust Your Long / Short Positions:</h3>
+                <Table color='blue'>
+                  <Table.Header>
+                    <Table.Row>
+                      <Table.HeaderCell>Long or Short?</Table.HeaderCell>
+                      <Table.HeaderCell>Symbol</Table.HeaderCell>
+                      <Table.HeaderCell>Beta</Table.HeaderCell>
+                      <Table.HeaderCell>Short Interest</Table.HeaderCell>
+                      <Table.HeaderCell>Short Date</Table.HeaderCell>
+                      <Table.HeaderCell>Forward Dividend & Yield</Table.HeaderCell>
+                      <Table.HeaderCell>Ex-Dividend Date</Table.HeaderCell>
+                      <Table.HeaderCell>EPS (TTM)</Table.HeaderCell>
+                      <Table.HeaderCell>5 Day % Change</Table.HeaderCell>
+                      <Table.HeaderCell>30 Day % Change</Table.HeaderCell>
+                      <Table.HeaderCell>3 Month % Change</Table.HeaderCell>
+                      <Table.HeaderCell>6 Month % Change</Table.HeaderCell>
+                      <Table.HeaderCell>1 Year % Change</Table.HeaderCell>
+                      <Table.HeaderCell>2 Year % Change</Table.HeaderCell>
+                      <Table.HeaderCell>5 Year % Change</Table.HeaderCell>
+                    </Table.Row>
+                  </Table.Header>
+
+                  <Table.Body>
+                    {list}
+                  </Table.Body>
+                </Table>
+              </Grid.Column>
+            </Grid.Row>
+
+            <Grid.Row>
+              <Grid.Column width={14}>
+                <h3>Your Beta Hedge Recommendation:</h3>
+                <Form onSubmit={this.handleSubmit} error={!(Number(this.state.value, 10) >= 0)}>
+                  <Input placeholder='Enter your amount' onChange={this.handleChange}/>
+                  <Button disabled={!(Number(this.state.value, 10) >= 0)}>Submit</Button>
+                  <Message error content='Please enter only a positive number'/>
+                </Form>
+                <h5 className='inline'>Total Amount Invested: ${this.state.amount}</h5> (Default: $25000)
+                <Stats betas={betaList} amount={this.state.amount}/>
+              </Grid.Column>
+            </Grid.Row>
+          </React.Fragment>
+        )
       }
-
-      return (
-        <React.Fragment>
-          <Grid.Row>
-            <Grid.Column width={14}>
-              <h3>Adjust Your Long / Short Positions:</h3>
-              <Table color='blue'>
-                <Table.Header>
-                  <Table.Row>
-                    <Table.HeaderCell>Long or Short?</Table.HeaderCell>
-                    <Table.HeaderCell>Symbol</Table.HeaderCell>
-                    <Table.HeaderCell>Beta</Table.HeaderCell>
-                    <Table.HeaderCell>Short Interest</Table.HeaderCell>
-                    <Table.HeaderCell>Short Date</Table.HeaderCell>
-                    <Table.HeaderCell>Forward Dividend & Yield</Table.HeaderCell>
-                    <Table.HeaderCell>Ex-Dividend Date</Table.HeaderCell>
-                    <Table.HeaderCell>EPS (TTM)</Table.HeaderCell>
-                    <Table.HeaderCell>5 Day % Change</Table.HeaderCell>
-                    <Table.HeaderCell>30 Day % Change</Table.HeaderCell>
-                    <Table.HeaderCell>3 Month % Change</Table.HeaderCell>
-                    <Table.HeaderCell>6 Month % Change</Table.HeaderCell>
-                    <Table.HeaderCell>1 Year % Change</Table.HeaderCell>
-                    <Table.HeaderCell>2 Year % Change</Table.HeaderCell>
-                    <Table.HeaderCell>5 Year % Change</Table.HeaderCell>
-                  </Table.Row>
-                </Table.Header>
-
-                <Table.Body>
-                  {list}
-                </Table.Body>
-              </Table>
-            </Grid.Column>
-          </Grid.Row>
-
-          <Grid.Row>
-            <Grid.Column width={14}>
-              <h3>Your Beta Hedge Recommendation:</h3>
-              <Form onSubmit={this.handleSubmit} error={!(Number(this.state.value, 10) >= 0)}>
-                <Input placeholder='Enter your amount' onChange={this.handleChange}/>
-                <Button disabled={!(Number(this.state.value, 10) >= 0)}>Submit</Button>
-                <Message error content='Please enter only a positive number'/>
-              </Form>
-              <h5 className='inline'>Total Amount Invested: ${this.state.amount}</h5> (Default: $25000)
-              <Stats betas={betaList} amount={this.state.amount}/>
-            </Grid.Column>
-          </Grid.Row>
-        </React.Fragment>
-      )
     } else {
       return <p>Please sign in to see your portfolio</p>
     }
