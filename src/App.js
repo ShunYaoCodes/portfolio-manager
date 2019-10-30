@@ -6,7 +6,7 @@ import NavBar from './components/NavBar';
 import Portfolio from './containers/Portfolio'
 import Watchlist from './containers/Watchlist'
 import StockDetail from './containers/StockDetail';
-import { BrowserRouter as Router, Route, NavLink, Redirect } from 'react-router-dom';
+import { BrowserRouter as Router, Route, NavLink} from 'react-router-dom';
 import './App.css'
 import LoginForm from './components/LoginForm';
 import RegistrationForm from './components/RegistrationForm';
