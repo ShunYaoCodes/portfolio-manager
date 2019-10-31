@@ -1,29 +1,34 @@
 import React, { Component } from 'react';
 import { Menu, Segment } from 'semantic-ui-react';
-import { NavLink } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 class NavBar extends Component {
-  state = { activeItem: '' }
+  state = { 
+    activePathName: window.location.pathname
+  }
 
-  handleItemClick = (e, { name }) => this.setState({ activeItem: name })
+  handleItemClick = (e, { to }) => this.setState({ activePathName: to })
 
   render() {
-    const { activeItem } = this.state
+    const { activePathName } = this.state
 
     return (
       <Segment inverted>
         <Menu inverted pointing secondary>
-          <Menu.Item as={NavLink} to='/'
+          <Menu.Item as={Link} to='/'
             name='Market'
-            active={activeItem === 'Market'}
+            active={activePathName === '/'}
+            onClick={this.handleItemClick}
           />
-          <Menu.Item as={NavLink} to='/portfolio'
+          <Menu.Item as={Link} to='/portfolio'
             name='Portfolio'
-            active={activeItem === 'Portfolio'}
+            active={activePathName === '/portfolio'}
+            onClick={this.handleItemClick}
           />
-          <Menu.Item as={NavLink} to='/watchlist'
+          <Menu.Item as={Link} to='/watchlist'
             name='Watchlist'
-            active={activeItem === 'Watchlist'}
+            active={activePathName === '/watchlist'}
+            onClick={this.handleItemClick}
           />
         </Menu>
       </Segment>

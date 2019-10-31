@@ -72,7 +72,7 @@ class App extends Component {
                 }
               </Grid.Column>
               <Grid.Column width={14}>
-                <NavBar {...this.state}/>
+                <NavBar />
               </Grid.Column>
             </Grid.Row>
 
