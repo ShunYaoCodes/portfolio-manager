@@ -10,16 +10,16 @@ import requireAuth from '../hocs/requireAuth';
 class Portfolio extends React.Component {
   state = {
     value: null,
-    amount: 25000,
+    amount: this.props.investmentAmount ? Number(this.props.investmentAmount) : 25000,
     portfolioQuotes: [],
     isLoading: true,
   }
 
   componentDidMount() {
-    if (this.props.portfolio.length) this.fetchPortfolioQuotes();
+    if (this.props.positions.length) this.fetchPortfolioQuotes();
 
     this.intervalID = setInterval(function(){
-      if (this.props.portfolio.length) this.fetchPortfolioQuotes();
+      if (this.props.positions.length) this.fetchPortfolioQuotes();
     }.bind(this), 5000);
   }
 
@@ -30,7 +30,7 @@ class Portfolio extends React.Component {
   fetchPortfolioQuotes = () => {
     fetch(ApiAdapter.getBatchStatsPrice(this.portfolioSymbols)).then(r => r.json()).then(quotes => {
       for(const symbol in quotes) {
-        const quote = this.props.portfolio.find(each => each.symbol === symbol);
+        const quote = this.props.positions.find(each => each.symbol === symbol);
         quotes[symbol].position_type = quote.position_type;
         quotes[symbol].id = quote.id; // add corresponding stock's backend id
       }
@@ -44,7 +44,7 @@ class Portfolio extends React.Component {
   }
 
   get portfolioSymbols() {
-    return this.props.portfolio.map(stock => stock.symbol);
+    return this.props.positions.map(stock => stock.symbol);
   }
 
   isLoaded = () => {
@@ -64,6 +64,7 @@ class Portfolio extends React.Component {
   }
 
   render() {
+    console.log(this.props.investmentAmount);
     if (this.state.isLoading) {
       return <img alt="Spinny GIF" src="https://cdn-images-1.medium.com/max/1600/1*9EBHIOzhE1XfMYoKz1JcsQ.gif" />
     } else {
@@ -132,7 +133,7 @@ class Portfolio extends React.Component {
 }
 
 const mapStateToProps = state => {
-  return { portfolio: state.portfolio };
+  return state.portfolio; // { positions, investmentAmount }
 };
 
 export default requireAuth(

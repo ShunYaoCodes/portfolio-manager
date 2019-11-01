@@ -37,7 +37,13 @@ export function fetchPortfolio() {
     fetch(`${ApiAdapter.backendHost()}/users/${localStorage.getItem("id")}/portfolio_assets`, {
       headers: AuthAdapter.headers(),
     }).then(r => r.json())
-    .then(portfolio => dispatch({ type: SET_PORTFOLIO, payload: { portfolio } }))
+    .then(({ positions, investment_amount }) => dispatch({ 
+      type: SET_PORTFOLIO, 
+      payload: { 
+        positions, 
+        investmentAmount: investment_amount 
+      } 
+    }))
   };
 };
 

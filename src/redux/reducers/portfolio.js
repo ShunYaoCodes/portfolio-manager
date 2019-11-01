@@ -1,45 +1,60 @@
 import { SET_PORTFOLIO, UPDATE_POSITION_TYPE, ADD_TO_PORTFOLIO, REMOVE_FROM_PORTFOLIO } from "../actionTypes";
 
-export default function(state = [], action) {
+const initialState = {
+    positions: [],
+    investmentAmount: 0,
+}
+
+export default function(state = initialState, action) {
     switch (action.type) {
         case SET_PORTFOLIO: {
-            const { portfolio } = action.payload;
+            const { positions, investmentAmount } = action.payload;
 
-            return [
-                ...portfolio,
-            ];
+            return {
+                positions,
+                investmentAmount,
+            }
         }
         case UPDATE_POSITION_TYPE: {
             const { symbolId, positionType } = action.payload;
 
-            const stock = state.find(stock => stock.id === symbolId);
-            const index = state.indexOf(stock);
+            const stock = state.positions.find(stock => stock.id === symbolId);
+            const index = state.positions.indexOf(stock);
 
-            return [
-                ...state.slice(0, index), 
-                {
-                    ...stock,
-                    position_type: positionType,
-                },
-                ...state.slice(index + 1),
-            ];
+            return {
+                ...state,
+                positions: [
+                    ...state.positions.slice(0, index), 
+                    {
+                        ...stock,
+                        position_type: positionType,
+                    },
+                    ...state.positions.slice(index + 1),
+                ],
+            };
         }
         case ADD_TO_PORTFOLIO: {
             const { stock } = action.payload;
 
-            return [
+            return {
                 ...state,
-                stock,
-            ];
+                positions: [
+                    ...state.positions,
+                    stock,
+                ],
+            };
         }
         case REMOVE_FROM_PORTFOLIO: {
             const { stock } = action.payload;
-            const index = state.indexOf(stock);
+            const index = state.positions.indexOf(stock);
 
-            return [
-              ...state.slice(0, index), 
-              ...state.slice(index + 1)
-            ];
+            return {
+                ...state,
+                positions: [
+                    ...state.positions.slice(0, index), 
+                    ...state.positions.slice(index + 1)
+                ],
+            };
         }
         default:
             return state;
