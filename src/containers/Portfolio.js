@@ -5,12 +5,13 @@ import UUID from 'uuid';
 import { Grid, Table, Form, Input, Button, Message } from 'semantic-ui-react';
 import ApiAdapter from '../adapters/ApiAdapter';
 import { connect } from 'react-redux';
+import { updateInvestmentAmount } from '../redux/actions';
 import requireAuth from '../hocs/requireAuth';
 
 class Portfolio extends React.Component {
   state = {
-    value: null,
-    amount: this.props.investmentAmount ? Number(this.props.investmentAmount) : 25000,
+    value: '',
+    amount: 25000,
     portfolioQuotes: [],
     isLoading: true,
   }
@@ -27,8 +28,18 @@ class Portfolio extends React.Component {
     clearInterval(this.intervalID);
   }
 
+  componentDidUpdate(prevProps, prevState, snapshot) {
+    if (Number(this.props.investmentAmount) !== Number(prevProps.investmentAmount)) {
+      this.setState({ 
+        value: Number(this.props.investmentAmount),
+        amount: Number(this.props.investmentAmount),
+      });
+    }
+  }
+
   fetchPortfolioQuotes = () => {
     fetch(ApiAdapter.getBatchStatsPrice(this.portfolioSymbols)).then(r => r.json()).then(quotes => {
+      // NEED TO REFACTOR AND EXCLUDE POSITIONS WITH OUT A LONG/SHORT
       for(const symbol in quotes) {
         const quote = this.props.positions.find(each => each.symbol === symbol);
         quotes[symbol].position_type = quote.position_type;
@@ -59,7 +70,8 @@ class Portfolio extends React.Component {
 
   handleSubmit = (e, { error }) => {
     if (!error) {
-      this.setState({ amount: this.state.value })
+      this.setState({ amount: this.state.value });
+      this.props.dispatch(updateInvestmentAmount(this.state.value));
     }
   }
 
@@ -118,11 +130,11 @@ class Portfolio extends React.Component {
             <Grid.Column width={14}>
               <h3>Your Beta Hedge Recommendation:</h3>
               <Form onSubmit={this.handleSubmit} error={!(Number(this.state.value, 10) >= 0)}>
-                <Input placeholder='Enter your amount' onChange={this.handleChange}/>
-                <Button disabled={!(Number(this.state.value, 10) >= 0)}>Submit</Button>
+                <Input placeholder='Enter your amount' onChange={this.handleChange} value={this.state.value} />
+                <Button disabled={!(Number(this.state.value, 10) >= 0)}>Calculate</Button>
                 <Message error content='Please enter only a positive number'/>
               </Form>
-              <h5 className='inline'>Total Amount Invested: ${this.state.amount}</h5> (Default: $25000)
+              <h5 className='inline'>Total Amount Invested: ${this.state.value ? this.state.value : this.state.amount}</h5> (Default: $25000)
               <Stats betas={betaList} amount={this.state.amount}/>
             </Grid.Column>
           </Grid.Row>
@@ -136,6 +148,8 @@ const mapStateToProps = state => {
   return state.portfolio; // { positions, investmentAmount }
 };
 
+const mapDispatchToProps = dispatch => ({ dispatch });
+
 export default requireAuth(
-  connect(mapStateToProps)(Portfolio),
+  connect(mapStateToProps, mapDispatchToProps)(Portfolio),
 );

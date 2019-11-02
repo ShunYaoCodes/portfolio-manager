@@ -1,4 +1,4 @@
-import { SET_PORTFOLIO, UPDATE_POSITION_TYPE, ADD_TO_PORTFOLIO, REMOVE_FROM_PORTFOLIO } from "../actionTypes";
+import { SET_PORTFOLIO, UPDATE_POSITION_TYPE, ADD_TO_PORTFOLIO, REMOVE_FROM_PORTFOLIO, UPDATE_INVESTMENT_AMOUNT } from "../actionTypes";
 
 const initialState = {
     positions: [],
@@ -31,6 +31,14 @@ export default function(state = initialState, action) {
                     },
                     ...state.positions.slice(index + 1),
                 ],
+            };
+        }
+        case UPDATE_INVESTMENT_AMOUNT: {
+            const { investmentAmount } = action.payload;
+
+            return {
+                ...state,
+                investmentAmount,
             };
         }
         case ADD_TO_PORTFOLIO: {

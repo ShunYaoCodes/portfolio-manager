@@ -2,7 +2,7 @@ import ApiAdapter from "../adapters/ApiAdapter";
 import AppAdapter from "../adapters/AppAdapter";
 import AuthAdapter from "../adapters/AuthAdapter";
 import { SET_INDEX, SET_SEARCH_HISTORY, SET_WATCHLIST, SET_PORTFOLIO, 
-  SET_STOCK, SET_STOCK_ERROR, SET_STOCK_STATUS, UPDATE_POSITION_TYPE, } from "./actionTypes";
+  SET_STOCK, SET_STOCK_ERROR, SET_STOCK_STATUS, UPDATE_POSITION_TYPE, UPDATE_INVESTMENT_AMOUNT} from "./actionTypes";
 
 export function fetchIndex() {
   return (dispatch, getState) => {
@@ -56,6 +56,18 @@ export function updatePositionType(symbolId, positionType) {
     })
 
     return dispatch({ type: UPDATE_POSITION_TYPE, payload: { symbolId, positionType } });
+  };
+};
+
+export function updateInvestmentAmount(amount) {
+  return (dispatch, getState) => {
+    fetch(`${ApiAdapter.backendHost()}/users/${localStorage.getItem("id")}`, {
+      method: "PATCH",
+      headers: AuthAdapter.headers(),
+      body: JSON.stringify({ investment_amount: amount })
+    })
+
+    return dispatch({ type: UPDATE_INVESTMENT_AMOUNT, payload: { investmentAmount: amount } });
   };
 };
 
