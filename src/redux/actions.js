@@ -1,7 +1,6 @@
 import ApiAdapter from "../adapters/ApiAdapter";
-import AppAdapter from "../adapters/AppAdapter";
 import AuthAdapter from "../adapters/AuthAdapter";
-import { SET_INDEX, SET_SEARCH_HISTORY_QUOTES, SET_WATCHLIST, SET_PORTFOLIO, 
+import { SET_INDEX, UPDATE_SEARCH_HISTORY, SET_SEARCH_HISTORY_QUOTES, SET_WATCHLIST, SET_PORTFOLIO, 
   SET_STOCK, SET_STOCK_ERROR, SET_STOCK_STATUS, UPDATE_POSITION_TYPE, UPDATE_INVESTMENT_AMOUNT} from "./actionTypes";
 
 export function fetchIndex() {
@@ -15,8 +14,8 @@ export function fetchIndex() {
 
 export function fetchSearchHistory() {
   return (dispatch, getState) => {
-    if (AppAdapter.searchHistory().length) {
-      fetch(ApiAdapter.getBatchQuotes(AppAdapter.searchHistory()))
+    if (getState().searchHistory.symbols.length) {
+      fetch(ApiAdapter.getBatchQuotes(getState().searchHistory.symbols))
       .then(r => r.json())
       .then(searchHistoryQuotes => dispatch({ type: SET_SEARCH_HISTORY_QUOTES, payload: { searchHistoryQuotes } }))
     }
@@ -135,10 +134,8 @@ export function fetchStockDetail(symbol) {
         }
       })
     })
-    .then(() => {
-      updateSearchHistory(symbol);
-      return dispatch(fetchSearchHistory());
-    })
+    .then(() => dispatch({ type: UPDATE_SEARCH_HISTORY, payload: { symbol } }))
+    .then(() => dispatch(fetchSearchHistory()))
     .catch((error) => {
       return dispatch({ 
         type: SET_STOCK_ERROR, 
@@ -149,17 +146,3 @@ export function fetchStockDetail(symbol) {
     });
   };
 };
-
-function updateSearchHistory(symbol) {
-  let newSearchHistory = [];
-
-  if (AppAdapter.searchHistory().length) {
-      newSearchHistory = AppAdapter.searchHistory().filter(stock => stock !== symbol);
-      newSearchHistory.unshift(symbol); // add to the beginning of array
-      newSearchHistory.splice(10);  // only keep the latest 10 stocks
-  } else {
-      newSearchHistory.push(symbol);
-  }
-
-  localStorage.setItem('searchHistory', JSON.stringify(newSearchHistory)); 
-}
