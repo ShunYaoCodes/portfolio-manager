@@ -1,7 +1,7 @@
 import { combineReducers } from "redux";
 import indexQuotes from "./indexQuotes";
 import toggleList from "./toggleList";
-import searchHistoryQuotes from "./searchHistoryQuotes";
+import searchHistory from "./searchHistory";
 import watchlist from "./watchlist";
 import portfolio from "./portfolio";
 import stockDetail from "./stockDetail";
@@ -9,7 +9,7 @@ import stockDetail from "./stockDetail";
 export default combineReducers({ 
     toggleList,
     indexQuotes,
-    searchHistoryQuotes,
+    searchHistory,
     watchlist,
     portfolio,
     stockDetail,

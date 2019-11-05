@@ -1,16 +1,17 @@
-import { SET_SEARCH_HISTORY } from "../actionTypes";
+import { SET_SEARCH_HISTORY_QUOTES } from "../actionTypes";
 
 const initialState = {
-    searchHistoryQuotes: []
+    symbols: [],
+    quotes: []
 };
 
 export default function(state = initialState, action) {
     switch (action.type) {
-        case SET_SEARCH_HISTORY: {
+        case SET_SEARCH_HISTORY_QUOTES: {
             const { searchHistoryQuotes } = action.payload;
             return {
                 ...state,
-                searchHistoryQuotes,
+                quotes: searchHistoryQuotes,
             };
         }
         default:

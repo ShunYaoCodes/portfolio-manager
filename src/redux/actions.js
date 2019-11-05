@@ -1,7 +1,7 @@
 import ApiAdapter from "../adapters/ApiAdapter";
 import AppAdapter from "../adapters/AppAdapter";
 import AuthAdapter from "../adapters/AuthAdapter";
-import { SET_INDEX, SET_SEARCH_HISTORY, SET_WATCHLIST, SET_PORTFOLIO, 
+import { SET_INDEX, SET_SEARCH_HISTORY_QUOTES, SET_WATCHLIST, SET_PORTFOLIO, 
   SET_STOCK, SET_STOCK_ERROR, SET_STOCK_STATUS, UPDATE_POSITION_TYPE, UPDATE_INVESTMENT_AMOUNT} from "./actionTypes";
 
 export function fetchIndex() {
@@ -18,7 +18,7 @@ export function fetchSearchHistory() {
     if (AppAdapter.searchHistory().length) {
       fetch(ApiAdapter.getBatchQuotes(AppAdapter.searchHistory()))
       .then(r => r.json())
-      .then(searchHistoryQuotes => dispatch({ type: SET_SEARCH_HISTORY, payload: { searchHistoryQuotes } }))
+      .then(searchHistoryQuotes => dispatch({ type: SET_SEARCH_HISTORY_QUOTES, payload: { searchHistoryQuotes } }))
     }
   };
 };

@@ -31,8 +31,8 @@ const SearchHistory = ({searchHistoryQuotes}) => {
 }
 
 const mapStateToProps = state => {
-  const { searchHistoryQuotes } = state;
-  return searchHistoryQuotes;
+  const { searchHistory } = state;
+  return { searchHistoryQuotes: searchHistory.quotes };
 };
 
 export default connect(mapStateToProps)(SearchHistory);
