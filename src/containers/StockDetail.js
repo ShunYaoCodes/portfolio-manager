@@ -80,7 +80,6 @@ class StockDetail extends React.Component {
 
 const mapStateToProps = state => {
   const { stockDetail } = state;
-  console.log(stockDetail);
   return { ...stockDetail };
 };
 

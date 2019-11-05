@@ -130,7 +130,7 @@ export function fetchStockDetail(symbol) {
           stock: {
             ...stock,
             inWatchlist: !!watchlist.find(stock => stock.symbol === symbol.toUpperCase()),
-            inPortfolio: !!portfolio.find(stock => stock.symbol === symbol.toUpperCase())
+            inPortfolio: !!portfolio.positions.find(stock => stock.symbol === symbol.toUpperCase())
           }
         }
       })
