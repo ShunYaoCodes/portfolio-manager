@@ -18,7 +18,8 @@ store.subscribe(throttle(() => {
     saveState({
         searchHistory: {
             symbols: store.getState().searchHistory.symbols,
-        }
+        },
+        auth: store.getState().auth,
     });
 }, 1000));
 

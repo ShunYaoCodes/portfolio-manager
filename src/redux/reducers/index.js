@@ -5,6 +5,7 @@ import searchHistory from "./searchHistory";
 import watchlist from "./watchlist";
 import portfolio from "./portfolio";
 import stockDetail from "./stockDetail";
+import auth from "./auth";
 
 export default combineReducers({ 
     toggleList,
@@ -13,4 +14,5 @@ export default combineReducers({
     watchlist,
     portfolio,
     stockDetail,
+    auth,
 });

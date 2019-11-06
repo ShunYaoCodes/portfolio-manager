@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import { Button, Form, Grid, Header, Image, Message, Segment } from 'semantic-ui-react';
 import withAuth from '../hocs/withAuth';
+import { connect } from 'react-redux';
+import { createLoginSession } from '../redux/actions';
 
 class LoginForm extends Component {
   state = {
@@ -26,9 +28,9 @@ class LoginForm extends Component {
       }
     )
     .then(res => res.json())
-    .then(json => {
-      localStorage.setItem('token', json.token);
-      localStorage.setItem('id', json.id);
+    .then(res => {
+      const { token, id } = res;
+      this.props.dispatch(createLoginSession(token, id));
       this.props.history.push('/');
       window.location.reload();
     })
@@ -77,4 +79,6 @@ class LoginForm extends Component {
   }
 }
 
-export default withAuth(LoginForm);
+const mapDispatchToProps = dispatch => ({ dispatch });
+
+export default withAuth(connect(null, mapDispatchToProps)(LoginForm));
