@@ -1,5 +1,4 @@
 import ApiAdapter from "../adapters/ApiAdapter";
-import AuthAdapter from "../adapters/AuthAdapter";
 import { SET_INDEX, UPDATE_SEARCH_HISTORY, SET_SEARCH_HISTORY_QUOTES, SET_WATCHLIST, SET_PORTFOLIO, 
   SET_STOCK, SET_STOCK_ERROR, SET_STOCK_STATUS, UPDATE_POSITION_TYPE, UPDATE_INVESTMENT_AMOUNT,
   CREATE_LOGIN_SESSION, REMOVE_LOGIN_SESSION} from "./actionTypes";
@@ -25,8 +24,8 @@ export function fetchSearchHistory() {
 
 export function fetchWatchlist() {
   return (dispatch, getState) => {
-    fetch(`${ApiAdapter.backendHost()}/users/${localStorage.getItem("id")}/watchlists`, {
-      headers: AuthAdapter.headers(),
+    fetch(`${ApiAdapter.backendHost()}/users/${getState().auth.id}/watchlists`, {
+      headers: authHeaders(getState().auth.token),
     }).then(r => r.json())
     .then(watchlist => dispatch({ type: SET_WATCHLIST, payload: { watchlist } }))
   };
@@ -34,8 +33,8 @@ export function fetchWatchlist() {
 
 export function fetchPortfolio() {
   return (dispatch, getState) => {
-    fetch(`${ApiAdapter.backendHost()}/users/${localStorage.getItem("id")}/portfolio_assets`, {
-      headers: AuthAdapter.headers(),
+    fetch(`${ApiAdapter.backendHost()}/users/${getState().auth.id}/portfolio_assets`, {
+      headers: authHeaders(getState().auth.token),
     }).then(r => r.json())
     .then(({ positions, investment_amount }) => dispatch({ 
       type: SET_PORTFOLIO, 
@@ -51,7 +50,7 @@ export function updatePositionType(symbolId, positionType) {
   return (dispatch, getState) => {
     fetch(`${ApiAdapter.backendHost()}/portfolio_assets/${symbolId}`, {
       method: "PATCH",
-      headers: AuthAdapter.headers(),
+      headers: authHeaders(getState().auth.token),
       body: JSON.stringify({ position_type: positionType })
     })
 
@@ -61,9 +60,9 @@ export function updatePositionType(symbolId, positionType) {
 
 export function updateInvestmentAmount(amount) {
   return (dispatch, getState) => {
-    fetch(`${ApiAdapter.backendHost()}/users/${localStorage.getItem("id")}`, {
+    fetch(`${ApiAdapter.backendHost()}/users/${getState().auth.id}`, {
       method: "PATCH",
-      headers: AuthAdapter.headers(),
+      headers: authHeaders(getState().auth.token),
       body: JSON.stringify({ investment_amount: amount })
     })
 
@@ -90,9 +89,9 @@ export function toggleStatus(stateName, checked, symbol) {
     }
 
     if (checked) {
-      fetch(`${ApiAdapter.backendHost()}/users/${localStorage.getItem("id")}/${endpoint}`, {
+      fetch(`${ApiAdapter.backendHost()}/users/${getState().auth.id}/${endpoint}`, {
         method: "POST",
-        headers: AuthAdapter.headers(),
+        headers: authHeaders(getState().auth.token),
         body: JSON.stringify({ symbol })
       }).then(r => r.json()).then(stock => {
         return dispatch({ type: `ADD_TO_${stateName.toUpperCase()}`, payload: { stock } })
@@ -103,7 +102,7 @@ export function toggleStatus(stateName, checked, symbol) {
       const stock = getState()[stateName].find(stock => stock.symbol === symbol);
       fetch(`${ApiAdapter.backendHost()}/${endpoint}/${stock.id}`, {
         method: "DELETE",
-        headers: AuthAdapter.headers(),
+        headers: authHeaders(getState().auth.token),
       }).then(r => r.json()).then(() => {
         return dispatch({ type: `REMOVE_FROM_${stateName.toUpperCase()}`, payload: { stock } })
       }).then(() => {
@@ -157,3 +156,10 @@ export function createLoginSession(token, id) {
       } 
   })
 };
+
+function authHeaders(authToken) {
+  return {
+    "Content-Type": "application/json",
+    "Authorization": authToken,
+  };
+}
