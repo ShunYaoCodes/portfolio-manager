@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import { Button, Form, Grid, Header, Image, Message, Segment } from 'semantic-ui-react';
 import withAuth from '../hocs/withAuth';
+import { connect } from 'react-redux';
+import { createLoginSession } from '../redux/actions';
 
 class RegistrationForm extends Component {
   state = {
@@ -31,12 +33,12 @@ class RegistrationForm extends Component {
       }
     )
     .then(res => res.json())
-    .then(json => {
-      if (json.errors) {
-        console.log(json.errors);
+    .then(res => {
+      if (res.errors) {
+        console.log(res.errors);
       } else {
-        localStorage.setItem('token', json.token);
-        localStorage.setItem('id', json.id);
+        const { token, id } = res;
+        this.props.dispatch(createLoginSession(token, id));
         this.props.history.push('/');
         window.location.reload();
       }
@@ -94,4 +96,6 @@ class RegistrationForm extends Component {
   }
 }
 
-export default withAuth(RegistrationForm);
+const mapDispatchToProps = dispatch => ({ dispatch });
+
+export default withAuth(connect(null, mapDispatchToProps)(RegistrationForm));
