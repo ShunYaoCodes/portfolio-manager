@@ -10,7 +10,6 @@ import { BrowserRouter as Router, Route, NavLink} from 'react-router-dom';
 import './App.css'
 import LoginForm from './components/LoginForm';
 import RegistrationForm from './components/RegistrationForm';
-import AuthAdapter from './adapters/AuthAdapter';
 import { connect } from 'react-redux';
 import { fetchIndex, fetchSearchHistory, fetchPortfolio, fetchWatchlist } from "./redux/actions";
 
@@ -30,7 +29,7 @@ class App extends Component {
   fetchStockData = () => {
     this.props.dispatch(fetchIndex());
     this.props.dispatch(fetchSearchHistory());
-    if (AuthAdapter.loggedIn()) {
+    if (this.loggedIn) {
       this.props.dispatch(fetchPortfolio());
       this.props.dispatch(fetchWatchlist());
     }
@@ -42,6 +41,10 @@ class App extends Component {
       localStorage.removeItem('id');
       window.location.reload();
     }
+  }
+
+  get loggedIn() {
+    return !!this.props.token;
   }
 
   render() {
@@ -58,7 +61,9 @@ class App extends Component {
               </Grid.Column>
               <Grid.Column computer={2} mobile={2}>
                 {
-                  AuthAdapter.notLoggedIn() ?
+                  this.loggedIn ?
+                    <Button primary onClick={this.handleSignOut} style={{marginTop: '10px'}}>Sign Out</Button>
+                    :
                     <div style={{marginTop: '10px'}}>
                         <NavLink exact to="/login">
                             <Button primary>Sign In</Button>
@@ -67,8 +72,6 @@ class App extends Component {
                             <Button secondary>Sign Up</Button>
                         </NavLink>
                     </div>
-                  :
-                    <Button primary onClick={this.handleSignOut} style={{marginTop: '10px'}}>Sign Out</Button>
                 }
               </Grid.Column>
               <Grid.Column width={14}>
@@ -89,10 +92,15 @@ class App extends Component {
   }
 }
 
+const mapStateToProps = state => {
+  const { token } = state.auth;
+  return { token };
+};
+
 const mapDispatchToProps = dispatch => ({ dispatch });
 
 export default connect(
-  null,
+  mapStateToProps,
   mapDispatchToProps
 )(App);
 
