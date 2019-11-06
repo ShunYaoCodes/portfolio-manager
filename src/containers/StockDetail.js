@@ -3,9 +3,8 @@ import { connect } from "react-redux";
 import { toggleStatus } from "../redux/actions";
 import NewsList from '../components/NewsList';
 import Asset from '../components/StockDetail/Asset';
-import { Grid } from 'semantic-ui-react'
-import { Checkbox } from 'semantic-ui-react'
-import AuthAdapter from '../adapters/AuthAdapter';
+import { Grid } from 'semantic-ui-react';
+import { Checkbox } from 'semantic-ui-react';
 
 class StockDetail extends React.Component {
   /****
@@ -36,7 +35,7 @@ class StockDetail extends React.Component {
 
           <Grid.Row>
             <Grid.Column width={7}>
-              {AuthAdapter.loggedIn() ? 
+              {this.props.loggedIn ? 
                 <div>
                   <Checkbox toggle checked={this.props.inWatchlist} onClick={this.handleToggle} name="watchlist"/>
                   {this.props.inWatchlist ? " Remove from your watchlist" : " Add to your watchlist"}
@@ -47,7 +46,7 @@ class StockDetail extends React.Component {
             </Grid.Column>
 
             <Grid.Column width={7}>
-              {AuthAdapter.loggedIn() ? 
+              {this.props.loggedIn ? 
                 <div>
                   <Checkbox toggle checked={this.props.inPortfolio} onClick={this.handleToggle} name="portfolio"/>
                   {this.props.inPortfolio ? " Remove from your portfolio" : " Add to your portfolio"}
@@ -79,8 +78,12 @@ class StockDetail extends React.Component {
 }
 
 const mapStateToProps = state => {
-  const { stockDetail } = state;
-  return { ...stockDetail };
+  const { stockDetail, auth } = state;
+  const { token } = auth;
+  return { 
+    ...stockDetail, 
+    loggedIn: !!token,
+  };
 };
 
 const mapDispatchToProps = dispatch => ({ dispatch });
