@@ -26,8 +26,18 @@ export function fetchWatchlist() {
   return (dispatch, getState) => {
     fetch(`${ApiAdapter.backendHost()}/users/${getState().auth.id}/watchlists`, {
       headers: authHeaders(getState().auth.token),
-    }).then(r => r.json())
+    })
+    .then(checkStatus)
+    .then(r => r.json())
     .then(watchlist => dispatch({ type: SET_WATCHLIST, payload: { watchlist } }))
+    .catch(error => {
+        console.log(error);
+        error.response.json().then(detail => {
+            if (detail.message === 'Invalid Token or Token Expired') {
+              return dispatch({ type: DELETE_LOGIN_SESSION })
+            }
+        })
+    })
   };
 };
 
@@ -35,7 +45,9 @@ export function fetchPortfolio() {
   return (dispatch, getState) => {
     fetch(`${ApiAdapter.backendHost()}/users/${getState().auth.id}/portfolio_assets`, {
       headers: authHeaders(getState().auth.token),
-    }).then(r => r.json())
+    })
+    .then(checkStatus)
+    .then(r => r.json())
     .then(({ positions, investment_amount }) => dispatch({ 
       type: SET_PORTFOLIO, 
       payload: { 
@@ -43,6 +55,14 @@ export function fetchPortfolio() {
         investmentAmount: investment_amount 
       } 
     }))
+    .catch(error => {
+      console.log(error);
+      error.response.json().then(detail => {
+          if (detail.message === 'Invalid Token or Token Expired') {
+            return dispatch({ type: DELETE_LOGIN_SESSION })
+          }
+      })
+    })
   };
 };
 
@@ -166,4 +186,14 @@ function authHeaders(authToken) {
     "Content-Type": "application/json",
     "Authorization": authToken,
   };
+}
+
+function checkStatus(response) {
+  if (response.status >= 200 && response.status < 300) {
+      return response;
+  } else {
+      const error = new Error(response.statusText);
+      error.response = response;
+      throw error;
+  }
 }
