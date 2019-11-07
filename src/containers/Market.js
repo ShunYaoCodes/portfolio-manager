@@ -5,7 +5,7 @@ import SearchHistory from '../components/Market/SearchHistory';
 import { Grid, Icon } from 'semantic-ui-react'
 import QuoteTable from '../components/Market/QuoteTable/QuoteTable';
 import ApiAdapter from '../adapters/ApiAdapter';
-import AppAdapter from '../adapters/AppAdapter';
+import { connect } from 'react-redux';
 
 class Market extends React.Component {
   state = {
@@ -58,7 +58,7 @@ class Market extends React.Component {
   }
 
   fetchNews = () => {
-    const adapter = AppAdapter.searchHistory().length ? ApiAdapter.getBatchNews(AppAdapter.searchHistory()) : ApiAdapter.getIndexNews();
+    const adapter = this.props.searchHistory.length ? ApiAdapter.getBatchNews(this.props.searchHistory) : ApiAdapter.getIndexNews();
     fetch(adapter).then(r => r.json()).then(news => {
       this.setState({ news })
     })
@@ -89,4 +89,8 @@ class Market extends React.Component {
   }
 }
 
-export default Market;
+const mapStateToProps = state => {
+  return { searchHistory: state.searchHistory.symbols };
+};
+
+export default connect(mapStateToProps)(Market);
