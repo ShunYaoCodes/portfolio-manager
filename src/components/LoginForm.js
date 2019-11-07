@@ -31,8 +31,6 @@ class LoginForm extends Component {
     .then(res => {
       const { token, id } = res;
       this.props.dispatch(createLoginSession(token, id));
-      this.props.history.push('/');
-      window.location.reload();
     })
   }
 

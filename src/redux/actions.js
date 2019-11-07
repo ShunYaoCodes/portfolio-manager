@@ -1,7 +1,7 @@
 import ApiAdapter from "../adapters/ApiAdapter";
 import { SET_INDEX, UPDATE_SEARCH_HISTORY, SET_SEARCH_HISTORY_QUOTES, SET_WATCHLIST, SET_PORTFOLIO, 
   SET_STOCK, SET_STOCK_ERROR, SET_STOCK_STATUS, UPDATE_POSITION_TYPE, UPDATE_INVESTMENT_AMOUNT,
-  CREATE_LOGIN_SESSION, REMOVE_LOGIN_SESSION} from "./actionTypes";
+  CREATE_LOGIN_SESSION, DELETE_LOGIN_SESSION} from "./actionTypes";
 
 export function fetchIndex() {
   return (dispatch, getState) => {
@@ -155,6 +155,10 @@ export function createLoginSession(token, id) {
         id,
       } 
   })
+};
+
+export function deleteLoginSession() {
+  return (dispatch, getState) => dispatch({ type: DELETE_LOGIN_SESSION })
 };
 
 function authHeaders(authToken) {

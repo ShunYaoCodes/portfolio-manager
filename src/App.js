@@ -11,7 +11,7 @@ import './App.css'
 import LoginForm from './components/LoginForm';
 import RegistrationForm from './components/RegistrationForm';
 import { connect } from 'react-redux';
-import { fetchIndex, fetchSearchHistory, fetchPortfolio, fetchWatchlist } from "./redux/actions";
+import { fetchIndex, fetchSearchHistory, fetchPortfolio, fetchWatchlist, deleteLoginSession } from "./redux/actions";
 
 class App extends Component {
   componentDidMount() {
@@ -37,9 +37,7 @@ class App extends Component {
 
   handleSignOut = () => {
     if (window.confirm('Are you sure you want to sign out?')) {
-      localStorage.removeItem('token');
-      localStorage.removeItem('id');
-      window.location.reload();
+      this.props.dispatch(deleteLoginSession());
     }
   }
 

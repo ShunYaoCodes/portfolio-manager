@@ -1,4 +1,4 @@
-import { CREATE_LOGIN_SESSION, REMOVE_LOGIN_SESSION  } from "../actionTypes";
+import { CREATE_LOGIN_SESSION, DELETE_LOGIN_SESSION  } from "../actionTypes";
 
 const initialState = {
     token: '',
@@ -15,13 +15,11 @@ export default function(state = initialState, action) {
                 id,
             }
         }
-        case REMOVE_LOGIN_SESSION: {
-            // const { stock } = action.payload;
-
-            // return [
-            //     ...state,
-            //     stock,
-            // ];
+        case DELETE_LOGIN_SESSION: {
+            return {
+                token: '',
+                id: '',
+            };
         }
         default:
             return state;
