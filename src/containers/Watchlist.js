@@ -57,7 +57,9 @@ class Watchlist extends React.Component {
   }
 
   render()  {
-    if (this.state.isLoading) {
+    if (!this.props.watchlist.length) {
+      return <h3>Please add stocks to you watchlist</h3>
+    } if (this.state.isLoading) {
       return <img alt="Spinny GIF" src="https://cdn-images-1.medium.com/max/1600/1*9EBHIOzhE1XfMYoKz1JcsQ.gif" />
     } else {
       if (this.state.quotes.length) {

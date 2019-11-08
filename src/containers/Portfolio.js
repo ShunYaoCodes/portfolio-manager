@@ -76,8 +76,9 @@ class Portfolio extends React.Component {
   }
 
   render() {
-    console.log(this.props.investmentAmount);
-    if (this.state.isLoading) {
+    if (!this.props.positions.length) {
+      return <h3>Please add stocks to you portfolio</h3>
+    } else if (this.state.isLoading) {
       return <img alt="Spinny GIF" src="https://cdn-images-1.medium.com/max/1600/1*9EBHIOzhE1XfMYoKz1JcsQ.gif" />
     } else {
       let list = [];
