@@ -6,9 +6,11 @@ import { createLoginSession } from '../redux/actions';
 
 class RegistrationForm extends Component {
   state = {
-    username: "",
+    email: "",
+    firstName: "",
+    lastName: "",
     password: "",
-    password_confirmation: "",
+    passwordConfirmation: "",
   }
 
   handleChange = (event) => {
@@ -26,9 +28,11 @@ class RegistrationForm extends Component {
           "Content-Type": "application/json"
         },
         body: JSON.stringify({ 
-          username: this.state.username, 
+          email: this.state.email,
+          first_name: this.state.firstName,
+          last_name: this.state.lastName,
           password: this.state.password,
-          password_confirmation: this.state.password_confirmation,
+          password_confirmation: this.state.passwordConfirmation,
         })
       }
     )
@@ -60,9 +64,25 @@ class RegistrationForm extends Component {
                 fluid icon='user' 
                 iconPosition='left' 
                 placeholder='E-mail address'
-                name="username"
+                name="email"
                 onChange={this.handleChange}
-                value={this.state.username}
+                value={this.state.email}
+              />
+              <Form.Input 
+                fluid icon='user' 
+                iconPosition='left' 
+                placeholder='First Name'
+                name="firstName"
+                onChange={this.handleChange}
+                value={this.state.firstName}
+              />
+              <Form.Input 
+                fluid icon='user' 
+                iconPosition='left' 
+                placeholder='Last Name'
+                name="lastName"
+                onChange={this.handleChange}
+                value={this.state.lastName}
               />
               <Form.Input
                 fluid
@@ -80,13 +100,13 @@ class RegistrationForm extends Component {
                 iconPosition='left'
                 placeholder='Confirm Password'
                 type='password'
-                name="password_confirmation"
+                name="passwordConfirmation"
                 onChange={this.handleChange}
-                value={this.state.password_confirmation}
+                value={this.state.passwordConfirmation}
               />
     
               <Button color='violet' fluid size='large' type="submit">
-                Login
+                Create
               </Button>
             </Segment>
           </Form>

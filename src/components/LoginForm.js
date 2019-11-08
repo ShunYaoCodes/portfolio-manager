@@ -6,7 +6,7 @@ import { createLoginSession } from '../redux/actions';
 
 class LoginForm extends Component {
   state = {
-    username: "",
+    email: "",
     password: "",
   }
 
@@ -24,7 +24,7 @@ class LoginForm extends Component {
         headers: {
           "Content-Type": "application/json"
         },
-        body: JSON.stringify({ username: this.state.username, password: this.state.password })
+        body: JSON.stringify({ email: this.state.email, password: this.state.password })
       }
     )
     .then(res => res.json())
@@ -48,9 +48,9 @@ class LoginForm extends Component {
                 fluid icon='user' 
                 iconPosition='left' 
                 placeholder='E-mail address'
-                name="username"
+                name="email"
                 onChange={this.handleChange}
-                value={this.state.username}
+                value={this.state.email}
               />
               <Form.Input
                 fluid
