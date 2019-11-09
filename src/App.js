@@ -66,7 +66,7 @@ class App extends Component {
                         <NavLink exact to="/login">
                             <Button primary>Sign In</Button>
                         </NavLink>
-                        <NavLink exact to="/register">
+                        <NavLink exact to="/signup">
                             <Button secondary>Sign Up</Button>
                         </NavLink>
                     </div>
@@ -78,7 +78,7 @@ class App extends Component {
             </Grid.Row>
 
             <Route exact path="/login" render={(props) => <LoginForm {...props} /> } />
-            <Route exact path="/register" render={(props) => <SignupForm {...props} /> } />
+            <Route exact path="/signup" render={(props) => <SignupForm {...props} /> } />
             <Route exact path='/' render={() => <Market />} />
             <Route exact path='/portfolio' render={() => <Portfolio />} />
             <Route exact path='/watchlist' render={() => <Watchlist />} />
