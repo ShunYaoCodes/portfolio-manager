@@ -4,7 +4,7 @@ import withAuth from '../hocs/withAuth';
 import { connect } from 'react-redux';
 import { createLoginSession } from '../redux/actions';
 
-class RegistrationForm extends Component {
+class SignupForm extends Component {
   state = {
     email: "",
     firstName: "",
@@ -118,4 +118,4 @@ class RegistrationForm extends Component {
 
 const mapDispatchToProps = dispatch => ({ dispatch });
 
-export default withAuth(connect(null, mapDispatchToProps)(RegistrationForm));
+export default withAuth(connect(null, mapDispatchToProps)(SignupForm));

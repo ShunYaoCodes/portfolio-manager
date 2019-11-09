@@ -9,7 +9,7 @@ import StockDetail from './containers/StockDetail';
 import { BrowserRouter as Router, Route, NavLink} from 'react-router-dom';
 import './App.css'
 import LoginForm from './components/LoginForm';
-import RegistrationForm from './components/RegistrationForm';
+import SignupForm from './components/SignupForm';
 import { connect } from 'react-redux';
 import { fetchIndex, fetchSearchHistory, fetchPortfolio, fetchWatchlist, deleteLoginSession } from "./redux/actions";
 
@@ -78,7 +78,7 @@ class App extends Component {
             </Grid.Row>
 
             <Route exact path="/login" render={(props) => <LoginForm {...props} /> } />
-            <Route exact path="/register" render={(props) => <RegistrationForm {...props} /> } />
+            <Route exact path="/register" render={(props) => <SignupForm {...props} /> } />
             <Route exact path='/' render={() => <Market />} />
             <Route exact path='/portfolio' render={() => <Portfolio />} />
             <Route exact path='/watchlist' render={() => <Watchlist />} />
