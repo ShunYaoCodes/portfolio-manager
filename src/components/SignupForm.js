@@ -1,7 +1,7 @@
 import React from 'react';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
-import { Button, Form, Grid, Header, Image, Message, Segment } from 'semantic-ui-react';
+import { Button, Form, Grid, Header, Image, Segment } from 'semantic-ui-react';
 import withAuth from '../hocs/withAuth';
 import { connect } from 'react-redux';
 import { createLoginSession } from '../redux/actions';
@@ -18,17 +18,17 @@ const SignupForm = ({ history, dispatch }) => {
     validationSchema: Yup.object({
       email: Yup.string()
         .email('Invalid email addresss')
-        .required('Required'),
+        .required('Email is required'),
       firstName: Yup.string()
-        .max(15, 'Must be 15 characters or less'),
+        .max(20, 'First Name must be 20 characters or less'),
       lastName: Yup.string()
-        .max(20, 'Must be 20 characters or less'),
+        .max(20, 'Last Name must be 20 characters or less'),
       password: Yup.string()
-        .min(8, 'Must be at least 8 characters long')
-        .required('Required'),
-      passwordConfirmation: Yup.string()
-        // .min(8, 'Must be 20 characters or less')
-        .required('Required'),
+        .min(8, 'Password must be at least 8 characters')
+        .required('Enter your password'),
+      passwordConfirmation: Yup.string("Enter your password")
+        .oneOf([Yup.ref("password")], "Password does not match")
+        .required("Confirm your password")
     }),
     onSubmit: ({ email, firstName, lastName, password, passwordConfirmation }) => {
       fetch("http://localhost:3000/api/v1/users/",
@@ -78,10 +78,8 @@ const SignupForm = ({ history, dispatch }) => {
               onChange={formik.handleChange}
               onBlur={formik.handleBlur}
               value={formik.values.email}
+              {...formik.touched.email && formik.errors.email ? { error: formik.errors.email } : {} }
             />
-            {formik.touched.email && formik.errors.email ? (
-              <div>{formik.errors.email}</div>
-            ) : null}
             <Form.Input 
               fluid icon='user' 
               iconPosition='left' 
@@ -92,10 +90,8 @@ const SignupForm = ({ history, dispatch }) => {
               onChange={formik.handleChange}
               onBlur={formik.handleBlur}
               value={formik.values.firstName}
+              {...formik.touched.firstName && formik.errors.firstName ? { error: formik.errors.firstName } : {} }
             />
-            {formik.touched.firstName && formik.errors.firstName ? (
-              <div>{formik.errors.firstName}</div>
-            ) : null}
             <Form.Input 
               fluid icon='user' 
               iconPosition='left' 
@@ -106,6 +102,7 @@ const SignupForm = ({ history, dispatch }) => {
               onChange={formik.handleChange}
               onBlur={formik.handleBlur}
               value={formik.values.lastName}
+              {...formik.touched.lastName && formik.errors.lastName ? { error: formik.errors.lastName } : {} }
             />
             <Form.Input
               fluid
@@ -118,10 +115,8 @@ const SignupForm = ({ history, dispatch }) => {
               onChange={formik.handleChange}
               onBlur={formik.handleBlur}
               value={formik.values.password}
+              {...formik.touched.password && formik.errors.password ? { error: formik.errors.password } : {} }
             />
-            {formik.touched.password && formik.errors.password ? (
-              <div>{formik.errors.password}</div>
-            ) : null}
             <Form.Input
               fluid
               icon='lock'
@@ -133,10 +128,8 @@ const SignupForm = ({ history, dispatch }) => {
               onChange={formik.handleChange}
               onBlur={formik.handleBlur}
               value={formik.values.passwordConfirmation}
+              {...formik.touched.passwordConfirmation && formik.errors.passwordConfirmation ? { error: formik.errors.passwordConfirmation } : {} }
             />
-            {formik.touched.passwordConfirmation && formik.errors.passwordConfirmation ? (
-              <div>{formik.errors.passwordConfirmation}</div>
-            ) : null}
   
             <Button color='violet' fluid size='large' type="submit">
               Create
