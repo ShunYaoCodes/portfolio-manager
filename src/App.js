@@ -45,6 +45,18 @@ class App extends Component {
     return !!this.props.token;
   }
 
+  get welcomeMessage() {
+    if (this.props.firstName.length && this.props.lastName.length) {
+      return `Welcome, ${this.props.firstName} ${this.props.lastName}!`;
+    } else if (this.props.firstName.length) {
+      return `Welcome, ${this.props.firstName}!`;
+    } else if (this.props.lastName.length) {
+      return `Welcome, ${this.props.lastName}!`;
+    } else {
+      return 'Welcome!';
+    }
+  }
+
   render() {
     return (
       <Router>
@@ -60,7 +72,7 @@ class App extends Component {
               {
                 this.loggedIn ?
                   <>
-                    <label>Welcome, Bartholomew Montgomery!</label>
+                    <label>{this.welcomeMessage}</label>
                     <Button primary onClick={this.handleSignOut} >Sign Out</Button>
                   </>
                   :
@@ -92,8 +104,8 @@ class App extends Component {
 }
 
 const mapStateToProps = state => {
-  const { token } = state.auth;
-  return { token };
+  const { token, firstName, lastName } = state.auth;
+  return { token, firstName, lastName };
 };
 
 const mapDispatchToProps = dispatch => ({ dispatch });

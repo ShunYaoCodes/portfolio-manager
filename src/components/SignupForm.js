@@ -51,8 +51,8 @@ const SignupForm = ({ history, dispatch }) => {
       if (res.errors) {
         console.log(res.errors);
       } else {
-        const { token, id } = res;
-        dispatch(createLoginSession(token, id));
+        const { token, id, firstName, lastName } = res;
+        dispatch(createLoginSession(token, id, firstName, lastName));
         history.push('/');
       }
     })

@@ -32,8 +32,8 @@ const LoginForm = ({ dispatch }) => {
       )
       .then(res => res.json())
       .then(res => {
-        const { token, id } = res;
-        dispatch(createLoginSession(token, id));
+        const { token, id, firstName, lastName } = res;
+        dispatch(createLoginSession(token, id, firstName, lastName));
       })
     },
   });

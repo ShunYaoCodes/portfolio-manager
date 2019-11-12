@@ -167,12 +167,14 @@ export function fetchStockDetail(symbol) {
   };
 };
 
-export function createLoginSession(token, id) {
+export function createLoginSession(token, id, firstName, lastName) {
   return (dispatch, getState) => dispatch({ 
       type: CREATE_LOGIN_SESSION, 
       payload: { 
         token, 
         id,
+        firstName,
+        lastName,
       } 
   })
 };
