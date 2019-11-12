@@ -48,43 +48,44 @@ class App extends Component {
   render() {
     return (
       <Router>
-        <div>
-          <Grid centered>
-            <Grid.Row>
-              <Grid.Column computer={6} mobile={14}>
-                <NavLink to='/' exact><h1 style={{marginTop: '5px'}}>Portfolio Manager and Hedger</h1></NavLink>
-              </Grid.Column>
-              <Grid.Column computer={6} mobile={12}>
-                <SearchBar />
-              </Grid.Column>
-              <Grid.Column computer={2} mobile={2}>
-                {
-                  this.loggedIn ?
-                    <Button primary onClick={this.handleSignOut} style={{marginTop: '10px'}}>Sign Out</Button>
-                    :
-                    <div style={{marginTop: '10px'}}>
-                        <NavLink exact to="/login">
-                            <Button primary>Sign In</Button>
-                        </NavLink>
-                        <NavLink exact to="/signup">
-                            <Button secondary>Sign Up</Button>
-                        </NavLink>
-                    </div>
-                }
-              </Grid.Column>
-              <Grid.Column width={14}>
-                <NavBar />
-              </Grid.Column>
-            </Grid.Row>
+        <Grid centered>
+          <Grid.Row>
+            <Grid.Column computer={4} mobile={14} textAlign='left'>
+              <NavLink to='/' exact><h1 style={{marginTop: '5px'}}>Portfolio Manager and Hedger</h1></NavLink>
+            </Grid.Column>
+            <Grid.Column computer={6} mobile={12} textAlign='center'>
+              <SearchBar />
+            </Grid.Column>
+            <Grid.Column computer={4} mobile={2} textAlign='right' style={{marginTop: '10px'}}>
+              {
+                this.loggedIn ?
+                  <>
+                    <label>Welcome, Bartholomew Montgomery!</label>
+                    <Button primary onClick={this.handleSignOut} >Sign Out</Button>
+                  </>
+                  :
+                  <>
+                      <NavLink exact to="/login">
+                          <Button primary>Sign In</Button>
+                      </NavLink>
+                      <NavLink exact to="/signup">
+                          <Button secondary>Sign Up</Button>
+                      </NavLink>
+                  </>
+              }
+            </Grid.Column>
+            <Grid.Column width={14}>
+              <NavBar />
+            </Grid.Column>
+          </Grid.Row>
 
-            <Route exact path="/login" render={(props) => <LoginForm {...props} /> } />
-            <Route exact path="/signup" render={(props) => <SignupForm {...props} /> } />
-            <Route exact path='/' render={() => <Market />} />
-            <Route exact path='/portfolio' render={() => <Portfolio />} />
-            <Route exact path='/watchlist' render={() => <Watchlist />} />
-            <Route path='/detail' render={() => <StockDetail />} />
-          </Grid>
-        </div>
+          <Route exact path="/login" render={(props) => <LoginForm {...props} /> } />
+          <Route exact path="/signup" render={(props) => <SignupForm {...props} /> } />
+          <Route exact path='/' render={() => <Market />} />
+          <Route exact path='/portfolio' render={() => <Portfolio />} />
+          <Route exact path='/watchlist' render={() => <Watchlist />} />
+          <Route path='/detail' render={() => <StockDetail />} />
+        </Grid>
       </Router>
     );
   }
