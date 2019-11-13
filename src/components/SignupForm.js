@@ -7,6 +7,8 @@ import { connect } from 'react-redux';
 import { createLoginSession } from '../redux/actions';
 
 const SignupForm = ({ history, dispatch }) => {
+  let emailTaken = false;
+
   const formik = useFormik({
     initialValues: {
       email: "",
@@ -24,9 +26,9 @@ const SignupForm = ({ history, dispatch }) => {
       lastName: Yup.string()
         .max(20, 'Last Name must be 20 characters or less'),
       password: Yup.string()
-        .min(8, 'Password must be at least 8 characters')
+        .min(6, 'Password must be at least 6 characters')
         .required('Enter your password'),
-      passwordConfirmation: Yup.string("Enter your password")
+      passwordConfirmation: Yup.string()
         .oneOf([Yup.ref("password")], "Password does not match")
         .required("Confirm your password")
     }),

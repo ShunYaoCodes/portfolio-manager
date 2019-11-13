@@ -46,11 +46,11 @@ class App extends Component {
   }
 
   get welcomeMessage() {
-    if (this.props.firstName.length && this.props.lastName.length) {
+    if (this.props.firstName && this.props.lastName) {
       return `Welcome, ${this.props.firstName} ${this.props.lastName}!`;
-    } else if (this.props.firstName.length) {
+    } else if (this.props.firstName) {
       return `Welcome, ${this.props.firstName}!`;
-    } else if (this.props.lastName.length) {
+    } else if (this.props.lastName) {
       return `Welcome, ${this.props.lastName}!`;
     } else {
       return 'Welcome!';
