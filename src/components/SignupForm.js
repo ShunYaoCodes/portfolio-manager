@@ -1,13 +1,13 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
-import { Button, Form, Grid, Header, Image, Segment } from 'semantic-ui-react';
+import { Button, Form, Grid, Header, Image, Segment, Message } from 'semantic-ui-react';
 import withAuth from '../hocs/withAuth';
 import { connect } from 'react-redux';
 import { createLoginSession } from '../redux/actions';
 
 const SignupForm = ({ history, dispatch }) => {
-  let emailTaken = false;
+  const [emailAlreadyRegisterd, setEmailAlreadyRegistered] = useState(false);
 
   const formik = useFormik({
     initialValues: {
@@ -51,8 +51,16 @@ const SignupForm = ({ history, dispatch }) => {
     .then(res => res.json())
     .then(res => {
       if (res.errors) {
-        console.log(res.errors);
+        const [errorMessage] = res.errors;
+        switch (errorMessage) {
+          case 'Email has already been taken':
+            setEmailAlreadyRegistered(true);
+            break;
+          default:
+            console.log(res.errors);
+        }
       } else {
+        setEmailAlreadyRegistered(false);
         const { token, id, firstName, lastName } = res;
         dispatch(createLoginSession(token, id, firstName, lastName));
         history.push('/');
@@ -61,6 +69,10 @@ const SignupForm = ({ history, dispatch }) => {
     },
   });
 
+  const handleEmailClick = () => {
+    setEmailAlreadyRegistered(false);
+  }
+
   return (
       <Grid textAlign='center' style={{ height: '80vh' }} verticalAlign='middle'>
       <Grid.Column style={{ maxWidth: 800 }}>
@@ -68,7 +80,7 @@ const SignupForm = ({ history, dispatch }) => {
           {/* <Image src='/logo.png' /> */}
           Create an account
         </Header>
-        <Form size='large' onSubmit={formik.handleSubmit}>
+        <Form error={emailAlreadyRegisterd} size='large' onSubmit={formik.handleSubmit}>
           <Segment stacked>
             <Form.Input 
               fluid icon='user' 
@@ -77,6 +89,7 @@ const SignupForm = ({ history, dispatch }) => {
               id="email"
               name="email"
               type="email"
+              onClick={handleEmailClick}
               onChange={formik.handleChange}
               onBlur={formik.handleBlur}
               value={formik.values.email}
@@ -132,7 +145,11 @@ const SignupForm = ({ history, dispatch }) => {
               value={formik.values.passwordConfirmation}
               {...formik.touched.passwordConfirmation && formik.errors.passwordConfirmation ? { error: formik.errors.passwordConfirmation } : {} }
             />
-  
+            <Message
+              error
+              header='This email is already registered'
+              content='Please use a different email address'
+            />
             <Button color='violet' fluid size='large' type="submit">
               Create
             </Button>
