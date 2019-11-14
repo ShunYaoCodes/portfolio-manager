@@ -3,6 +3,8 @@ import { SET_INDEX, UPDATE_SEARCH_HISTORY, SET_SEARCH_HISTORY_QUOTES, SET_WATCHL
   SET_STOCK, SET_STOCK_ERROR, SET_STOCK_STATUS, UPDATE_POSITION_TYPE, UPDATE_INVESTMENT_AMOUNT,
   CREATE_LOGIN_SESSION, DELETE_LOGIN_SESSION} from "./actionTypes";
 
+const backendHost = process.env.REACT_APP_BACKEND_HOST;
+
 export function fetchIndex() {
   return (dispatch, getState) => {
     fetch(ApiAdapter.getIndexQuotes()).then(r => r.json()).then(indexes => {
@@ -24,7 +26,7 @@ export function fetchSearchHistory() {
 
 export function fetchWatchlist() {
   return (dispatch, getState) => {
-    fetch(`${ApiAdapter.backendHost()}/users/${getState().auth.id}/watchlists`, {
+    fetch(`${backendHost}/users/${getState().auth.id}/watchlists`, {
       headers: authHeaders(getState().auth.token),
     })
     .then(checkStatus)
@@ -43,7 +45,7 @@ export function fetchWatchlist() {
 
 export function fetchPortfolio() {
   return (dispatch, getState) => {
-    fetch(`${ApiAdapter.backendHost()}/users/${getState().auth.id}/portfolio_assets`, {
+    fetch(`${backendHost}/users/${getState().auth.id}/portfolio_assets`, {
       headers: authHeaders(getState().auth.token),
     })
     .then(checkStatus)
@@ -68,7 +70,7 @@ export function fetchPortfolio() {
 
 export function updatePositionType(symbolId, positionType) {
   return (dispatch, getState) => {
-    fetch(`${ApiAdapter.backendHost()}/portfolio_assets/${symbolId}`, {
+    fetch(`${backendHost}/portfolio_assets/${symbolId}`, {
       method: "PATCH",
       headers: authHeaders(getState().auth.token),
       body: JSON.stringify({ position_type: positionType })
@@ -80,7 +82,7 @@ export function updatePositionType(symbolId, positionType) {
 
 export function updateInvestmentAmount(amount) {
   return (dispatch, getState) => {
-    fetch(`${ApiAdapter.backendHost()}/users/${getState().auth.id}`, {
+    fetch(`${backendHost}/users/${getState().auth.id}`, {
       method: "PATCH",
       headers: authHeaders(getState().auth.token),
       body: JSON.stringify({ investment_amount: amount })
@@ -109,7 +111,7 @@ export function toggleStatus(stateName, checked, symbol) {
     }
 
     if (checked) {
-      fetch(`${ApiAdapter.backendHost()}/users/${getState().auth.id}/${endpoint}`, {
+      fetch(`${backendHost}/users/${getState().auth.id}/${endpoint}`, {
         method: "POST",
         headers: authHeaders(getState().auth.token),
         body: JSON.stringify({ symbol })
@@ -120,7 +122,7 @@ export function toggleStatus(stateName, checked, symbol) {
       })
     } else {
       const stock = getState()[stateName].find(stock => stock.symbol === symbol);
-      fetch(`${ApiAdapter.backendHost()}/${endpoint}/${stock.id}`, {
+      fetch(`${backendHost}/${endpoint}/${stock.id}`, {
         method: "DELETE",
         headers: authHeaders(getState().auth.token),
       }).then(r => r.json()).then(() => {
