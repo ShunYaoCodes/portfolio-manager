@@ -6,7 +6,7 @@ import withAuth from '../hocs/withAuth';
 import { connect } from 'react-redux';
 import { createLoginSession } from '../redux/actions';
 
-const LoginForm = ({ dispatch }) => {
+const LoginForm = ({ history, path, dispatch }) => {
   const formik = useFormik({
     initialValues: {
       email: "",
@@ -34,6 +34,7 @@ const LoginForm = ({ dispatch }) => {
       .then(res => {
         const { token, id, firstName, lastName } = res;
         dispatch(createLoginSession(token, id, firstName, lastName));
+        history.push(path ? path : '/');
       })
     },
   });
@@ -86,6 +87,11 @@ const LoginForm = ({ dispatch }) => {
   );
 };
 
+const mapStateToProps = state => {
+  const { path } = state.page;
+  return { path };
+};
+
 const mapDispatchToProps = dispatch => ({ dispatch });
 
-export default withAuth(connect(null, mapDispatchToProps)(LoginForm));
+export default withAuth(connect(mapStateToProps, mapDispatchToProps)(LoginForm));
