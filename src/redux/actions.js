@@ -1,7 +1,7 @@
 import ApiAdapter from "../adapters/ApiAdapter";
 import { SET_INDEX, UPDATE_SEARCH_HISTORY, SET_SEARCH_HISTORY_QUOTES, SET_WATCHLIST, SET_PORTFOLIO, 
   SET_STOCK, SET_STOCK_ERROR, SET_STOCK_STATUS, UPDATE_POSITION_TYPE, UPDATE_INVESTMENT_AMOUNT,
-  CREATE_LOGIN_SESSION, DELETE_LOGIN_SESSION} from "./actionTypes";
+  CREATE_LOGIN_SESSION, DELETE_LOGIN_SESSION, SET_LOCATION_PATH} from "./actionTypes";
 
 const backendHost = process.env.REACT_APP_BACKEND_HOST;
 
@@ -183,6 +183,10 @@ export function createLoginSession(token, id, firstName, lastName) {
 
 export function deleteLoginSession() {
   return (dispatch, getState) => dispatch({ type: DELETE_LOGIN_SESSION })
+};
+
+export function setLocationPath(path) {
+  return (dispatch, getState) => dispatch({ type: SET_LOCATION_PATH, payload: { path } })
 };
 
 function authHeaders(authToken) {

@@ -6,6 +6,7 @@ import watchlist from "./watchlist";
 import portfolio from "./portfolio";
 import stockDetail from "./stockDetail";
 import auth from "./auth";
+import page from "./page";
 
 export default combineReducers({ 
     toggleList,
@@ -15,4 +16,5 @@ export default combineReducers({
     portfolio,
     stockDetail,
     auth,
+    page,
 });

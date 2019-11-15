@@ -1,13 +1,18 @@
 import React, { Component } from 'react';
 import { Menu, Segment } from 'semantic-ui-react';
 import { Link } from 'react-router-dom';
+import { connect } from 'react-redux';
+import { setLocationPath } from '../redux/actions';
 
 class NavBar extends Component {
   state = { 
     activePathName: window.location.pathname
   }
 
-  handleItemClick = (e, { to }) => this.setState({ activePathName: to })
+  handleItemClick = (e, { to }) => {
+    this.setState({ activePathName: to });
+    this.props.dispatch(setLocationPath(to));
+  }
 
   render() {
     const { activePathName } = this.state
@@ -36,4 +41,6 @@ class NavBar extends Component {
   }
 }
 
-export default NavBar;
+const mapDispatchToProps = dispatch => ({ dispatch });
+
+export default connect(null, mapDispatchToProps)(NavBar);
