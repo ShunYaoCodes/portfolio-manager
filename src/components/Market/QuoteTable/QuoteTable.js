@@ -9,7 +9,7 @@ const QuoteTable = props => {
   return (
     <div>
       <h3>{props.tableName}:</h3>
-      <Table color='blue' columns={4}>
+      <Table color='blue' unstackable columns={4}>
         <Table.Header>
           <Table.Row>
             <Table.HeaderCell>Symbol</Table.HeaderCell>

@@ -16,7 +16,7 @@ const News = props => {
           <span className='data'>Date: {props.date}</span>
         </Item.Meta>
 
-        <Item.Description>
+        <Item.Description className='mobile-hide'>
           <a href={props.url} target="_blank" rel="noopener noreferrer">
             {props.body}
           </a>

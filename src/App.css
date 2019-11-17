@@ -60,6 +60,10 @@ label {
         margin-top: 0px !important;
         text-align: left !important;
     }
+
+    table {
+        font-size: 12px !important;
+    }
 }
 
 @media only screen and (max-width: 320px) {

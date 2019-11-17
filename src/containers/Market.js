@@ -73,11 +73,11 @@ class Market extends React.Component {
         </Grid.Row>
 
         <Grid.Row>
-          <Grid.Column computer={10} mobile={8}>
+          <Grid.Column computer={10} mobile={15}>
             <h2><Icon name='newspaper outline'/> Market News:</h2>
             <NewsList news={this.state.news} type='market'/>
           </Grid.Column>
-          <Grid.Column computer={4} mobile={8}>
+          <Grid.Column computer={4} mobile={15}>
             <SearchHistory />
             <QuoteTable tableName='Most Active' tableRows={this.state.mostActive} />
             <QuoteTable tableName='Gainers' tableRows={this.state.gainers} />
