@@ -40,12 +40,25 @@ label {
 }
 
 @media only screen and (max-width: 768px) {
+    h1 {
+        font-size: 20px !important;
+    }
+
     p {
       font-size: 10px;
     }
 
     .mobile-hide {
         display: none !important;
+    }
+
+    .search-bar {
+        text-align: left !important;
+    }
+
+    .user-actions {
+        margin-top: 0px !important;
+        text-align: left !important;
     }
 }
 

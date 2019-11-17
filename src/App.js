@@ -62,13 +62,13 @@ class App extends Component {
       <Router>
         <Grid centered>
           <Grid.Row>
-            <Grid.Column computer={4} mobile={14} textAlign='left'>
-              <NavLink to='/' exact><h1 style={{marginTop: '5px'}}>Portfolio Manager and Hedger</h1></NavLink>
+            <Grid.Column computer={4} mobile={14} textAlign='left' style={{marginTop: '10px'}}>
+              <NavLink to='/' exact><h1>Portfolio Manager and Hedger</h1></NavLink>
             </Grid.Column>
-            <Grid.Column computer={6} mobile={12} textAlign='center'>
+            <Grid.Column computer={6} mobile={14} textAlign='center' className='search-bar'>
               <SearchBar />
             </Grid.Column>
-            <Grid.Column computer={4} mobile={2} textAlign='right' style={{marginTop: '10px'}}>
+            <Grid.Column computer={4} mobile={14} textAlign='right' style={{marginTop: '10px'}} className='user-actions'>
               {
                 this.loggedIn ?
                   <>
@@ -86,7 +86,7 @@ class App extends Component {
                   </>
               }
             </Grid.Column>
-            <Grid.Column width={14}>
+            <Grid.Column style={{marginTop: '5px'}} width={14}>
               <NavBar />
             </Grid.Column>
           </Grid.Row>
