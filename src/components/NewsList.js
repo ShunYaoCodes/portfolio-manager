@@ -16,14 +16,14 @@ class NewsList extends React.Component {
     switch(this.type) {
       case 'market':
         for (let symbol in this.news) {
-          const all_symbol_news = this.news[symbol].news;
+          const all_symbol_news = this.news[symbol].news.slice(0, 2); // display latest 2 news per index symbol
           this.handle_news(all_symbol_news);
         }
         break;
       case 'detail':
       case 'watchlist':
       default:
-          this.handle_news(this.news);
+          this.handle_news(this.news.slice(0, 10));  // display latest 10 news
     }
   }
 
