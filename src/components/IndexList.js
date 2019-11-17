@@ -7,13 +7,13 @@ const IndexList = ({indexQuotes}) => {
   if (indexQuotes && indexQuotes.length) {
     const indexList = indexQuotes.map(index => <Index key={UUID()} {...index} />)
     return (
-      <React.Fragment>
+      <>
         {indexList}
-      </React.Fragment>
+      </>
     )
   } else {
     return (
-      <div></div>
+      <></>
     )
   }
 

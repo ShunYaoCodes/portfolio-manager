@@ -45,7 +45,7 @@ const Index = props => {
       <NavLink style={{color: 'white'}} to={link} name={props.symbol} onClick={handleClick}>
         <p>{symbol}</p>
         <p>{props.latestPrice}&nbsp;&nbsp;{props.change}</p>
-        <p><Icon name='triangle down' />&nbsp;({(props.changePercent*100).toFixed(2)}%)</p>
+        <p><Icon className='mobile-hide' name='triangle down' />&nbsp;({(props.changePercent*100).toFixed(2)}%)</p>
       </NavLink>
     </Segment>    
 

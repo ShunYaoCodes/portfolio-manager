@@ -1,4 +1,4 @@
-const indexes = ['spy', 'qqq', 'dia', 'iwm'];
+const indexes = ['spy', 'qqq', 'dia', 'iwm', 'vxx'];
 const publishableKey = process.env.REACT_APP_PUBLISHABLE_KEY;
 const host = process.env.REACT_APP_STOCK_API_HOST;
 
