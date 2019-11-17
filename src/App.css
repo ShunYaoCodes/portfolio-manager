@@ -38,3 +38,19 @@ label {
     padding: 0;
     text-decoration-skip-ink: "auto";
 }
+
+@media only screen and (max-width: 768px) {
+    p {
+      font-size: 8px;
+    }
+
+    .mobile-hide {
+        display: none !important;
+    }
+}
+
+@media only screen and (max-width: 320px) {
+    p {
+        font-size: 8px;
+    }
+}
