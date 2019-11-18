@@ -145,8 +145,8 @@ const Stats = props => {
       />)
   }
   return (
-    <React.Fragment>
-      <Table color='black'>
+    <div style={{overflow: 'auto', marginTop: '10px'}}>
+      <Table unstackable color='black'>
         <Table.Header>
           <Table.Row>
             <Table.HeaderCell></Table.HeaderCell>
@@ -197,7 +197,7 @@ const Stats = props => {
           </Table.Row>
         </Table.Body>
       </Table>
-    </React.Fragment>
+    </div>
   )
 }
 
