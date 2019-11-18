@@ -72,38 +72,40 @@ class Watchlist extends React.Component {
             </Grid.Row>
     
             <Grid.Row>
-              <Grid.Column width={14}>
+              <Grid.Column computer={14} mobile={15}>
                 <h3>Your Watchlist:</h3>
-                <Table color='blue'>
-                  <Table.Header>
-                    <Table.Row>
-                      <Table.HeaderCell>Symbol</Table.HeaderCell>
-                      <Table.HeaderCell>Last Price</Table.HeaderCell>
-                      <Table.HeaderCell>Change</Table.HeaderCell>
-                      <Table.HeaderCell>% Change</Table.HeaderCell>
-                      <Table.HeaderCell>Daily High</Table.HeaderCell>
-                      <Table.HeaderCell>Daily Low</Table.HeaderCell>
-                      <Table.HeaderCell>Daily Volume</Table.HeaderCell>
-                      <Table.HeaderCell>Average Volume</Table.HeaderCell>
-                      <Table.HeaderCell>Sector</Table.HeaderCell>
-                      <Table.HeaderCell>Market Cap</Table.HeaderCell>
-                      <Table.HeaderCell>P/E Ratio</Table.HeaderCell>
-                      <Table.HeaderCell>52 Week High</Table.HeaderCell>
-                      <Table.HeaderCell>52 Week Low</Table.HeaderCell>
-                      <Table.HeaderCell>YTD Change</Table.HeaderCell>
-                    </Table.Row>
-                  </Table.Header>
-    
-                  <Table.Body>
-                    {list}
-                  </Table.Body>
-                </Table>
+                <div style={{overflow: 'auto'}}>
+                  <Table unstackable color='blue'>
+                    <Table.Header>
+                      <Table.Row>
+                        <Table.HeaderCell>Symbol</Table.HeaderCell>
+                        <Table.HeaderCell>Last Price</Table.HeaderCell>
+                        <Table.HeaderCell>Change</Table.HeaderCell>
+                        <Table.HeaderCell>% Change</Table.HeaderCell>
+                        <Table.HeaderCell>Daily High</Table.HeaderCell>
+                        <Table.HeaderCell>Daily Low</Table.HeaderCell>
+                        <Table.HeaderCell>Daily Volume</Table.HeaderCell>
+                        <Table.HeaderCell>Average Volume</Table.HeaderCell>
+                        <Table.HeaderCell>Sector</Table.HeaderCell>
+                        <Table.HeaderCell>Market Cap</Table.HeaderCell>
+                        <Table.HeaderCell>P/E Ratio</Table.HeaderCell>
+                        <Table.HeaderCell>52 Week High</Table.HeaderCell>
+                        <Table.HeaderCell>52 Week Low</Table.HeaderCell>
+                        <Table.HeaderCell>YTD Change</Table.HeaderCell>
+                      </Table.Row>
+                    </Table.Header>
+      
+                    <Table.Body>
+                      {list}
+                    </Table.Body>
+                  </Table>
+                </div>
               </Grid.Column>
             </Grid.Row>
 
             {this.state.news.length ?
               <Grid.Row>
-                <Grid.Column width={14}>
+                <Grid.Column computer={14} mobile={15}>
                   <h3>Your Watchlist News:</h3>
                   <NewsList news={this.state.news} type='watchlist'/>
                 </Grid.Column>
