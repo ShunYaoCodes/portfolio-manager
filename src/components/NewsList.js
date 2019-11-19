@@ -48,7 +48,7 @@ class NewsList extends React.Component {
     this.handle_data();
 
     return (
-      <Item.Group>
+      <Item.Group className='item-group'>
         {this.newslist}
       </Item.Group>
     )
