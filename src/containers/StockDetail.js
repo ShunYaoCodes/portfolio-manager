@@ -28,7 +28,7 @@ class StockDetail extends React.Component {
       return (
         <React.Fragment>
           <Grid.Row>
-            <Grid.Column width={14}>
+            <Grid.Column computer={14} mobile={15}>
               <h2>{this.props.quote.companyName} ({this.props.quote.symbol})</h2>
             </Grid.Column>
           </Grid.Row>
@@ -60,7 +60,7 @@ class StockDetail extends React.Component {
           <Asset {...this.props}/>
 
           <Grid.Row>
-            <Grid.Column width={14}>
+            <Grid.Column computer={14} mobile={15}>
               <h2>{this.props.quote.symbol} News:</h2>
               <NewsList news={this.props.news}  type='detail'/>
             </Grid.Column>

@@ -5,8 +5,8 @@ import { Table } from 'semantic-ui-react'
 const Stats = props => {
   //console.log('in stats', props);
   return (
-    <React.Fragment>
-      <Table>
+    <div style={{overflow: 'auto'}}>
+      <Table unstackable>
         <Table.Body>
           <Table.Row>
             <Table.Cell className='head'>Last Price</Table.Cell>
@@ -53,7 +53,7 @@ const Stats = props => {
           </Table.Row>
         </Table.Body>
       </Table>
-    </React.Fragment>
+    </div>
   )
 }
 

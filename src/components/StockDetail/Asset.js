@@ -8,7 +8,7 @@ const Asset = (props) => {
   return (
     <React.Fragment>
       <Grid.Row>
-        <Grid.Column width={14}>
+        <Grid.Column computer={14} mobile={15}>
           <h2>{props.quote.symbol} YTD Chart:</h2>
           <TypeChooser>
             {type => <StockChart type={type} data={props.chart} />}
@@ -16,7 +16,7 @@ const Asset = (props) => {
         </Grid.Column>
       </Grid.Row>
       <Grid.Row>
-        <Grid.Column width={14}>
+        <Grid.Column computer={14} mobile={15}>
           <h2>{props.quote.symbol} Summary:</h2>
           <Stats {...props.quote}/>
         </Grid.Column>
