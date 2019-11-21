@@ -4,6 +4,7 @@ import { toggleStatus } from "../redux/actions";
 import NewsList from '../components/NewsList';
 import Asset from '../components/StockDetail/Asset';
 import { Grid } from 'semantic-ui-react';
+import { fetchStockDetail } from '../redux/actions';
 import { Checkbox } from 'semantic-ui-react';
 
 class StockDetail extends React.Component {
@@ -24,7 +25,17 @@ class StockDetail extends React.Component {
   }
 
   render() {
-    if (Object.keys(this.props.quote).length && !this.props.error) {
+    if (this.props.error) {
+      return (
+        <Grid.Row>
+          <h3>{this.props.error}</h3>
+        </Grid.Row>
+      )
+    } else if (!Object.keys(this.props.quote).length) {
+      const symbol = window.location.search.replace("?symbol=" , ""); // when user refreshes page or enters url directly
+      this.props.dispatch(fetchStockDetail(symbol));
+      return <img alt="Spinny GIF" src="https://cdn-images-1.medium.com/max/1600/1*9EBHIOzhE1XfMYoKz1JcsQ.gif" />
+    } else {
       return (
         <React.Fragment>
           <Grid.Row>
@@ -66,12 +77,6 @@ class StockDetail extends React.Component {
             </Grid.Column>
           </Grid.Row>
         </React.Fragment>
-      )
-    } else {
-      return (
-        <Grid.Row>
-          <h3>{this.props.error}</h3>
-        </Grid.Row>
       )
     }
   }
