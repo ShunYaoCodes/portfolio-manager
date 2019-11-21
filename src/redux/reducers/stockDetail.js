@@ -18,8 +18,8 @@ export default function(state = initialState, action) {
 
             return {
                 ...state,
-                quote: quote,
-                news: news,
+                quote,
+                news,
                 chart: transformChartData(chart),
                 inWatchlist,
                 inPortfolio,
@@ -49,12 +49,12 @@ function transformChartData(chartData) {
 
     let data = chartData.map(d => {
         return {
-        date: parseDate(d.date),
-        open: d.open,
-        high: d.high,
-        low: d.low,
-        close: d.close,
-        volume: d.volume,
+            date: parseDate(d.date),
+            open: d.open,
+            high: d.high,
+            low: d.low,
+            close: d.close,
+            volume: d.volume,
         }
     })
 

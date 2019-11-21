@@ -162,7 +162,7 @@ export function fetchStockDetail(symbol) {
       return dispatch({ 
         type: SET_STOCK_ERROR, 
         payload: {
-          stockError: `No results for ${error.message}. Please enter a valid stock symbol.`,
+          error: `No results for ${error.message}. Please enter a valid stock symbol.`,
         }
       })
     });
