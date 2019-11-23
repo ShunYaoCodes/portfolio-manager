@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import { Button, Form, Grid, Header, Image, Segment, Message } from 'semantic-ui-react';
@@ -7,6 +7,8 @@ import { connect } from 'react-redux';
 import { createLoginSession } from '../redux/actions';
 
 const LoginForm = ({ history, path, dispatch }) => {
+  const [validLogin, setValidLogin] = useState(true);
+
   const formik = useFormik({
     initialValues: {
       email: "",
@@ -32,12 +34,28 @@ const LoginForm = ({ history, path, dispatch }) => {
       )
       .then(res => res.json())
       .then(res => {
-        const { token, id, firstName, lastName } = res;
-        dispatch(createLoginSession(token, id, firstName, lastName));
-        history.push(path ? path : '/');
+        if (res.error) {
+          const { message } = res.error;
+          switch (message) {
+            case "Credentials don't match":
+              setValidLogin(false);
+              break;
+            default:
+              console.log(res.errors);
+          }
+        } else {
+          setValidLogin(true);
+          const { token, id, firstName, lastName } = res;
+          dispatch(createLoginSession(token, id, firstName, lastName));
+          history.push(path ? path : '/');
+        }
       })
     },
   });
+
+  const handleEmailClick = () => {
+    setValidLogin(true);
+  }
 
   return (
     <Grid textAlign='center' style={{ height: '80vh' }} verticalAlign='middle'>
@@ -46,7 +64,7 @@ const LoginForm = ({ history, path, dispatch }) => {
           {/* <Image src='/logo.png' /> */}
           Sign in to your account
         </Header>
-        <Form size='large' onSubmit={formik.handleSubmit}>
+        <Form error={!validLogin} size='large' onSubmit={formik.handleSubmit}>
           <Segment stacked>
             <Form.Input 
               fluid icon='user' 
@@ -55,6 +73,7 @@ const LoginForm = ({ history, path, dispatch }) => {
               id="email"
               name="email"
               type="email"
+              onClick={handleEmailClick}
               onChange={formik.handleChange}
               onBlur={formik.handleBlur}
               value={formik.values.email}
@@ -73,7 +92,10 @@ const LoginForm = ({ history, path, dispatch }) => {
               value={formik.values.password}
               {...formik.touched.password && formik.errors.password ? { error: formik.errors.password } : {} }
             />
-  
+            <Message
+              error
+              content='Incorrect email or password'
+            />
             <Button color='violet' fluid size='large' type="submit">
               Login
             </Button>

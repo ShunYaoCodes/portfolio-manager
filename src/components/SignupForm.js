@@ -50,8 +50,8 @@ const SignupForm = ({ history, dispatch }) => {
     )
     .then(res => res.json())
     .then(res => {
-      if (res.errors) {
-        const [errorMessage] = res.errors;
+      if (res.error) {
+        const [errorMessage] = res.error;
         switch (errorMessage) {
           case 'Email has already been taken':
             setEmailAlreadyRegistered(true);
